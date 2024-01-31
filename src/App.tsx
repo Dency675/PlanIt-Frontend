@@ -1,12 +1,13 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import ReportPage from "./pages/ReportPage/ReportPage";
+import TeamSettings from "./pages/TeamSettings/TeamSettings";
 
 function App() {
   return (
     <>
-      <ReportPage />
+      {/* <ReportPage /> */}
+      <TeamSettings />
     </>
   );
 }
