@@ -1,18 +1,4 @@
-import { Settings } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  IconButton,
-  List,
-  ListDivider,
-  ListItem,
-  ListItemContent,
-  ListItemDecorator,
-  Typography,
-} from "@mui/joy";
+import { Avatar, Box, Button, ButtonGroup, Divider, IconButton, List, ListDivider, ListItem, ListItemContent, ListItemDecorator, Typography } from "@mui/joy";
 import React from "react";
 import Input from "@mui/joy/Input";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
@@ -29,15 +15,19 @@ const TeamList = () => {
       >
         Team Members
       </Typography>
-      <List
+      <List 
         aria-labelledby="ellipsis-list-demo"
-        sx={{ "--ListItemDecorator-size": "56px" }}
+        sx={{
+          "--ListItemDecorator-size": "56px",
+          width: "100%", // Make the list width 100% to fill the container
+          p: { xs: 0, sm: 2 }, // Add padding for smaller screens
+        }}
       >
         <ListDivider />
         <TeamMember />
       </List>
       <Divider sx={{ height: 2 }} />
-      <Box sx={{ pt: 2, display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{  pt: 2, display: "flex",mt:2, justifyContent: "flex-end", p: { xs: 2, sm: 0 } }}>
         <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} />
       </Box>
     </Box>
