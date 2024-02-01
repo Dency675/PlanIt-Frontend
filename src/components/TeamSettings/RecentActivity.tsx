@@ -20,6 +20,7 @@ import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 const RecentActivity = () => {
   return (
     <Box>
+      <ListDivider />
       <ListItem
         sx={{
           display: "flex",
@@ -49,9 +50,9 @@ const RecentActivity = () => {
             </Typography>
           </ListItemContent>
         </Box>
-        <Button sx={{ mt: { xs: 1, sm: 0 } }}>View Report</Button> {/* Margin top based on screen size */}
+        <Button sx={{ mt: { xs: 1, sm: 0 } }}>View Report</Button>{" "}
+        {/* Margin top based on screen size */}
       </ListItem>
-      <ListDivider />
     </Box>
   );
 };
