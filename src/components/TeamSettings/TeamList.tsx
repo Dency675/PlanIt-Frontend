@@ -16,7 +16,7 @@ import {
 import React from "react";
 import Input from "@mui/joy/Input";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import TeamMember from "../TeamSettings/TeamMember";
+import TeamMember from "./TeamMember";
 
 const TeamList = () => {
   return (

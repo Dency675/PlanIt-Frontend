@@ -1,9 +1,9 @@
 import React from "react";
-import TeamList from "../../components/Navbar/TeamList";
+import TeamList from "../../components/TeamSettings/TeamList";
 import { Box, Card, Divider, Grid } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
-import SideNav from "../../components/TeamSettings/SideNav";
+import SideNav from "../../components/Navbar/SideNav";
 import Header from "../../components/Navbar/Header";
 
 const TeamSettings = () => {

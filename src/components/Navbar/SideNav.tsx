@@ -6,7 +6,7 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import ListItemButton from "@mui/joy/ListItemButton";
 import Typography from "@mui/joy/Typography";
 import Home from "@mui/icons-material/Home";
-import TeamName from "./TeamName";
+import TeamName from "../TeamSettings/TeamName";
 
 export default function SideNav() {
   return (

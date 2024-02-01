@@ -11,7 +11,7 @@ import Grid from "@mui/joy/Grid";
 
 import Typography from "@mui/joy/Typography";
 import Card from "@mui/joy/Card";
-import SideNav from "../TeamSettings/SideNav";
+import SideNav from "../Navbar/SideNav";
 
 const CreateRoomForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
