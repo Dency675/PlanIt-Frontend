@@ -30,8 +30,16 @@ const CreateRoomForm: React.FC = () => {
     <Box>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2} columns={16} sx={{ flexGrow: 1 }}>
-          <Grid xs={3}>
-            <SideNav></SideNav>
+          <Grid md={"auto"}>
+            <Box
+              pl={2}
+              sx={{
+                display: { xs: "none", md: "flex" },
+              }}
+            >
+              <SideNav></SideNav>
+            </Box>
+
             {isSmallScreen ? (
               <Drawer variant="temporary">
                 {/* Drawer content goes here */}
@@ -41,9 +49,9 @@ const CreateRoomForm: React.FC = () => {
               // <TeamListDrawer />
             )}
           </Grid>
-          <Grid xs={12}>
+          <Grid xs={16} md={12} px={3} pb={2} sx={{ flexGrow: 1 }} mx="auto">
             <Grid container alignItems="center" justifyContent="center">
-              <Grid container xs={10} mx="auto">
+              <Grid container mx="auto">
                 <Card>
                   <Typography level="h2">Create Room</Typography>
 
@@ -125,7 +133,7 @@ const CreateRoomForm: React.FC = () => {
                       </Grid>
                     </Grid>
 
-                    <Grid xs={12} mt={3}>
+                    <Grid xs={12} mt={2}>
                       <Button type="Create" color="success">
                         Submit
                       </Button>

@@ -13,7 +13,8 @@ export default function SideNav() {
     <Box
       sx={{
         flexGrow: 1,
-        display: "flex",
+        // display: { xs: "none", md: "flex" },
+
         justifyContent: "center",
         gap: 2,
         flexWrap: "wrap",
