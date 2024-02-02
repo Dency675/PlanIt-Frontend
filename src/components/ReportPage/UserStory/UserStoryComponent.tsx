@@ -1,9 +1,9 @@
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
+import Card from "@mui/joy/Card";
 import CardContent from "@mui/material/CardContent";
 import { Typography } from "@mui/joy";
 import UserStoryParicipantComponent from "./UserStoryParicipantComponent";
 import UserStoryScoreComponent from "./UserStoryScoreComponent";
+import { CardHeader } from "@mui/material";
 
 const UserStoryComponent = () => {
   return (
