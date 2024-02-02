@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/joy'
-import React from 'react'
+import React, { useState } from 'react'
 import UserStories from './UserStories'
 import Timer from './Timer'
 import CustomButtonGroup from './CustonButtonGroup'
@@ -8,11 +8,15 @@ import VotingCards from './VotingCards'
 
 
 const LeftComponent = () => {
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  const startTimer = () => {
+    setIsTimerRunning(true);
+  };
   return (
-    <Box> {/* Apply background color and padding */}
+    <Box> 
      <UserStories/>
-     <Timer/>
-     <CustomButtonGroup/>
+     <Timer isRunning={isTimerRunning}/>
+     <CustomButtonGroup onStartTimer={startTimer}/>
      <VotingCards/>
     </Box>
   )

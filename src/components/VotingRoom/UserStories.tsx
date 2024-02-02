@@ -18,9 +18,7 @@ export default function UserStories() {
         maxWidth: '100%',
         mx: 'auto',
         mt:5,
-        // to make the demo resizable
         overflow: 'auto',
-        // resize: 'horizontal',
       }}
     >
       <Typography level="title-lg" startDecorator={<Book />}>
@@ -35,7 +33,6 @@ export default function UserStories() {
         }}
       >
         <FormControl sx={{ gridColumn: '1/-1' }}>
-          {/* <Input endDecorator={<CreditCardIcon />} /> */}
           <Select
       placeholder="Select User Story"
       indicator={<KeyboardArrowDown />}

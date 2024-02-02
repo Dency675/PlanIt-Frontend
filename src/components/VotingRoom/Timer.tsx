@@ -3,10 +3,12 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import { Typography } from '@mui/joy';
 
+interface TimerProps {
+  isRunning: boolean;
+}
 
-const Timer: React.FC = () => {
-  const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+const Timer: React.FC<TimerProps> = ({ isRunning }) => {
+  const [seconds, setSeconds] = useState<number>(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -18,18 +20,12 @@ const Timer: React.FC = () => {
 
       // Clear the interval after 10 seconds
       setTimeout(() => {
-        setIsRunning(false);
+        clearInterval(interval);
       }, 10000);
     }
 
-    // Cleanup function to clear the interval
     return () => clearInterval(interval);
   }, [isRunning]);
-
-  const handleStartTimer = () => {
-    setSeconds(0); // Reset seconds to 0 before starting
-    setIsRunning(true);
-  };
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
@@ -38,25 +34,20 @@ const Timer: React.FC = () => {
   };
 
   return (
-    <div>
-      {/* <h1>{formatTime(seconds)}</h1> */}
-      {/* <button onClick={handleStartTimer}>Start Timer</button> */}
-      <Card variant="outlined"
+    <Card variant="outlined"
       sx={{
-      
         maxHeight: 40,
         maxWidth: 60,
         mx: 'auto',
-         mt:2,  
+        mt: 2,
         overflow: 'auto',
       }}>
-        <CardContent>
-<Typography   color="danger"
-        level="h3">{formatTime(seconds)}</Typography>
-        </CardContent>
-      </Card>
-    </div>
-    
+      <CardContent>
+        <Typography color="danger" level="h3">
+          {formatTime(seconds)}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 
