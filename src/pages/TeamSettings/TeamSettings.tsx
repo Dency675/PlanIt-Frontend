@@ -1,5 +1,5 @@
 import React from "react";
-import TeamList from "../../components/TeamSettings/TeamList";
+import TeamList from "../../components/Navbar/SideNav";
 import { Box, Card, Divider, Grid } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
