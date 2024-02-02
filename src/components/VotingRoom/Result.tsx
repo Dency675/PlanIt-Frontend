@@ -17,9 +17,7 @@ const Result = () => {
       mx: 3,
       my:5,
       height: 500,
-      // to make the demo resizable
       overflow: 'auto',
-      // resize: 'horizontal',
     }}>
       <Typography level="title-lg">Result</Typography>
       <Divider orientation="horizontal" />

@@ -5,7 +5,7 @@ import RightComponent from "../../components/VotingRoom/RightComponent";
 
 function VotingRoom() {
   return (
-    <Container> {/* Set background color */}
+    <Container> 
       <Box display="flex" flexDirection="row">
         <Box flex={5}>
           <LeftComponent />

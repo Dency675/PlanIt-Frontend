@@ -17,7 +17,7 @@ const VotingCards: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   const handleCardClick = (index: number) => {
-    setSelectedCard(index === selectedCard ? null : index); // Toggle selected card
+    setSelectedCard(index === selectedCard ? null : index); 
   };
 
   return (
@@ -26,23 +26,21 @@ const VotingCards: React.FC = () => {
         {cardData.map((card, index) => (
           <Slide in={true} direction={'right'} timeout={(1000 * index) / 2} key={index}>
             <Card
-            //  color="primary"
               variant="solid"
               sx={{
-                backgroundImage: 'linear-gradient(to right, #FD726F, #B2D5D9)', // Set your custom color here
+                backgroundImage: 'linear-gradient(to right, #FD726F, #B2D5D9)', 
           color: 'white',
-                width: '60px', // Set desired width
-                height: '90px', // Set desired height
+                width: '60px', 
+                height: '90px',
                 mx: 'auto',
                 my: 5,
                 cursor: 'pointer',
-                border: selectedCard === index ? '2px solid blue' : '1px solid ', // Apply different border styles based on selection
+                border: selectedCard === index ? '2px solid blue' : '1px solid ', 
                 overflow: 'auto'
               }}
-              onClick={() => handleCardClick(index)} // Handle card click event
+              onClick={() => handleCardClick(index)} 
             >
               <CardContent>
-                {/* <Typography>{card.title}</Typography> */}
                 <Typography level='h1'>{card.content}</Typography>
               </CardContent>
             </Card>
