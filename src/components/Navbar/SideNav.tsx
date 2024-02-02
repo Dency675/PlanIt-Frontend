@@ -11,10 +11,12 @@ import TeamName from "../TeamSettings/TeamName";
 export default function SideNav() {
   return (
     <Box
+      pr={4}
       sx={{
         flexGrow: 1,
         // display: { xs: "none", md: "flex" },
-
+        borderRight: "1px solid",
+        borderColor: "divider",
         justifyContent: "center",
         gap: 2,
         flexWrap: "wrap",
