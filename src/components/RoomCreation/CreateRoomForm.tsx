@@ -35,6 +35,7 @@ const CreateRoomForm: React.FC = () => {
               pl={2}
               sx={{
                 display: { xs: "none", md: "flex" },
+                height: "100%",
               }}
             >
               <SideNav></SideNav>
@@ -102,34 +103,42 @@ const CreateRoomForm: React.FC = () => {
                         <GuestInput />
                       </Grid>
                     </Grid>
-
                     <Grid
                       container
-                      xs={12}
-                      spacing={1}
-                      direction="column"
-                      alignItems="flex-start"
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="stretch"
                     >
-                      <Grid>
-                        <Typography level="title-lg">Set Timer</Typography>
+                      <Grid xs={12} md={6}>
+                        <Grid
+                          container
+                          spacing={1}
+                          direction="column"
+                          alignItems="flex-start"
+                        >
+                          <Grid>
+                            <Typography level="title-lg">Set Timer</Typography>
+                          </Grid>
+                          <Grid>
+                            <TimerInput />
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Grid>
-                        <TimerInput />
-                      </Grid>
-                    </Grid>
 
-                    <Grid
-                      container
-                      xs={12}
-                      spacing={1}
-                      direction="column"
-                      alignItems="flex-start"
-                    >
-                      <Grid>
-                        <Typography level="title-lg">User Story</Typography>
-                      </Grid>
-                      <Grid>
-                        <FileSelector />
+                      <Grid xs={12} md={6}>
+                        <Grid
+                          container
+                          spacing={1}
+                          direction="column"
+                          alignItems="flex-start"
+                        >
+                          <Grid>
+                            <Typography level="title-lg">User Story</Typography>
+                          </Grid>
+                          <Grid>
+                            <FileSelector />
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </Grid>
 

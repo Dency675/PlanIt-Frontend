@@ -20,8 +20,12 @@ import RecentActivity from "./RecentActivity";
 
 const RecentActivities = () => {
   return (
-    <Box sx={{ m: { xs: 2, sm: 3 } }}> {/* Add margin for spacing */}
-      <Card sx={{ width: { xs: '100%', sm: 740 }, m: 3 }}> {/* Adjust width based on screen size */}
+    <Box>
+      {" "}
+      {/* Add margin for spacing */}
+      <Card sx={{ width: { xs: "100%", sm: 740 }, m: 3 }}>
+        {" "}
+        {/* Adjust width based on screen size */}
         <List>
           <ListItem nested>
             <ListSubheader sticky>Past Meetings</ListSubheader>
