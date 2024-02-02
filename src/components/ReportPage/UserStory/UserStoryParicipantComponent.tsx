@@ -1,4 +1,4 @@
-import Card from "@mui/material/Card";
+import Card from "@mui/joy/Card";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -21,7 +21,10 @@ const UserStoryParicipantComponent = () => {
     // Add more participants as needed
   ];
   return (
-    <Card style={{ width: 900, border: "0.5px solid #9DBEFF" }}>
+    <Card
+      style={{ width: 900, border: "0.5px solid #9DBEFF" }}
+      variant="outlined"
+    >
       <TableContainer style={{ maxHeight: 200, overflowY: "auto" }}>
         <Table>
           <TableHead>

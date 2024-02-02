@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Card } from "@mui/joy";
 import CardHeader from "@mui/material/CardHeader";
 import { Clock } from "lucide-react";
 import React from "react";
