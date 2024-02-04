@@ -38,7 +38,8 @@ function App() {
     //     </Box>
     //   </JoyCssVarsProvider>
     // </MaterialCssVarsProvider>
-   <VotingRoom/>
+  //  <VotingRoom/>
+  <Login/>
     // <ReportPage />
   );
 }
