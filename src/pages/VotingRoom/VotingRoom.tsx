@@ -5,7 +5,7 @@ import RightComponent from "../../components/VotingRoom/RightComponent";
 
 function VotingRoom() {
   return (
-    <Container> 
+    <Container>
       <Box display="flex" flexDirection="row">
         <Box flex={5}>
           <LeftComponent />
@@ -14,7 +14,7 @@ function VotingRoom() {
           <RightComponent />
         </Box>
       </Box>
-    </Container>    
+    </Container>
   );
 }
 
