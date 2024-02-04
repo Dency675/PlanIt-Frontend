@@ -25,7 +25,7 @@ function App() {
       <JoyCssVarsProvider>
         <CssBaseline enableColorScheme />
         <Box>
-          {/* <Login /> */}
+          <Login />
           {/* <BrowserRouter>
      <Routes>
       <Route path='/' element={</>}></Route>
@@ -33,7 +33,7 @@ function App() {
      </Routes>
      </BrowserRouter> */}
           {/* <ReportPage /> */}
-          <TeamManagement />
+          {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
         </Box>
