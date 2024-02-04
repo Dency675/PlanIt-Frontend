@@ -20,15 +20,15 @@ import RecentActivity from "./RecentActivity";
 
 const RecentActivities = () => {
   return (
-    <Box>
-      <Card sx={{ width: 740, m: 3 }}>
+    <Box sx={{ m: { xs: 2, sm: 3 } }}> {/* Add margin for spacing */}
+      <Card sx={{ width: { xs: '100%', sm: 740 }, m: 3 }}> {/* Adjust width based on screen size */}
         <List>
           <ListItem nested>
             <ListSubheader sticky>Past Meetings</ListSubheader>
             <Sheet
               variant="outlined"
               sx={{
-                maxHeight: 300,
+                maxHeight: { xs: 200, sm: 300 }, // Adjust maxHeight based on screen size
                 overflow: "auto",
                 borderRadius: "sm",
               }}
@@ -38,7 +38,7 @@ const RecentActivities = () => {
                 sx={{ "--ListItemDecorator-size": "50px", padding: 2 }}
               >
                 {[...Array(10)].map((__, index) => (
-                  <RecentActivity />
+                  <RecentActivity key={index} />
                 ))}
               </List>
             </Sheet>
