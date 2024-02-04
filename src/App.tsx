@@ -19,8 +19,8 @@ function App() {
      </BrowserRouter> */}
       {/* <ReportPage /> */}
 
-      {/* <TeamSettings /> */}
-      <RoomCreation />
+      <TeamSettings />
+      {/* <RoomCreation /> */}
     </>
   );
 }
