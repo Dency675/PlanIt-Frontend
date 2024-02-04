@@ -16,30 +16,30 @@ import {
 } from "@mui/material/styles";
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
+import TeamManagement from "./pages/TeamManagement/TeamManagement";
 
 const materialTheme = materialExtendTheme();
 function App() {
   return (
-    // <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
-    //   <JoyCssVarsProvider>
-    //     <CssBaseline enableColorScheme />
-    //     <Box>
-    //       {/* <Login /> */}
-    //       {/* <BrowserRouter>
-    //  <Routes>
-    //   <Route path='/' element={</>}></Route>
-    //   <Route path='/registration' element={<RegistrationHandler/>}></Route>
-    //  </Routes>
-    //  </BrowserRouter> */}
-    //       {/* <ReportPage /> */}
-
-    //       {/* <TeamSettings /> */}
-    //       <RoomCreation />
-    //     </Box>
-    //   </JoyCssVarsProvider>
-    // </MaterialCssVarsProvider>
-   <VotingRoom/>
-    // <ReportPage />
+    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+      <JoyCssVarsProvider>
+        <CssBaseline enableColorScheme />
+        <Box>
+          {/* <Login /> */}
+          {/* <BrowserRouter>
+     <Routes>
+      <Route path='/' element={</>}></Route>
+      <Route path='/registration' element={<RegistrationHandler/>}></Route>
+     </Routes>
+     </BrowserRouter> */}
+          {/* <ReportPage /> */}
+          <TeamManagement />
+          {/* <TeamSettings /> */}
+          {/* <RoomCreation /> */}
+        </Box>
+      </JoyCssVarsProvider>
+    </MaterialCssVarsProvider>
+    // <VotingRoom />
   );
 }
 
