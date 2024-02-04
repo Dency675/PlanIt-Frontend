@@ -15,8 +15,12 @@ import { size } from "@floating-ui/core";
 import { width } from "@mui/system";
 import { Add } from "@mui/icons-material";
 import { SiMicrosoftoutlook } from "react-icons/si";
+import useLoginHandler from "../../pages/Login/LoginHandler";
 
 const RightComponent = () => {
+  const { handleLogin } = useLoginHandler(() => {
+    console.log("Logged in successfully");
+  });
   return (
     <Sheet
       sx={{
@@ -74,6 +78,7 @@ const RightComponent = () => {
       <Button
         sx={{ mt: 1 /* margin top */ }}
         startDecorator={<SiMicrosoftoutlook />}
+        onClick={() => handleLogin("popup")}
       >
         {" "}
         Continue with Outlook
