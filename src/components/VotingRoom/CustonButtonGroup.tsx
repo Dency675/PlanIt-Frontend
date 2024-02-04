@@ -9,7 +9,7 @@ import Typography from '@mui/joy/Typography';
 interface CustomButtonGroupProps {
   onStartTimer: () => void; 
 }
-
+//timer function 
 const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer }) => {
   return (
     <Card
