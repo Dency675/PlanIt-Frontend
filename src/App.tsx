@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import RoomCreation from "./pages/RoomCreation/RoomCreation";
 import { Box } from "@mui/joy";
+import VotingRoom from "./pages/VotingRoom/VotingRoom";
 
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -37,7 +38,8 @@ function App() {
     //     </Box>
     //   </JoyCssVarsProvider>
     // </MaterialCssVarsProvider>
-    <ReportPage />
+   <VotingRoom/>
+    // <ReportPage />
   );
 }
 
