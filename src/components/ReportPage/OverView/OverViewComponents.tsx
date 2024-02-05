@@ -12,10 +12,9 @@ const OverViewComponents = () => {
         width: "100%",
         maxWidth: 1000,
         margin: "auto",
-        height: "200px",
-        display: "flex", // Add display: flex
-        alignItems: "center", // Add alignItems: center
-        justifyContent: "center", // Optionally, add justifyContent: center to horizontally center the content
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-evenly",
       }}
     >
       <Grid container spacing={3}>
@@ -37,7 +36,7 @@ const OverViewComponents = () => {
         </Grid>
         <Grid item xs={6} sm={6} md={3}>
           <OverViewSubComponents
-            title="Total Stories"
+            title="Total User Stories "
             description={`${description} stories`}
             logo={
               <ClipboardList style={{ fontSize: "40px", strokeWidth: "2" }} />

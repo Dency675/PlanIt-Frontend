@@ -1,4 +1,4 @@
-import { Card } from "@mui/joy";
+import { Box, Card } from "@mui/joy";
 import CardHeader from "@mui/material/CardHeader";
 import { Clock } from "lucide-react";
 import React from "react";
@@ -8,9 +8,14 @@ const UserStoryScoreComponent = () => {
     <Card
       variant="outlined"
       color="primary"
-      style={{ width: 300, height: 200, border: "1px solid  #9DBEFF" }}
+      style={{
+        width: 200,
+        height: 200,
+        border: "1px solid  #9DBEFF",
+        padding: 0,
+      }}
     >
-      <div
+      <Box
         style={{
           marginTop: 35,
           display: "flex",
@@ -23,7 +28,7 @@ const UserStoryScoreComponent = () => {
     <CardContent>Score is 50</CardContent> */}
         <Clock size={85} />
         <CardHeader title="SCORE : 2" />
-      </div>
+      </Box>
     </Card>
   );
 };

@@ -1,13 +1,12 @@
 import Card from "@mui/joy/Card";
-import CardContent from "@mui/material/CardContent";
-import { Typography } from "@mui/joy";
+import { Box, Typography } from "@mui/joy";
 import UserStoryParicipantComponent from "./UserStoryParicipantComponent";
 import UserStoryScoreComponent from "./UserStoryScoreComponent";
-import { CardHeader } from "@mui/material";
+import { CardHeader, Grid } from "@mui/material";
 
 const UserStoryComponent = () => {
   return (
-    <div
+    <Grid
       style={{
         display: "flex",
         justifyContent: "center",
@@ -18,7 +17,9 @@ const UserStoryComponent = () => {
         variant="outlined"
         color="primary"
         style={{
-          width: 1100,
+          maxWidth: 1100,
+          width: "100%",
+          margin: "0 auto",
           paddingLeft: 7,
           paddingRight: 7,
           backgroundColor: "#FFFFFF",
@@ -27,30 +28,43 @@ const UserStoryComponent = () => {
         }}
       >
         <CardHeader title="Story 1" />
-        <Typography level="body-xs">
-          Lorem ipsum is placeholder text commonly used in the graphic, print,
-          and publishing industries for previewing layouts and visual mockups
-          Lorem ipsum is placeholder text commonly used in the graphic, print,
-          and publishing industries for previewing layouts and visual mockups
-          Lorem ipsum is placeholder text commonly used in the graphic, print,
-          and publishing industries for previewing layouts and visual mockups
-          Lorem ipsum is placeholder text commonly used in the graphic, print,
-          and publishing industries for previewing layouts and visual mockups
-        </Typography>
-        <CardContent>
-          <div
+        <Grid container spacing={1}>
+          <Grid item xs={12} textAlign={"center"}>
+            <Typography>
+              Lorem ipsum is placeholder text commonly used in the graphic,
+              print, and publishing industries for previewing layouts and visual
+              mockups.
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={9}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 35,
+              paddingBottom: 20,
+            }}
+          >
+            <UserStoryParicipantComponent />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={3}
             style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <UserStoryParicipantComponent />
             <UserStoryScoreComponent />
-          </div>
-        </CardContent>
+          </Grid>
+        </Grid>
       </Card>
-    </div>
+    </Grid>
   );
 };
 

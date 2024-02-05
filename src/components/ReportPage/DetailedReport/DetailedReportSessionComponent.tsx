@@ -1,5 +1,14 @@
 import React from "react";
-import { Box, CardContent, List, ListItem, Typography } from "@mui/material";
+import {
+  Box,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { Card } from "@mui/joy";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
@@ -8,71 +17,131 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import CalculateRoundedIcon from "@mui/icons-material/CalculateRounded";
 import SupervisedUserCircleRoundedIcon from "@mui/icons-material/SupervisedUserCircleRounded";
 
-const DetailedReportSessionComponent = ({ name = "sessions" }: any) => {
+const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
+  const iconSize = "large";
+
   return (
-    <Card
-      style={{ padding: 10, border: "1px solid #9DBEFF" }}
-      variant="outlined"
-    >
+    <Card variant="outlined" color="primary" sx={{ padding: 0 }}>
       <CardContent>
         <Typography
           fontSize={25}
           fontWeight={750}
           sx={{
             display: "flex",
-            justifyContent: "space-evenly",
-            alignContent: "center",
+            justifyContent: "center",
+            marginBottom: 2,
           }}
         >
           Session Details
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignContent: "center",
-          }}
-        >
-          <List>
-            <ListItem>
-              <DriveFileRenameOutlineOutlinedIcon
-                fontSize="large"
-                sx={{ marginRight: 1 }}
-              />
-
-              <Typography>Session Name {name}</Typography>
-            </ListItem>
-            <ListItem>
-              <Groups3Icon fontSize="large" sx={{ marginRight: 1 }} />
-              <Typography>Scrum Master {name}</Typography>
-            </ListItem>
-            <ListItem>
-              <ManageAccountsRoundedIcon
-                fontSize="large"
-                sx={{ marginRight: 1 }}
-              />
-              <Typography>Product Manager : {name}</Typography>
-            </ListItem>
-            <ListItem>
-              <SupervisedUserCircleRoundedIcon
-                fontSize="large"
-                sx={{ marginRight: 1 }}
-              />
-              <Typography>Product Owner : {name}</Typography>
-            </ListItem>
-            <ListItem>
-              <CalendarMonthRoundedIcon
-                fontSize="large"
-                sx={{ marginRight: 1 }}
-              />
-              <Typography>Date : 12/12/12</Typography>
-            </ListItem>
-            <ListItem>
-              <CalculateRoundedIcon fontSize="large" sx={{ marginRight: 1 }} />
-              <Typography>Estimation Method : Fibonacci</Typography>
-            </ListItem>
-          </List>
-        </Box>
+        <TableContainer>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <DriveFileRenameOutlineOutlinedIcon fontSize={iconSize} />
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>Session Name</Typography>
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>{name}</Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Groups3Icon fontSize={iconSize} />
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>Scrum Master</Typography>
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>{name}</Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <ManageAccountsRoundedIcon fontSize={iconSize} />
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>Product Manager</Typography>
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>{name}</Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <SupervisedUserCircleRoundedIcon fontSize={iconSize} />
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>Product Owner</Typography>
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>{name}</Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <CalendarMonthRoundedIcon fontSize={iconSize} />
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>Date</Typography>
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>{name}</Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <CalculateRoundedIcon fontSize={iconSize} />
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>Estimation Method</Typography>
+                </TableCell>
+                <TableCell
+                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
+                >
+                  <Typography>{name}</Typography>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </CardContent>
     </Card>
   );

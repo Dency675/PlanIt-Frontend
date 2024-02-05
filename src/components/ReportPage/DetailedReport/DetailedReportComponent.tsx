@@ -15,10 +15,10 @@ const DetailedReportComponent = () => {
         justifyContent: "space-evenly",
       }}
     >
-      <Grid item xs={12} sm={4} md={5}>
+      <Grid item xs={12} sm={4} md={4.5}>
         <DetailedReportChartComponent />
       </Grid>
-      <Grid item xs={12} sm={4} md={3}>
+      <Grid item xs={12} sm={4} md={4}>
         <DetailedReportSessionComponent />
       </Grid>
       <Grid item xs={12} sm={4} md={3}>
