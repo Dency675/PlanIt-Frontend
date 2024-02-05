@@ -36,8 +36,8 @@ function App() {
           {/* <ReportPage /> */}
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
-          {/* <RoomCreation /> */}
-          <AppRouter />
+          <RoomCreation />
+          {/* <AppRouter /> */}
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
