@@ -17,6 +17,7 @@ import {
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import TeamManagement from "./pages/TeamManagement/TeamManagement";
+import AppRouter from "./Routes";
 
 const materialTheme = materialExtendTheme();
 function App() {
@@ -25,7 +26,7 @@ function App() {
       <JoyCssVarsProvider>
         <CssBaseline enableColorScheme />
         <Box>
-          <Login />
+          {/* <Login /> */}
           {/* <BrowserRouter>
      <Routes>
       <Route path='/' element={</>}></Route>
@@ -36,6 +37,7 @@ function App() {
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
+          <AppRouter />
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
