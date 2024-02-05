@@ -36,12 +36,12 @@ function App() {
      </BrowserRouter> */}
           {/* <ReportPage /> */}
           {/* <TeamManagement /> */}
-          {/* <TeamSettings /> */}
+          <TeamSettings />
           {/* <RoomCreation /> */}
           {/* <VotingRoom/> */}
           {/* <Admin/> */}
           {/* <AppRouter /> */}
-          <VotingRoom />
+          {/* <VotingRoom /> */}
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>

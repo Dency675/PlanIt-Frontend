@@ -97,7 +97,18 @@ const TeamList: React.FC = () => {
           ))}
         </List>
       </Sheet>
-      {/* ... (rest of your code) */}
+      <Divider sx={{ height: 2 }} />
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          mt: 2,
+          justifyContent: "flex-end",
+          p: { xs: 2, sm: 0 },
+        }}
+      >
+        <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} />
+      </Box>
     </Box>
   );
 };

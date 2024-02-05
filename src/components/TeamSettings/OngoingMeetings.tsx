@@ -2,6 +2,7 @@ import { Padding } from "@mui/icons-material";
 import {
   AspectRatio,
   Box,
+  Button,
   Card,
   CardOverflow,
   List,
@@ -27,19 +28,23 @@ const OngoingMeetings = () => {
       >
         Ongoing Meeting
       </Typography>
+
       <Card
         orientation="horizontal"
         variant="outlined"
-        sx={{ width: 200, m: 3 }}
+        sx={{ width: 180, m: 3 }}
       >
         <CardContent>
+          {/* <ListItemButton> */}
           <Typography fontWeight="md" textColor="success.plainColor">
             Meeting Name
           </Typography>
           <Typography level="body-sm" sx={{ display: "flex" }}>
             <AccessTimeIcon sx={{ paddingRight: 1 }} /> 1.00 pm
           </Typography>
+          {/* </ListItemButton> */}
         </CardContent>
+
         <CardOverflow
           variant="soft"
           color="primary"
