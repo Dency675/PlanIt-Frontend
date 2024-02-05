@@ -27,6 +27,7 @@ import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
 
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import { useMsal } from "@azure/msal-react";
 
 function ColorSchemeToggle() {
   const [mounted, setMounted] = React.useState(false);
@@ -65,6 +66,15 @@ function ColorSchemeToggle() {
 
 export default function Header() {
   const [open, setOpen] = React.useState(false);
+  const { instance } = useMsal();
+  const logOut = () => {
+    localStorage.removeItem("roleID");
+    sessionStorage.clear();
+    instance.logoutPopup({
+      postLogoutRedirectUri: "/",
+      mainWindowRedirectUri: "/",
+    });
+  };
   return (
     <Box
       sx={{
@@ -201,7 +211,7 @@ export default function Header() {
                 </Box>
               </MenuItem>
               <ListDivider />
-              <MenuItem>
+              <MenuItem onClick={logOut}>
                 <LogoutRoundedIcon />
                 Log out
               </MenuItem>
