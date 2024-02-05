@@ -27,12 +27,9 @@ const participants = [
   "John",
   "John",
   "ddddd",
-  // Add more participants as needed
 ];
 
 const DetailedReportParticipantListComponent = () => {
-  //   const visibleParticipants = participants.slice(0, 5); // Get the first five participants
-
   return (
     <Card variant="outlined" color="primary">
       <Typography variant="h5" component="div" textAlign={"center"}>

@@ -1,4 +1,5 @@
 import Card from "@mui/joy/Card";
+import { Grid } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,7 +19,6 @@ const UserStoryParicipantComponent = () => {
     { name: "Participant 8", score: 85 },
     { name: "Participant 9", score: 79 },
     { name: "Participant 10", score: 93 },
-    // Add more participants as needed
   ];
   return (
     <Card
@@ -29,8 +29,28 @@ const UserStoryParicipantComponent = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Score</TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "#FFFFFF",
+                  zIndex: 1,
+                }}
+              >
+                Name
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "#FFFFFF",
+                  zIndex: 1,
+                }}
+              >
+                Score
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
