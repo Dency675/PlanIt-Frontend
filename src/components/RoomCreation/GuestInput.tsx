@@ -9,6 +9,12 @@ interface UserData {
   email: string;
 }
 
+interface UserData {
+  id: string;
+  employeeId: string;
+  name: string;
+  email: string;
+}
 const GuestInput: React.FC = () => {
   const [usersArray, setUsersArray] = React.useState<UserData[]>([]);
   const [selectedUserArray, setSelectedUserArray] = React.useState<UserData[]>(

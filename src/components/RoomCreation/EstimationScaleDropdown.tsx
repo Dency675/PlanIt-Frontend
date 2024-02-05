@@ -25,7 +25,11 @@ const EstimationScaleDropdown: React.FC = () => {
     const fetchEstimations = async () => {
       try {
         const response = await axios.get(
+<<<<<<< HEAD
           "http://localhost:3001/getEstimations"
+=======
+          "http://localhost:3000/getEstimations"
+>>>>>>> fe2ecd0 (implemented search functionality)
         );
         const responseData: Record<string, EstimationData> = response.data;
 

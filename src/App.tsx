@@ -34,6 +34,7 @@ function App() {
      </Routes>
      </BrowserRouter> */}
           {/* <ReportPage /> */}
+<<<<<<< HEAD
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
           <RoomCreation />
@@ -42,6 +43,15 @@ function App() {
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
     // <VotingRoom />
+=======
+
+          {/* <TeamSettings /> */}
+          <RoomCreation />
+        </Box>
+      </JoyCssVarsProvider>
+    </MaterialCssVarsProvider>
+    // <ReportPage />
+>>>>>>> fe2ecd0 (implemented search functionality)
   );
 }
 
