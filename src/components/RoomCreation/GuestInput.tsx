@@ -1,7 +1,13 @@
 import * as React from "react";
 import Autocomplete from "@mui/joy/Autocomplete";
-// import axios from "axios";
-// import TextField from "@mui/material/TextField";
+import axios from "axios";
+
+interface UserData {
+  id: string;
+  employeeId: string;
+  name: string;
+  email: string;
+}
 
 interface UserData {
   id: string;
@@ -11,23 +17,31 @@ interface UserData {
 }
 const GuestInput: React.FC = () => {
   const [usersArray, setUsersArray] = React.useState<UserData[]>([]);
-
   const [selectedUserArray, setSelectedUserArray] = React.useState<UserData[]>(
     []
   );
   const [search, setSearch] = React.useState<string>("");
   const [inputValue, setInputValue] = React.useState("");
+  const [userList, setUserList] = React.useState<
+    { email: string; givenName: string }[]
+  >([]);
 
   React.useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/searchUser?offset=0&search=${inputValue}`
+        const response = await axios.post(
+          `http://localhost:3001/searchUserFilter`,
+          {
+            userList: userList,
+          },
+          {
+            params: {
+              offset: 0,
+              search: inputValue,
+            },
+          }
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-        const data = await response.json();
+        const data = response.data;
         // Transform the received data into the format you need
         const transformedUsers = data.userResults.map((user: any) => ({
           id: user.id,
@@ -45,8 +59,18 @@ const GuestInput: React.FC = () => {
   }, [inputValue]);
 
   React.useEffect(() => {
+    console.log("userList");
+    console.log(userList);
+  }, [userList]);
+
+  React.useEffect(() => {
     console.log("selectedUserArray");
     console.log(selectedUserArray);
+    const updatedUserList = selectedUserArray.map((user) => ({
+      email: user.email,
+      givenName: user.name.split(" ")[0], // Assuming the first word is the given name
+    }));
+    setUserList(updatedUserList);
   }, [selectedUserArray]);
 
   return (
