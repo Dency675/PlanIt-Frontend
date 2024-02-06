@@ -41,7 +41,6 @@ const TeamMember = ({ teamMember, onRemove }: TeamMemberProps) => {
     <ListItem
       sx={{
         flexDirection: { xs: "column", md: "row" },
-
         alignItems: { xs: "center", md: "flex-start" },
       }}
     >
