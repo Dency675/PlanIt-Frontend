@@ -1,64 +1,63 @@
-import React, { useState } from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  IconButton,
-  List,
-  ListDivider,
-  ListItem,
-  ListItemContent,
-  ListItemDecorator,
-  Sheet,
-  Typography,
-} from "@mui/joy";
+import { Box, Divider, List, ListDivider, Typography } from "@mui/joy";
+import React, { useEffect, useState } from "react";
 import Input from "@mui/joy/Input";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import TeamMember from "./TeamMember";
+import { TeamMember } from "./TeamMember";
+import axios from "axios";
+import { TeamMemberProps } from "./TeamMember";
 
-interface TeamMemberData {
-  id: number;
-  name: string;
-  role: string;
-}
+const TeamList = () => {
+  const [teamMembers, setTeamMembers] = useState<
+    TeamMemberProps["teamMember"][]
+  >([]);
 
-const TeamList: React.FC = () => {
-  const initialTeamMembers: TeamMemberData[] = [
-    { id: 1, name: "Dencymol Baby", role: "Project Manager" },
-    { id: 2, name: "Mariyam Baby", role: "Developer" },
-    { id: 3, name: "Aljo Baby", role: "Scrum Master" },
-    { id: 4, name: "Gee Baby", role: "Project Manager" },
-    // Add more dummy data as needed
-  ];
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/getMembers?team_id=1"
+        );
+        const teamMembersData = response.data.activeTeamMembers;
+        // console.log(teamMembersData);
+        setTeamMembers(teamMembersData);
+      } catch (error) {
+        console.error("Error fetching team members:", error);
+      }
+    };
 
-  // const TeamList = () => {
-  //   const [teamMembers, setTeamMembers] = useState([
-  //     { id: 1, name: "Dencymol Baby", role: "Project Manager" },
-  //     { id: 2, name: "Mariyam Baby", role: "Developer" },
-  //     { id: 3, name: "Aljo Baby", role: "Scrum Master" },
-  //     { id: 4, name: "Gee Baby", role: "Project Manager" },
-  //     // Add more dummy data as needed
-  //   ]);
+    fetchTeamMembers();
+  }, []);
 
-  const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
-  const [scrumMasterId, setScrumMasterId] = useState<number | null>(null);
+  console.log("IM HERE");
+  console.log(teamMembers);
+  const handleRemoveMember = async (id: number) => {
+    try {
+      await axios.put(
+        `http://localhost:3001/removeMember?id=${id}`
+        // , { userId: id }
+      );
+      setTeamMembers((prevMembers) =>
+        prevMembers.filter((member) => {
+          console.log("Member:", member);
+          return member?.id !== id;
+        })
+      );
 
-  const handleRemoveMember = (id: number) => {
-    setTeamMembers((prevMembers) =>
-      prevMembers.filter((member) => member.id !== id)
-    );
-
-    // If the removed member was the Scrum Master, reset Scrum Master status
-    if (scrumMasterId === id) {
-      setScrumMasterId(null);
+      // const mappedTeamMembers = teamMembers.map((member) => ({
+      //   id: member.teamMember.id,
+      //   userInformation: member.teamMember.userInformation,
+      //   role: member.teamMember.role,
+      // }));
+    } catch (error) {
+      console.error("Error removing member:", error);
     }
   };
 
-  const handleMakeScrumMaster = (id: number) => {
-    setScrumMasterId(id);
-  };
+  // const mappedTeamMembers = teamMembers.map((member) => ({
+  //   id: member.teamMember.id,
+  //   userInformation: member.teamMember.userInformation,
+  //   role: member.teamMember.role,
+  // }));
 
   return (
     <Box>
@@ -70,33 +69,24 @@ const TeamList: React.FC = () => {
       >
         Team Members
       </Typography>
-      <Sheet
+      <List
+        aria-labelledby="ellipsis-list-demo"
         sx={{
-          maxHeight: { xs: 200, sm: 300 },
-          overflow: "auto",
-          borderRadius: "sm",
+          "--ListItemDecorator-size": "56px",
+          width: "100%",
+          p: { xs: 0, sm: 2 },
         }}
       >
-        <List
-          sx={{
-            "--ListItemDecorator-size": "56px",
-            width: "100%",
-            p: { xs: 0, sm: 2 },
-          }}
-        >
-          {teamMembers.map((member) => (
-            <React.Fragment key={member.id}>
-              <ListDivider />
-              <TeamMember
-                member={member}
-                isScrumMaster={scrumMasterId === member.id}
-                onRemove={() => handleRemoveMember(member.id)}
-                onMakeScrumMaster={() => handleMakeScrumMaster(member.id)}
-              />
-            </React.Fragment>
-          ))}
-        </List>
-      </Sheet>
+        {teamMembers.map((teamMember, index) => (
+          <React.Fragment key={index}>
+            <ListDivider />
+            <TeamMember
+              teamMember={teamMember}
+              onRemove={(id) => handleRemoveMember(id)}
+            />
+          </React.Fragment>
+        ))}
+      </List>
       <Divider sx={{ height: 2 }} />
       <Box
         sx={{
