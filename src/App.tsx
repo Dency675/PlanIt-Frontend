@@ -18,6 +18,7 @@ import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import TeamManagement from "./pages/TeamManagement/TeamManagement";
 import AppRouter from "./Routes";
+import Admin from "./pages/Admin/Admin";
 
 const materialTheme = materialExtendTheme();
 function App() {
@@ -36,7 +37,9 @@ function App() {
           {/* <ReportPage /> */}
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
-          <RoomCreation />
+          {/* <RoomCreation /> */}
+          {/* <VotingRoom/> */}
+          <Admin/>
           {/* <AppRouter /> */}
         </Box>
       </JoyCssVarsProvider>
