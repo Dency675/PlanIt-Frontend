@@ -39,12 +39,12 @@ function App() {
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
           {/* <VotingRoom/> */}
-          <Admin/>
+          {/* <Admin/> */}
           {/* <AppRouter /> */}
+          <VotingRoom />
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
-    // <VotingRoom />
   );
 }
 
