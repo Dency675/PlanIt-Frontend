@@ -1,9 +1,9 @@
 import React from "react";
-import TeamList from "../../components/TeamSettings/TeamList";
+import SideNav from "../../components/Navbar/SideNav";
 import { Box, Card, Divider, Grid, useTheme } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
-import SideNav from "../../components/Navbar/SideNav";
+import TeamList from "../../components/TeamSettings/TeamList";
 import Header from "../../components/Navbar/Header";
 import { Drawer, useMediaQuery } from "@mui/material";
 

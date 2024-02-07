@@ -1,10 +1,64 @@
-import { Avatar, Box, Button, ButtonGroup, Divider, IconButton, List, ListDivider, ListItem, ListItemContent, ListItemDecorator, Typography } from "@mui/joy";
-import React from "react";
+import { Box, Divider, List, ListDivider, Typography } from "@mui/joy";
+import React, { useEffect, useState } from "react";
 import Input from "@mui/joy/Input";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import TeamMember from "./TeamMember";
+import { TeamMember } from "./TeamMember";
+import axios from "axios";
+import { TeamMemberProps } from "./TeamMember";
 
 const TeamList = () => {
+  const [teamMembers, setTeamMembers] = useState<
+    TeamMemberProps["teamMember"][]
+  >([]);
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/getMembers?team_id=1"
+        );
+        const teamMembersData = response.data.activeTeamMembers;
+        // console.log(teamMembersData);
+        setTeamMembers(teamMembersData);
+      } catch (error) {
+        console.error("Error fetching team members:", error);
+      }
+    };
+
+    fetchTeamMembers();
+  }, []);
+
+  console.log("IM HERE");
+  console.log(teamMembers);
+  const handleRemoveMember = async (id: number) => {
+    try {
+      await axios.put(
+        `http://localhost:3001/removeMember?id=${id}`
+        // , { userId: id }
+      );
+      setTeamMembers((prevMembers) =>
+        prevMembers.filter((member) => {
+          console.log("Member:", member);
+          return member?.id !== id;
+        })
+      );
+
+      // const mappedTeamMembers = teamMembers.map((member) => ({
+      //   id: member.teamMember.id,
+      //   userInformation: member.teamMember.userInformation,
+      //   role: member.teamMember.role,
+      // }));
+    } catch (error) {
+      console.error("Error removing member:", error);
+    }
+  };
+
+  // const mappedTeamMembers = teamMembers.map((member) => ({
+  //   id: member.teamMember.id,
+  //   userInformation: member.teamMember.userInformation,
+  //   role: member.teamMember.role,
+  // }));
+
   return (
     <Box>
       <Typography
@@ -15,19 +69,34 @@ const TeamList = () => {
       >
         Team Members
       </Typography>
-      <List 
+      <List
         aria-labelledby="ellipsis-list-demo"
         sx={{
           "--ListItemDecorator-size": "56px",
-          width: "100%", // Make the list width 100% to fill the container
-          p: { xs: 0, sm: 2 }, // Add padding for smaller screens
+          width: "100%",
+          p: { xs: 0, sm: 2 },
         }}
       >
-        <ListDivider />
-        <TeamMember />
+        {teamMembers.map((teamMember, index) => (
+          <React.Fragment key={index}>
+            <ListDivider />
+            <TeamMember
+              teamMember={teamMember}
+              onRemove={(id) => handleRemoveMember(id)}
+            />
+          </React.Fragment>
+        ))}
       </List>
       <Divider sx={{ height: 2 }} />
-      <Box sx={{  pt: 2, display: "flex",mt:2, justifyContent: "flex-end", p: { xs: 2, sm: 0 } }}>
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          mt: 2,
+          justifyContent: "flex-end",
+          p: { xs: 2, sm: 0 },
+        }}
+      >
         <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} />
       </Box>
     </Box>
