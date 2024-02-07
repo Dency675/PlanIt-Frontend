@@ -12,8 +12,6 @@ import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import ModalClose from '@mui/joy/ModalClose';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
@@ -24,13 +22,11 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
@@ -38,6 +34,10 @@ import { fetchUsersData } from '../../pages/Admin/apis/usersList';
 import { useState,useEffect } from 'react';
 import { UserList } from '../../pages/Admin/types/UserList';
 import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
+import Snackbar from '@mui/joy/Snackbar';
+import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
+
+
 
  function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -79,10 +79,11 @@ import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
 export default function UsersList() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,11 +106,14 @@ export default function UsersList() {
       try {
         await deleteUser(userId);
         console.log(`User with ID ${userId} deleted successfully.`);
-        
+        // setOpen(true)
      
       // setData(data.filter(user => user.id !== userId));
       setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
       console.log("Member:", data);
+
+   
+
 
         
       } catch (error) {
@@ -128,16 +132,42 @@ export default function UsersList() {
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Rename</MenuItem>
-        <MenuItem>Move</MenuItem>
+        <MenuItem>Assign Team Manager</MenuItem>
         <Divider />
         <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
       </Menu>
-    </Dropdown>
-  );
-}
+     
+      {/* <Snackbar
+        variant="soft"
+        color="success"
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
+        endDecorator={
+          <Button
+            onClick={() => setOpen(false)}
+            size="sm"
+            variant="soft"
+            color="success"
+          >
+            Dismiss
+          </Button>
+        }
+      >
+        Your message was sent successfully.
+      </Snackbar> */}
 
+
+
+     
+    </Dropdown>
+  
+
+  
+  );
+  
+}
 
 
 
@@ -163,6 +193,7 @@ export default function UsersList() {
   // );
   return (
     <React.Fragment>
+
       <Sheet
         className="SearchAndFilters-mobile"
         sx={{
@@ -274,7 +305,7 @@ export default function UsersList() {
                   sx={{ verticalAlign: 'text-bottom' }}
                 />
               </th>
-              <th style={{ width: 120, padding: '12px 6px' }}>
+              <th style={{ width: 140, padding: '12px 10px' }}>
                 <Link
                   underline="none"
                   color="primary"
@@ -293,10 +324,10 @@ export default function UsersList() {
                   User Id
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-              <th style={{ width: 240, padding: '12px 6px' }}>Department</th>
-              <th style={{ width: 140, padding: '12px 6px' }}> </th>
+              <th style={{ width: 200, padding: '12px 10px' }}>Name</th>
+              <th style={{ width: 160, padding: '12px 10px' }}>Status</th>
+              <th style={{ width: 160, padding: '12px 10px' }}>Department</th>
+              <th style={{ width: 140, padding: '12px 10px' }}>Set Role </th>
             </tr>
           </thead>
           <tbody>
@@ -325,7 +356,7 @@ export default function UsersList() {
                 </td>
                 <td>
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    {/* <Avatar size="sm">{row.customer.initial}</Avatar> */}
+                    <Avatar size="sm">{ row.givenName.charAt(0).toUpperCase()}</Avatar>
                     <div>
                       <Typography level="body-xs">{row.givenName}</Typography>
                       <Typography level="body-xs">{row.email}</Typography>
@@ -360,9 +391,9 @@ export default function UsersList() {
                 </td>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Link level="body-xs" component="button">
+                    {/* <Link level="body-xs" component="button">
                       Download
-                    </Link>
+                    </Link> */}
                     <RowMenu userId={row.id}  />
 
                   </Box>
@@ -393,7 +424,7 @@ export default function UsersList() {
           Previous
         </Button>
 
-        <Box sx={{ flex: 1 }} />
+        {/* <Box sx={{ flex: 1 }} />
         {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
           <IconButton
             key={page}
@@ -404,7 +435,7 @@ export default function UsersList() {
             {page}
           </IconButton>
         ))}
-        <Box sx={{ flex: 1 }} />
+        <Box sx={{ flex: 1 }} /> */}
 
         <Button
           size="sm"
