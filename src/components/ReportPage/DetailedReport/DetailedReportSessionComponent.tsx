@@ -16,8 +16,11 @@ import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import CalculateRoundedIcon from "@mui/icons-material/CalculateRounded";
 import SupervisedUserCircleRoundedIcon from "@mui/icons-material/SupervisedUserCircleRounded";
+import { SessionDetailsResponsesParent } from "../../../pages/ReportPage/types";
 
-const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
+const DetailedReportSessionComponent = ({
+  sessionData,
+}: SessionDetailsResponsesParent) => {
   const iconSize = "large";
 
   return (
@@ -51,7 +54,7 @@ const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>{name}</Typography>
+                  <Typography>{sessionData.data.sessionTitle}</Typography>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -68,7 +71,7 @@ const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>{name}</Typography>
+                  <Typography>{sessionData.data.scrumMasterName}</Typography>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -80,12 +83,12 @@ const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>Product Manager</Typography>
+                  <Typography>Project Manager</Typography>
                 </TableCell>
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>{name}</Typography>
+                  <Typography>{sessionData.data.projectManagerName}</Typography>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -102,7 +105,7 @@ const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>{name}</Typography>
+                  <Typography>{sessionData.data.productOwnerName}</Typography>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -119,7 +122,9 @@ const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>{name}</Typography>
+                  <Typography>
+                    {sessionData.data.createDateTime.slice(0, 10)}
+                  </Typography>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -136,7 +141,7 @@ const DetailedReportSessionComponent = ({ name = "MoneyHeist" }: any) => {
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
                 >
-                  <Typography>{name}</Typography>
+                  <Typography>{sessionData.data.estimationName}</Typography>
                 </TableCell>
               </TableRow>
             </TableBody>

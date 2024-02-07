@@ -1,11 +1,31 @@
-import React from "react";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import { Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { Grid } from "@mui/material";
+import { BarChartComponentResponsesParent } from "../../../pages/ReportPage/types";
 
-const DetailedReportChartComponent = () => {
+const DetailedReportChartComponent = ({
+  barChartData,
+}: BarChartComponentResponsesParent) => {
+  console.log("barchartdata", barChartData);
+  console.log("barchartdata.data", barChartData.data);
+
+  const calculationArray = Object.values(barChartData.data).map((item) => ({
+    storyPointResult: item.storyPointResult,
+    userStoryId: item.userStoryId,
+  }));
+
+  console.log("calculationArray");
+  console.log(calculationArray);
+  console.log(typeof calculationArray);
+
+  const storyPointArray = calculationArray.map((item) => item.storyPointResult);
+  const userStoryIdArray = calculationArray.map((item) => item.userStoryId);
+
+  console.log("Story Point Array:", storyPointArray);
+  console.log("User Story Id Array:", userStoryIdArray);
+
   return (
     <Card
       variant="outlined"
@@ -24,27 +44,17 @@ const DetailedReportChartComponent = () => {
                   xAxis={[
                     {
                       scaleType: "band",
-                      data: [
-                        "group A",
-                        "group B",
-                        "group C",
-                        "group D",
-                        "group E",
-                        "group F",
-                        "group G",
-                        "group H",
-                        "group I",
-                        "group J",
-                        "group 1",
-                        "group J2",
-                        "group J3",
-                        "group Js",
-                      ],
+                      data: userStoryIdArray,
+                      label: "User Story Id",
                     },
                   ]}
-                  series={[
-                    { data: [4, 6, 7, 9, 4, 3, 5, 1, 2, 4, 3, 5, 1, 2] },
+                  yAxis={[
+                    {
+                      scaleType: "linear",
+                      label: "Story Points",
+                    },
                   ]}
+                  series={[{ data: storyPointArray }]}
                   width={450}
                   height={350}
                 />

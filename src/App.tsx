@@ -34,8 +34,8 @@ function App() {
       <Route path='/registration' element={<RegistrationHandler/>}></Route>
      </Routes>
      </BrowserRouter> */}
-          {/* <ReportPage /> */}
-          {/* <TeamManagement /> */}
+          <ReportPage />
+
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
           <AppRouter />
