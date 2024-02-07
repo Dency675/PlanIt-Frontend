@@ -1,25 +1,28 @@
-// EstimationScaleDropdown.tsx
 import * as React from "react";
 import axios from "axios";
-// import Select from "@mui/material";
-import { Select, SelectChangeEvent } from "@mui/material";
+import { selectClasses } from "@mui/joy/Select";
+import { InputLabel, Select, SelectChangeEvent } from "@mui/material";
 import Option from "@mui/joy/Option";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import { MenuItem } from "@mui/material";
-import selectClasses from "@mui/joy/Select/selectClasses";
 
 interface EstimationData {
   id: number;
   estimationName: string;
 }
 
-const EstimationScaleDropdown: React.FC = () => {
+interface EstimationScaleDropdownProps {
+  setSelectedEstimationScale: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedEstimationScaleId: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const EstimationScaleDropdown: React.FC<EstimationScaleDropdownProps> = ({
+  setSelectedEstimationScale,
+  setSelectedEstimationScaleId,
+}) => {
   const [estimationsArray, setEstimationsArray] = React.useState<
     EstimationData[]
   >([]);
-
-  const [selectedEstimation, setSelectedEstimation] =
-    React.useState<String>("");
 
   React.useEffect(() => {
     const fetchEstimations = async () => {
@@ -35,11 +38,6 @@ const EstimationScaleDropdown: React.FC = () => {
         }));
 
         setEstimationsArray(estimationsArray);
-        // console.log(estimationsArray);
-
-        // estimationsArray.map((item, index) => {
-        //   console.log(estimationsArray[index].estimationName);
-        // });
       } catch (error) {
         console.error("Error fetching estimations:", error);
       }
@@ -47,30 +45,25 @@ const EstimationScaleDropdown: React.FC = () => {
 
     fetchEstimations();
   }, []);
-  // const handleEstimationChange = (
-  //   event: React.ChangeEvent<{ value: unknown }>
-  // ) => {
-  //   setSelectedEstimation(event.target.value as string);
-  // };
-  interface EstimationProps {
-    handleEstimationChange: (e: SelectChangeEvent<string>) => void;
-    selectedEstimation: string; // Assuming selectedEstimation is a string
-  }
   const HandleEstimationChange = (e: SelectChangeEvent<string>) => {
-    setSelectedEstimation(e.target.value);
-    // console.log(e.target.value);
+    // setSelectedEstimationScale(e.target.value as string);
+    const selectedEstimationName = e.target.value as string;
+    const selectedEstimation = estimationsArray.find(
+      (estimation) => estimation.estimationName === selectedEstimationName
+    );
+    if (selectedEstimation) {
+      setSelectedEstimationScale(selectedEstimation.estimationName);
+      setSelectedEstimationScaleId(selectedEstimation.id);
+    }
   };
-  React.useEffect(() => {
-    console.log("selectedEstimation");
-    console.log(selectedEstimation);
-  }, [selectedEstimation]);
 
   return (
     <Select
       placeholder="Select Scale"
-      value={selectedEstimation as string}
+      fullWidth
+      size="small"
       onChange={HandleEstimationChange}
-      // indicator={<KeyboardArrowDown />}
+      IconComponent={KeyboardArrowDown}
       sx={{
         [`& .${selectClasses.indicator}`]: {
           transition: "0.2s",
@@ -81,12 +74,7 @@ const EstimationScaleDropdown: React.FC = () => {
       }}
     >
       {estimationsArray.map((item, index) => (
-        <MenuItem
-          key={index}
-          value={item.estimationName}
-
-          // onChange={setSelectedEstimation(item.estimationName)}
-        >
+        <MenuItem key={index} value={item.estimationName}>
           {item.estimationName}
         </MenuItem>
       ))}

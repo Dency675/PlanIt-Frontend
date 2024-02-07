@@ -9,18 +9,22 @@ interface UserData {
   email: string;
 }
 
-interface UserData {
-  id: string;
-  employeeId: string;
-  name: string;
-  email: string;
+interface GuestInputProps {
+  setSelectedUserArrayWithId: React.Dispatch<
+    React.SetStateAction<
+      { sessionId: number | null; userId: string; roleId: number }[]
+    >
+  >;
 }
-const GuestInput: React.FC = () => {
+
+const GuestInput: React.FC<GuestInputProps> = ({
+  setSelectedUserArrayWithId,
+}) => {
   const [usersArray, setUsersArray] = React.useState<UserData[]>([]);
   const [selectedUserArray, setSelectedUserArray] = React.useState<UserData[]>(
     []
   );
-  const [search, setSearch] = React.useState<string>("");
+  // const [search, setSearch] = React.useState<string>("");
   const [inputValue, setInputValue] = React.useState("");
   const [userList, setUserList] = React.useState<
     { email: string; givenName: string }[]
@@ -56,7 +60,7 @@ const GuestInput: React.FC = () => {
     };
 
     fetchUsers();
-  }, [inputValue]);
+  }, [inputValue, userList]);
 
   React.useEffect(() => {
     console.log("userList");
@@ -68,8 +72,15 @@ const GuestInput: React.FC = () => {
     console.log(selectedUserArray);
     const updatedUserList = selectedUserArray.map((user) => ({
       email: user.email,
-      givenName: user.name.split(" ")[0], // Assuming the first word is the given name
+      givenName: user.name.split(" ")[0],
     }));
+    const updatedUserListWithId = selectedUserArray.map((user) => ({
+      sessionId: null,
+      userId: user.id,
+      roleId: 4,
+    }));
+
+    setSelectedUserArrayWithId(updatedUserListWithId);
     setUserList(updatedUserList);
   }, [selectedUserArray]);
 

@@ -16,7 +16,16 @@ const VisuallyHiddenInput = styled("input")`
   width: 1px;
 `;
 
-const FileSelector: React.FC = () => {
+const FileSelector: React.FC<{ onFileSelect: (file: File) => void }> = ({
+  onFileSelect,
+}) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    if (selectedFile) {
+      onFileSelect(selectedFile);
+    }
+  };
+
   return (
     <Button
       component="label"
@@ -43,7 +52,7 @@ const FileSelector: React.FC = () => {
       }
     >
       Upload a file
-      <VisuallyHiddenInput type="file" />
+      <VisuallyHiddenInput type="file" onChange={handleFileSelect} />
     </Button>
   );
 };
