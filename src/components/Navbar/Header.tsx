@@ -70,6 +70,7 @@ export default function Header() {
   const logOut = () => {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
+    localStorage.removeItem("userId");
     instance.logoutPopup({
       postLogoutRedirectUri: "/",
       mainWindowRedirectUri: "/",

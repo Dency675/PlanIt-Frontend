@@ -37,6 +37,7 @@ const AppRoutes = () => {
               </ProtectedRoute>
             }
           >
+            <Route path="home" element={<TeamManagement />} />
             <Route path="settings" element={<TeamSettings />} />
             <Route path="vote" element={<VotingRoom />} />
             <Route path="report" element={<ReportPage />} />
@@ -56,10 +57,12 @@ const AppRoutes = () => {
             path="/scrum_master"
             element={
               <ProtectedRoute allowedRoles={["scrum master"]}>
-                <TeamManagement />
+                <RoomCreation />
               </ProtectedRoute>
             }
           >
+            <Route path="home" element={<TeamManagement />} />
+            <Route path="settings" element={<TeamSettings />} />
             <Route path="room" element={<RoomCreation />} />
             <Route path="vote" element={<VotingRoom />} />
             <Route path="report" element={<ReportPage />} />
