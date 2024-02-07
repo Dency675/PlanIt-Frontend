@@ -1,10 +1,25 @@
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 import DetailedReportChartComponent from "./DetailedReportChartComponent";
 import DetailedReportSessionComponent from "./DetailedReportSessionComponent";
 import DetailedReportParticipantListComponent from "./DetailedReportParticipantListComponent";
+import {
+  BarChartComponentResponsesData,
+  ParticipantDataListResponsesData,
+  SessionDetailsResponsesData,
+} from "../../../pages/ReportPage/types";
 
-const DetailedReportComponent = () => {
+interface DetailedReportComponentProps {
+  sessionData: SessionDetailsResponsesData;
+  barChartData: BarChartComponentResponsesData;
+  participantData: ParticipantDataListResponsesData;
+}
+
+const DetailedReportComponent: React.FC<DetailedReportComponentProps> = ({
+  sessionData,
+  barChartData,
+  participantData,
+}) => {
   return (
     <Grid
       container
@@ -16,13 +31,15 @@ const DetailedReportComponent = () => {
       }}
     >
       <Grid item xs={12} sm={4} md={4.5}>
-        <DetailedReportChartComponent />
+        <DetailedReportChartComponent barChartData={barChartData} />
       </Grid>
       <Grid item xs={12} sm={4} md={4}>
-        <DetailedReportSessionComponent />
+        <DetailedReportSessionComponent sessionData={sessionData} />
       </Grid>
       <Grid item xs={12} sm={4} md={3}>
-        <DetailedReportParticipantListComponent />
+        <DetailedReportParticipantListComponent
+          participantData={participantData}
+        />
       </Grid>
     </Grid>
   );
