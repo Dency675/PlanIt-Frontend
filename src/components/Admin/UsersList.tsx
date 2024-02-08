@@ -36,6 +36,7 @@ import { UserList } from '../../pages/Admin/types/UserList';
 import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
 import Snackbar from '@mui/joy/Snackbar';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
+import { AspectRatio, Card, Skeleton } from '@mui/joy';
 
 
 
@@ -83,21 +84,39 @@ export default function UsersList() {
   // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const fetchedData = await fetchUsersData();
-        setData(fetchedData);
+        const fetchedData = await fetchUsersData(page)
+        if (fetchedData.length === 0) {
+          setHasMoreData(false); // No more data available
+        } else {
+          setData(fetchedData);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
+      }
+      finally {
+        setLoading(false)
       }
     };
     
     fetchData();
-  }, []);
+  }, [page]);
+
+  const handleNextPage = () => {
+    setPage(page + 7); 
+  };
+
+  const handlePrevPage = () => {
+    setPage(prevPage => prevPage - 7); 
+  };
 
 
 
@@ -113,17 +132,11 @@ export default function UsersList() {
       // setData(data.filter(user => user.id !== userId));
       setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
       console.log("Member:", data);
-
-   
-
-
         
       } catch (error) {
         console.error('Error deleting user :', error);
       }
     };
-
-    
 
   return (
     <Dropdown>
@@ -159,41 +172,21 @@ export default function UsersList() {
       >
         Account has been deactivated
       </Snackbar>
-
-
-
-     
     </Dropdown>
-  
-
-  
   );
-  
 }
-
-
 
   const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchQuery(e.target.value);
   };
-  // const handleDeleteUser = (deletedUserId: string) => {
-  //   setData(data.filter(user => user.id !== deletedUserId));
-  // };
-  // const handleDeleteUser = (deletedUserId: string) => {
-  //   // Filter the data to remove the user with the deletedUserId
-  //   const updatedData = data.filter(user => user.id !== deletedUserId);
-  //   setData([...updatedData]);
-  // };
 
   const filteredRows = data.filter((row) =>
     Object.values(row).some((value) =>
       value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-  // const renderFilters = () => (
-  
-  // );
   return (
+    
     <React.Fragment>
 
       <Sheet
@@ -210,29 +203,6 @@ export default function UsersList() {
           startDecorator={<SearchIcon />}
           sx={{ flexGrow: 1 }}
         />
-        {/* <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FilterAltIcon />
-        </IconButton> */}
-        {/* <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal> */}
       </Sheet>
       <Box  
         className="SearchAndFilters-tabletUp"
@@ -326,13 +296,14 @@ export default function UsersList() {
                   User Id
                 </Link>
               </th>
-              <th style={{ width: 200, padding: '12px 10px' }}>Name</th>
+              <th style={{ width: 230, padding: '12px 10px' }}>Name</th>
               <th style={{ width: 160, padding: '12px 10px' }}>Status</th>
               <th style={{ width: 160, padding: '12px 10px' }}>Department</th>
               <th style={{ width: 140, padding: '12px 10px' }}>Set Role </th>
             </tr>
           </thead>
           <tbody>
+            
             {stableSort(filteredRows, getComparator(order, 'id')).map((row) => (
               
               //  {filteredRows.map((row) => (
@@ -403,6 +374,7 @@ export default function UsersList() {
               </tr>
             ))}
           </tbody>
+    
         </Table>
       </Sheet>
       <Box
@@ -422,32 +394,23 @@ export default function UsersList() {
           variant="outlined"
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
+          onClick={handlePrevPage} disabled={page === 0}
         >
           Previous
         </Button>
-
-        {/* <Box sx={{ flex: 1 }} />
-        {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? 'outlined' : 'plain'}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))}
-        <Box sx={{ flex: 1 }} /> */}
-
+         {hasMoreData && 
         <Button
           size="sm"
           variant="outlined"
           color="neutral"
           endDecorator={<KeyboardArrowRightIcon />}
+          onClick={handleNextPage}
+          disabled={!hasMoreData}
         >
           Next
-        </Button>
+        </Button>}
       </Box>
     </React.Fragment>
+    
   );
 }
