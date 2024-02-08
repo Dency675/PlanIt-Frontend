@@ -4,7 +4,6 @@ import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Stack from "@mui/joy/Stack";
 import Avatar from "@mui/joy/Avatar";
-import Button from "@mui/joy/Button";
 import Tooltip from "@mui/joy/Tooltip";
 import Dropdown from "@mui/joy/Dropdown";
 import Menu from "@mui/joy/Menu";
@@ -13,14 +12,12 @@ import MenuItem from "@mui/joy/MenuItem";
 import ListDivider from "@mui/joy/ListDivider";
 import Drawer from "@mui/joy/Drawer";
 import ModalClose from "@mui/joy/ModalClose";
-import DialogTitle from "@mui/joy/DialogTitle";
 
-import LanguageRoundedIcon from "@mui/icons-material/LanguageRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SideNav from "./SideNav";
-import { CssVarsProvider, useColorScheme } from "@mui/joy";
+import { CssVarsProvider } from "@mui/joy";
 
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
@@ -28,6 +25,9 @@ import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import { useMsal } from "@azure/msal-react";
+
+import LightLogo from "../../assets/images/logo_Pi.png";
+import DarkLogo from "../../assets/images/logo_white.png";
 
 function ColorSchemeToggle() {
   const [mounted, setMounted] = React.useState(false);
@@ -70,6 +70,7 @@ export default function Header() {
   const logOut = () => {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
+    localStorage.removeItem("userId");
     instance.logoutPopup({
       postLogoutRedirectUri: "/",
       mainWindowRedirectUri: "/",
@@ -83,8 +84,9 @@ export default function Header() {
         justifyContent: "space-between",
         borderBottom: "1px solid",
         borderColor: "divider",
-        m: 2,
-        padding: 2,
+        m: 1,
+        mb: 2,
+        padding: 1,
       }}
     >
       <CssVarsProvider>
@@ -95,28 +97,17 @@ export default function Header() {
           spacing={1}
           sx={{ display: { xs: "none", md: "flex" } }}
         >
-          <IconButton
-            size="md"
-            variant="outlined"
-            color="neutral"
-            sx={{
-              display: { xs: "none", md: "inline-flex" },
-              borderRadius: "50%",
-            }}
-          >
-            <LanguageRoundedIcon />
-          </IconButton>
-
-          <Button
-            variant="plain"
-            color="neutral"
-            component="a"
-            href="/joy-ui/getting-started/templates/email/"
-            size="sm"
-            sx={{ alignSelf: "center" }}
-          >
-            PlanIT
-          </Button>
+          <Box>
+            <img
+              src={
+                localStorage.getItem("joy-mode") === "dark"
+                  ? DarkLogo
+                  : LightLogo
+              }
+              alt=""
+              style={{ width: "100px", height: "45px" }}
+            />
+          </Box>
         </Stack>
         <Box sx={{ display: { xs: "inline-flex", md: "none" } }}>
           <IconButton
@@ -132,7 +123,17 @@ export default function Header() {
             onClose={() => setOpen(false)}
           >
             <ModalClose />
-            <DialogTitle>PlanIt</DialogTitle>
+            <Box sx={{ px: 1, pt: 1 }}>
+              <img
+                src={
+                  localStorage.getItem("joy-mode") === "dark"
+                    ? DarkLogo
+                    : LightLogo
+                }
+                alt=""
+                style={{ width: "100px", height: "45px" }}
+              />
+            </Box>
             <SideNav />
 
             <Box sx={{ px: 1 }}>{/* <TeamNav /> */}</Box>
