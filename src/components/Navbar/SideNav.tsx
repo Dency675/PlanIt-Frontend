@@ -10,6 +10,7 @@ import TeamName from "../TeamSettings/TeamName";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Card, ListDivider, Divider } from "@mui/joy";
 
 interface TeamLists {
   teamInfoList: {
@@ -70,6 +71,7 @@ export default function SideNav() {
               <ListItem>
                 <ListItemButton>{teamList.teamName}</ListItemButton>
               </ListItem>
+              <ListDivider />
             </React.Fragment>
           ))}
         </List>
