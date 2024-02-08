@@ -17,33 +17,14 @@ import { CardContent } from "@mui/joy";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import fetchOngoingMeeting from "./api/fetchOngoingMeetings";
 // import { Link } from "react-router-dom";
 
 interface OngoingMeetingProps {
-  sessionTitle: string;
-  createDateTime: string;
+  ongoingMeetings: { sessionTitle: string; createDateTime: string }[];
 }
 
-const OngoingMeetings = () => {
-  const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
-    []
-  );
-
-  useEffect(() => {
-    const fetchOngoingMeeting = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/getAllOngoingMeetings?teamId=1`
-        );
-        const ongoingMeetingData = response.data;
-        setOngoingMeetings(ongoingMeetingData);
-      } catch (error) {
-        console.error("Error fetching meeting:", error);
-      }
-    };
-    fetchOngoingMeeting();
-  }, []);
-
+const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   return (
     <Grid container>
       <Grid xs={12}>

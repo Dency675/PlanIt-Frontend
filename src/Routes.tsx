@@ -57,7 +57,7 @@ const AppRoutes = () => {
             path="/scrum_master"
             element={
               <ProtectedRoute allowedRoles={["scrum master"]}>
-                <RoomCreation />
+                <TeamManagement />
               </ProtectedRoute>
             }
           >

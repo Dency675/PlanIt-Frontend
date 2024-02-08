@@ -1,6 +1,7 @@
 import * as React from "react";
 import Autocomplete from "@mui/joy/Autocomplete";
 import axios from "axios";
+import { SearchIcon } from "lucide-react";
 
 interface UserData {
   id: string;
