@@ -3,7 +3,7 @@ import "./App.css";
 import ReportPage from "./pages/ReportPage/ReportPage";
 import TeamSettings from "./pages/TeamSettings/TeamSettings";
 import Header from "./components/Navbar/Header";
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import RoomCreation from "./pages/RoomCreation/RoomCreation";
 import { Box } from "@mui/joy";
@@ -27,6 +27,15 @@ function App() {
       <JoyCssVarsProvider>
         <CssBaseline enableColorScheme />
         <Box>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<TeamSettings />} />
+              {/* <Route path="/report" element={<ReportPage />} /> */}
+              <Route path="/report/:sessionId" element={<ReportPage />} />
+              <Route path="/room/:sessionId" element={<VotingRoom />} />
+            </Routes>
+          </BrowserRouter>
+
           {/* <Login /> */}
           {/* <BrowserRouter>
      <Routes>
@@ -36,6 +45,8 @@ function App() {
      </BrowserRouter> */}
           <ReportPage />
 
+          {/* <ReportPage /> */}
+          {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
           <AppRouter />

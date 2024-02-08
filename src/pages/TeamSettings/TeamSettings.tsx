@@ -10,6 +10,9 @@ import { Drawer, useMediaQuery } from "@mui/material";
 const TeamSettings = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [selectedTeamId, setSelectedTeamId] = React.useState<number | null>(
+    null
+  );
 
   return (
     <>

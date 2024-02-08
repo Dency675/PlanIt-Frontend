@@ -17,14 +17,17 @@ import { CardContent } from "@mui/joy";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 // import { Link } from "react-router-dom";
 
 interface OngoingMeetingProps {
+  id: number;
   sessionTitle: string;
   createDateTime: string;
 }
 
 const OngoingMeetings = () => {
+  const navigate = useNavigate();
   const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
@@ -37,6 +40,7 @@ const OngoingMeetings = () => {
         );
         const ongoingMeetingData = response.data;
         setOngoingMeetings(ongoingMeetingData);
+        console.log(ongoingMeetingData);
       } catch (error) {
         console.error("Error fetching meeting:", error);
       }
@@ -89,7 +93,12 @@ const OngoingMeetings = () => {
                     borderColor: "divider",
                   }}
                 >
-                  JOIN
+                  <ListItemButton
+                    onClick={() => navigate(`/room/${ongoingMeeting.id}`)}
+                  >
+                    Join
+                  </ListItemButton>
+                  {/* JOIN */}
                   {/* <Link to="/">JOIN</Link> */}
                 </CardOverflow>
               </Card>
