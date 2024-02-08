@@ -19,10 +19,7 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import TeamManagement from "./pages/TeamManagement/TeamManagement";
 import AppRouter from "./Routes";
 import Admin from "./pages/Admin/Admin";
-<<<<<<< HEAD
 import Users from "./pages/Admin/Admin";
-=======
->>>>>>> d978ffc (added basic routing)
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const materialTheme = materialExtendTheme();
@@ -31,7 +28,6 @@ function App() {
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
         <CssBaseline enableColorScheme />
-<<<<<<< HEAD
         <Box>
           {/* <BrowserRouter>
      <Routes>
@@ -45,19 +41,6 @@ function App() {
           {/* <RoomCreation /> */}
           <AppRouter />
         </Box>
-=======
-        <Router>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/report" element={<ReportPage />} />
-            <Route path="/team-management" element={<TeamManagement />} />
-            <Route path="/team-settings" element={<TeamSettings />} />
-            <Route path="/room-creation" element={<RoomCreation />} />
-            <Route path="/voting-room" element={<VotingRoom />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
-        </Router>
->>>>>>> d978ffc (added basic routing)
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
   );
