@@ -17,31 +17,27 @@ import { File } from "lucide-react";
 import { width } from "@mui/system";
 import { Box } from "@mui/joy";
 import CalculationMethodsDropdown from "./CalculationMethodsDropdown";
+import fetchMembers from "./api/fetchTeamMembers";
+import addSessionParticipants from "./api/addSessionParticipants";
 
 const CreateRoomForm: React.FC = () => {
   const [userFile, setUserFile] = useState<File | null>(null);
 
-  const [userId, setUserId] = useState<string>("");
+  const [sessionId, setSessionId] = useState<number>(0);
+  const teamId: string = "1";
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
     setUserFile(file);
   };
 
+  const [teamMember, setTeamMember] = useState<
+    { userId: string; roleId: number }[]
+  >([{ userId: "", roleId: 0 }]);
+
   const storedUserId = localStorage.getItem("userId");
   console.log(" from local storage storedUserId");
   console.log(storedUserId);
-  // setUserId(storedUserId as string);
-
-  // React.useEffect(() => {
-  //   console.log("userId from local storage");
-  //   console.log(userId);
-  // }, [userId]);
-
-  // React.useEffect(() => {
-  //   console.log("userFile");
-  //   console.log(userFile);
-  // }, [userFile]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -51,7 +47,7 @@ const CreateRoomForm: React.FC = () => {
     formData.append("sessionTitle", roomName);
     formData.append("createDateTime", new Date().toLocaleDateString());
     formData.append("timer", voteTime);
-    formData.append("teamId", "1");
+    formData.append("teamId", teamId);
     formData.append("scrumMasterId", storedUserId as string);
     formData.append("estimationId", selectedEstimationScaleId.toString());
     formData.append("calculationId", selectedCalculationMethodId.toString());
@@ -72,10 +68,74 @@ const CreateRoomForm: React.FC = () => {
       );
       console.log("Response:", response.data);
       console.log(response.data.data.id);
+      setSessionId(response.data.data.id as number);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  React.useEffect(() => {
+    const combinedArray = [
+      ...teamMember,
+      ...selectedUserArrayWithId,
+      { userId: storedUserId as string, roleId: 6 },
+    ];
+
+    console.log("combinedArray");
+    console.log(combinedArray);
+
+    addSessionParticipants({
+      sessionId: sessionId,
+      participants: combinedArray,
+    })
+      .then((response: any) => {
+        console.log("Response from addSessionParticipants:", response);
+      })
+      .catch((error) => {
+        console.error(
+          "Error occurred while adding session participants:",
+          error
+        );
+      });
+  }, [sessionId]);
+
+  React.useEffect(() => {
+    console.log("sessionId ...");
+    console.log(sessionId);
+  }, [sessionId]);
+
+  React.useEffect(() => {
+    fetchMembers(teamId)
+      .then((response) => {
+        console.log("Response from fetchMembers:", response);
+        setTeamMember(response);
+      })
+      .catch((error) => {
+        console.error(
+          "Error occurred while adding session participants:",
+          error
+        );
+      });
+
+    // addSessionParticipants({
+    //   sessionId: 1,
+    //   participants: teamMember,
+    // })
+    //   .then((response: any) => {
+    //     console.log("Response from addSessionParticipants:", response);
+    //   })
+    //   .catch((error) => {
+    //     console.error(
+    //       "Error occurred while adding session participants:",
+    //       error
+    //     );
+    //   });
+  }, []);
+
+  React.useEffect(() => {
+    console.log("teamMember ");
+    console.log(teamMember);
+  }, [teamMember]);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -94,23 +154,10 @@ const CreateRoomForm: React.FC = () => {
 
   const [selectedUserArrayWithId, setSelectedUserArrayWithId] = React.useState<
     {
-      sessionId: number | null;
       userId: string;
       roleId: number;
     }[]
   >([]);
-
-  // React.useEffect(() => {
-  //   console.log(" selectedEstimation from room creation");
-  //   console.log(selectedEstimationScale);
-  //   console.log(selectedEstimationScaleId);
-  // }, [selectedEstimationScale]);
-
-  // React.useEffect(() => {
-  //   console.log(" selectedCalculationMethod from room creation");
-  //   console.log(selectedCalculationMethod);
-  //   console.log(selectedCalculationMethodId);
-  // }, [selectedCalculationMethod]);
 
   React.useEffect(() => {
     console.log(" timer from room creation");
