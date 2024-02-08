@@ -34,6 +34,8 @@ import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
 import GroupIcon from '@mui/icons-material/Group';
 import Groups2Icon from '@mui/icons-material/Groups2';
+import UsersList from './UsersList';
+import TeamsList from './TeamsList';
 
 function Toggler({
   defaultExpanded = false,
@@ -66,12 +68,18 @@ function Toggler({
     </React.Fragment>
   );
 }
+interface SidebarProps {
+  SendValueToParent: (tabName: any) => void;
+  // Add other props here if needed
+}
 
-export default function Sidebar() {
+export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
   const [selectedTab, setSelectedTab] = useState(null);
+//  console.log(selectedTab)
 
   const handleTabClick = (tabName:any) => {
     setSelectedTab(tabName);
+    SendValueToParent(tabName);
   };
 
   return (
@@ -169,16 +177,16 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
 
-          <ListItem>
+          {/* <ListItem>
             <ListItemButton selected={selectedTab === 'orders'} onClick={() => handleTabClick('orders')}>
               <ShoppingCartRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Orders</Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
-          <ListItem nested>
+          {/* <ListItem nested>
             <Toggler
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
@@ -207,7 +215,10 @@ export default function Sidebar() {
                 </ListItem>
               </List>
             </Toggler>
-          </ListItem>
+          </ListItem> */}
+          {/* {selectedTab === 'users' && <UsersList/> }
+      {selectedTab === 'teams' && <TeamsList />} */}
+      {/* {selectedTab === 'orders' && <OrdersTabContent />} */}
         </List>
       </Box>
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
@@ -227,3 +238,7 @@ export default function Sidebar() {
     </Sheet>
   );
 }
+function SendValueToParent(tabName: any) {
+  throw new Error('Function not implemented.');
+}
+

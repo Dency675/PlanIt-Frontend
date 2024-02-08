@@ -11,18 +11,28 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-import Sidebar from '../../components/Admin/Sidebar';
-import OrderTable from '../../components/Admin/OrderTable';
-import OrderList from '../../components/Admin/OrderList';
+
+
 import Header from '../../components/Admin/Header';
+import UsersList from '../../components/Admin/UsersList';
+import TeamsList from '../../components/Admin/TeamsList';
+import { Sidebar } from '../../components/Admin/Sidebar';
+
+
 
 export default function JoyOrderDashboardTemplate() {
+  const [selectedTab, setSelectedTab] = React.useState(null); // State for selected tab
+
+  console.log(selectedTab)
+  const handleValueFromChild = (tabName:any) => {
+    setSelectedTab(tabName);
+  };
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
         <Header />
-        <Sidebar />
+        <Sidebar SendValueToParent={handleValueFromChild}/>
         <Box
           component="main"
           className="MainContent"
@@ -67,7 +77,7 @@ export default function JoyOrderDashboardTemplate() {
                 Dashboard
               </Link> */}
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Users
+              {selectedTab === 'teams' ? 'Teams' : 'Users'} {/* Conditionally render breadcrumb label */}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -83,7 +93,7 @@ export default function JoyOrderDashboardTemplate() {
             }}
           >
             <Typography level="h2" component="h1">
-              Users
+            {selectedTab === 'teams' ? 'Teams' : 'Users'} {/* Conditionally render breadcrumb label */}
             </Typography>
             {/* <Button
               color="primary"
@@ -93,9 +103,12 @@ export default function JoyOrderDashboardTemplate() {
               Download PDF
             </Button> */}
           </Box>
-          <OrderTable />
-          {/* <OrderList /> */}
+          {/* <UsersList/> */}
+          {selectedTab === 'teams' ? <TeamsList /> : <UsersList />} 
+        
+          
         </Box>
+        
       </Box>
     </CssVarsProvider>
   );

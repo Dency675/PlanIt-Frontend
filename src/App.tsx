@@ -8,7 +8,7 @@ import Login from "./pages/Login/Login";
 import RoomCreation from "./pages/RoomCreation/RoomCreation";
 import { Box } from "@mui/joy";
 import VotingRoom from "./pages/VotingRoom/VotingRoom";
-
+ 
 import {
   experimental_extendTheme as materialExtendTheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
@@ -19,7 +19,8 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import TeamManagement from "./pages/TeamManagement/TeamManagement";
 import AppRouter from "./Routes";
 import Admin from "./pages/Admin/Admin";
-
+import Users from './pages/Admin/Admin'
+ 
 const materialTheme = materialExtendTheme();
 function App() {
   return (
@@ -44,5 +45,6 @@ function App() {
     </MaterialCssVarsProvider>
   );
 }
-
+ 
 export default App;
+ 
