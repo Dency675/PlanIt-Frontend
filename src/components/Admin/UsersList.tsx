@@ -83,7 +83,8 @@ export default function UsersList() {
   // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [open, setOpen] = React.useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,6 +108,7 @@ export default function UsersList() {
         await deleteUser(userId);
         console.log(`User with ID ${userId} deleted successfully.`);
         // setOpen(true)
+        setOpenSnackbar(true);
      
       // setData(data.filter(user => user.id !== userId));
       setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
@@ -137,16 +139,16 @@ export default function UsersList() {
         <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
       </Menu>
      
-      {/* <Snackbar
+      <Snackbar
         variant="soft"
         color="success"
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
         endDecorator={
           <Button
-            onClick={() => setOpen(false)}
+            onClick={() => setOpenSnackbar(false)}
             size="sm"
             variant="soft"
             color="success"
@@ -155,8 +157,8 @@ export default function UsersList() {
           </Button>
         }
       >
-        Your message was sent successfully.
-      </Snackbar> */}
+        Account has been deactivated
+      </Snackbar>
 
 
 
@@ -208,15 +210,15 @@ export default function UsersList() {
           startDecorator={<SearchIcon />}
           sx={{ flexGrow: 1 }}
         />
-        <IconButton
+        {/* <IconButton
           size="sm"
           variant="outlined"
           color="neutral"
           onClick={() => setOpen(true)}
         >
           <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
+        </IconButton> */}
+        {/* <Modal open={open} onClose={() => setOpen(false)}>
           <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
             <ModalClose />
             <Typography id="filter-modal" level="h2">
@@ -224,13 +226,13 @@ export default function UsersList() {
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* {renderFilters()} */}
+              {renderFilters()}
               <Button color="primary" onClick={() => setOpen(false)}>
                 Submit
               </Button>
             </Sheet>
           </ModalDialog>
-        </Modal>
+        </Modal> */}
       </Sheet>
       <Box  
         className="SearchAndFilters-tabletUp"
