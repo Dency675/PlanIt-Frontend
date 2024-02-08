@@ -250,13 +250,13 @@ export default function UsersList() {
           <Input  value={searchQuery}
         onChange={handleSearch} size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
-        <Button
+        {/* <Button
               color="primary"
               startDecorator={<DownloadRoundedIcon />}
               size="sm"
             >
               Download PDF
-            </Button>
+            </Button> */}
         {/* {renderFilters()} */}
       </Box>
       <Sheet

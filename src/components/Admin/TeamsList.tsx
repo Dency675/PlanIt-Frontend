@@ -221,13 +221,13 @@ export default function TeamsList() {
           <Input  value={searchQuery}
         onChange={handleSearch} size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
-        <Button
+        {/* <Button
               color="primary"
               startDecorator={<DownloadRoundedIcon />}
               size="sm"
             >
               Download PDF
-            </Button>
+            </Button> */}
         {/* {renderFilters()} */}
       </Box>
       <Sheet
@@ -354,15 +354,15 @@ export default function TeamsList() {
                 <td>
                 <Typography level="body-xs">{row.createdAt}</Typography>
                 </td>
-                <td>
+                {/* <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <Link level="body-xs" component="button">
                       Download
                     </Link>
-                    {/* <RowMenu userId={row.id}  /> */}
+                    <RowMenu userId={row.id}  />
 
                   </Box>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
@@ -389,7 +389,7 @@ export default function TeamsList() {
           Previous
         </Button>
 
-        <Box sx={{ flex: 1 }} />
+        {/* <Box sx={{ flex: 1 }} />
         {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
           <IconButton
             key={page}
@@ -400,7 +400,7 @@ export default function TeamsList() {
             {page}
           </IconButton>
         ))}
-        <Box sx={{ flex: 1 }} />
+        <Box sx={{ flex: 1 }} /> */}
 
         <Button
           size="sm"

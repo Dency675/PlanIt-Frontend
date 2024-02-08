@@ -177,16 +177,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem>
+          {/* <ListItem>
             <ListItemButton selected={selectedTab === 'orders'} onClick={() => handleTabClick('orders')}>
               <ShoppingCartRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Orders</Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
-          <ListItem nested>
+          {/* <ListItem nested>
             <Toggler
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
@@ -215,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
                 </ListItem>
               </List>
             </Toggler>
-          </ListItem>
+          </ListItem> */}
           {/* {selectedTab === 'users' && <UsersList/> }
       {selectedTab === 'teams' && <TeamsList />} */}
       {/* {selectedTab === 'orders' && <OrdersTabContent />} */}
