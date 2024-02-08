@@ -37,6 +37,7 @@ const GuestInput: React.FC<GuestInputProps> = ({
           `http://localhost:3001/searchUserFilter`,
           {
             userList: userList,
+            teamId: 1,
           },
           {
             params: {
