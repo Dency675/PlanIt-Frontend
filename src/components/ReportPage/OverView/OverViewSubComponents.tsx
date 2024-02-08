@@ -14,9 +14,9 @@ const OverViewSubComponents = ({ title, description, logo }: any) => {
         transition:
           "background-color 0.3s, color 0.3s, border-color 0.3s, border-width 0.3s",
         "&:hover": {
-          backgroundColor: "#0080ff",
+          backgroundColor: "#979999",
           color: "#ffffff",
-          borderColor: "#000000",
+          borderColor: "#ffffff",
           borderWidth: "1px",
         },
         borderColor: isHovered ? "#00cc00" : "#0080ff",

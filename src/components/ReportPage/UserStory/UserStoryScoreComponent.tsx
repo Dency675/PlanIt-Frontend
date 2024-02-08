@@ -27,7 +27,7 @@ const UserStoryScoreComponent = () => {
         {/* <CardHeader title="Another Card" />
     <CardContent>Score is 50</CardContent> */}
         <Clock size={85} />
-        <CardHeader title="SCORE : 2" />
+        <CardHeader title="Story Point : 2" />
       </Box>
     </Card>
   );

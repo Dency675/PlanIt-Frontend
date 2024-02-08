@@ -4,7 +4,7 @@ import UserStoryParicipantComponent from "./UserStoryParicipantComponent";
 import UserStoryScoreComponent from "./UserStoryScoreComponent";
 import { CardHeader, Grid } from "@mui/material";
 
-const UserStoryComponent = () => {
+const UserStoryComponent = ({ index }: { index: number }) => {
   return (
     <Grid
       style={{
@@ -27,13 +27,13 @@ const UserStoryComponent = () => {
           border: "0.5px solid #9DBEFF",
         }}
       >
-        <CardHeader title="Story 1" />
+        <CardHeader title={`Story ${index}`} />
         <Grid container spacing={1}>
           <Grid item xs={12} textAlign={"center"}>
             <Typography>
-              Lorem ipsum is placeholder text commonly used in the graphic,
-              print, and publishing industries for previewing layouts and visual
-              mockups.
+              As a registered user, I want to be able to reset my password
+              easily so that I can regain access to my account in case I forget
+              my password
             </Typography>
           </Grid>
           <Grid
