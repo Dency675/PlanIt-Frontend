@@ -11,9 +11,7 @@ interface UserData {
 
 interface GuestInputProps {
   setSelectedUserArrayWithId: React.Dispatch<
-    React.SetStateAction<
-      { sessionId: number | null; userId: string; roleId: number }[]
-    >
+    React.SetStateAction<{ userId: string; roleId: number }[]>
   >;
 }
 
@@ -37,6 +35,7 @@ const GuestInput: React.FC<GuestInputProps> = ({
           `http://localhost:3001/searchUserFilter`,
           {
             userList: userList,
+            teamId: 1,
           },
           {
             params: {
@@ -75,7 +74,6 @@ const GuestInput: React.FC<GuestInputProps> = ({
       givenName: user.name.split(" ")[0],
     }));
     const updatedUserListWithId = selectedUserArray.map((user) => ({
-      sessionId: null,
       userId: user.id,
       roleId: 4,
     }));
