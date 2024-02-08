@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SideNav from "../../components/Navbar/SideNav";
 import { Box, Card, Divider, Grid, useTheme } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
@@ -6,10 +6,33 @@ import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import TeamList from "../../components/TeamSettings/TeamList";
 import Header from "../../components/Navbar/Header";
 import { Drawer, useMediaQuery } from "@mui/material";
+import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingMeetings";
 
 const TeamSettings = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  interface OngoingMeetingProps {
+    sessionTitle: string;
+    createDateTime: string;
+  }
+  const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
+    []
+  );
+
+  useEffect(() => {
+    fetchOngoingMeeting()
+      .then((response: any) => {
+        console.log("Response from addSessionParticipants:", response);
+        setOngoingMeetings(response);
+      })
+      .catch((error) => {
+        console.error(
+          "Error occurred while adding session participants:",
+          error
+        );
+      });
+  }, []);
 
   return (
     <>
@@ -40,7 +63,7 @@ const TeamSettings = () => {
             <Card sx={{ m: 3, display: "flex" }}>
               <TeamList />
             </Card>
-            <OngoingMeetings />
+            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities />
           </Box>
         </Grid>
