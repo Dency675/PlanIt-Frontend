@@ -9,16 +9,16 @@ import TableRow from "@mui/material/TableRow";
 
 const UserStoryParicipantComponent = () => {
   const participants = [
-    { name: "Participant 1", score: 95 },
-    { name: "Participant 2", score: 88 },
-    { name: "Participant 3", score: 72 },
-    { name: "Participant 4", score: 87 },
-    { name: "Participant 5", score: 94 },
-    { name: "Participant 6", score: 78 },
-    { name: "Participant 7", score: 91 },
-    { name: "Participant 8", score: 85 },
-    { name: "Participant 9", score: 79 },
-    { name: "Participant 10", score: 93 },
+    { name: "Participant 1", score: 3 },
+    { name: "Participant 2", score: 1 },
+    { name: "Participant 3", score: 4 },
+    { name: "Participant 4", score: 2 },
+    { name: "Participant 5", score: 1 },
+    { name: "Participant 6", score: 3 },
+    { name: "Participant 7", score: 4 },
+    { name: "Participant 8", score: 3 },
+    { name: "Participant 9", score: 2 },
+    { name: "Participant 10", score: 2 },
   ];
   return (
     <Card
@@ -49,7 +49,7 @@ const UserStoryParicipantComponent = () => {
                   zIndex: 1,
                 }}
               >
-                Score
+                Story point
               </TableCell>
             </TableRow>
           </TableHead>

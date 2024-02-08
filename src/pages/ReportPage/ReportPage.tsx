@@ -1,5 +1,5 @@
 import { Typography } from "@mui/joy";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import OverViewComponents from "../../components/ReportPage/OverView/OverViewComponents";
 import UserStoryComponent from "../../components/ReportPage/UserStory/UserStoryComponent";
 import DetailedReportComponent from "../../components/ReportPage/DetailedReport/DetailedReportComponent";
@@ -24,6 +24,7 @@ const ReportPage = () => {
       incompleteUserStoryCount: 0,
       participantCount: 0,
     });
+
   const [sessionData, setSessionData] = useState<SessionDetailsResponsesData>({
     data: {
       sessionTitle: " ",
@@ -35,6 +36,7 @@ const ReportPage = () => {
       participantCount: 0,
     },
   });
+
   const [barChartData, setBarChartData] =
     useState<BarChartComponentResponsesData>({
       data: {
@@ -49,6 +51,37 @@ const ReportPage = () => {
         userName: "hari",
       },
     });
+
+  const [visibleUserStoryCount, setVisibleUserStoryCount] = useState(6);
+
+  const loadMoreUserStories = () => {
+    setVisibleUserStoryCount((prevCount) => prevCount + 6);
+  };
+
+  const observer = useRef(
+    new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting) {
+          loadMoreUserStories();
+        }
+      },
+      { threshold: 1 }
+    )
+  );
+
+  const userStoryRef = useRef(null);
+
+  useEffect(() => {
+    const currentObserver = observer.current;
+    if (userStoryRef.current) {
+      currentObserver.observe(userStoryRef.current);
+    }
+
+    return () => {
+      currentObserver.disconnect();
+    };
+  }, [userStoryRef.current]);
 
   useEffect(() => {
     const fetchOverViewComponentData = async () => {
@@ -78,7 +111,6 @@ const ReportPage = () => {
     const fetchSessionDataDetails = async () => {
       try {
         const sessionData = await sessionDetailsData(1);
-        console.log(sessionData);
         setSessionData(sessionData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -98,11 +130,14 @@ const ReportPage = () => {
     };
     fetchBarChartData();
   }, []);
+
+  const totalUserStories = overViewData.completeStoryCount;
+
   return (
     <>
       <Header></Header>
       <Grid
-        style={{ backgroundColor: "#E5F6F7" }}
+        style={{ backgroundColor: "#f0f3f7" }}
         container
         spacing={3}
         sx={{ padding: 2 }}
@@ -157,13 +192,14 @@ const ReportPage = () => {
             User Story
           </Typography>
           <Grid />
-          <Grid item xs={12} sm={12} md={12}>
-            <UserStoryComponent />
-            <UserStoryComponent />
-            <UserStoryComponent />
-            <UserStoryComponent />
-            <UserStoryComponent />
-          </Grid>
+          {Array.from({ length: totalUserStories }, (_, index) => (
+            <Grid item xs={12} sm={12} md={12} key={index}>
+              {index < visibleUserStoryCount && (
+                <UserStoryComponent index={index + 1} />
+              )}
+            </Grid>
+          ))}
+          <div ref={userStoryRef} />
         </Grid>
       </Grid>
     </>
