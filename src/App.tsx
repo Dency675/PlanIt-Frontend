@@ -20,6 +20,7 @@ import TeamManagement from "./pages/TeamManagement/TeamManagement";
 import AppRouter from "./Routes";
 import Admin from "./pages/Admin/Admin";
 import Users from "./pages/Admin/Admin";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const materialTheme = materialExtendTheme();
 function App() {
@@ -28,18 +29,17 @@ function App() {
       <JoyCssVarsProvider>
         <CssBaseline enableColorScheme />
         <Box>
-          {/* <Login /> */}
           {/* <BrowserRouter>
      <Routes>
       <Route path='/' element={</>}></Route>
       <Route path='/registration' element={<RegistrationHandler/>}></Route>
      </Routes>
      </BrowserRouter> */}
-          <ReportPage />
+          {/* <ReportPage /> */}
 
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
-          {/* <AppRouter /> */}
+          <AppRouter />
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
