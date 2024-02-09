@@ -71,7 +71,6 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
         console.log(response);
         console.log(roles);
         console.log(userId);
-        let dummy = "Njnkna";
         if (roles.length > 0) {
           setUserRoles(roles);
           setUserId(userId);
@@ -81,7 +80,7 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
 
           let role = roles[0].trim().replace(/ /g, "_");
           // let role = "scrum_master";
-          navigate(`/${role}`);
+          navigate(`/${role}/`);
         }
         onLoginSuccess();
       } catch (e) {
