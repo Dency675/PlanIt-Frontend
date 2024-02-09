@@ -71,7 +71,6 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
         console.log(response);
         console.log(roles);
         console.log(userId);
-        let dummy = "Njnkna";
         if (roles.length > 0) {
           setUserRoles(roles);
           setUserId(userId);

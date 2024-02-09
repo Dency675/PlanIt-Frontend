@@ -20,32 +20,34 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 
 interface OngoingMeetingProps {
-  id: number;
-  sessionTitle: string;
-  createDateTime: string;
+  ongoingMeetings: {
+    id: number;
+    sessionTitle: string;
+    createDateTime: string;
+  }[];
 }
 
-const OngoingMeetings = () => {
+const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   const navigate = useNavigate();
-  const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
-    []
-  );
+  // const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
+  //   []
+  // );
 
-  useEffect(() => {
-    const fetchOngoingMeeting = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/getAllOngoingMeetings?teamId=1`
-        );
-        const ongoingMeetingData = response.data;
-        setOngoingMeetings(ongoingMeetingData);
-        console.log(ongoingMeetingData);
-      } catch (error) {
-        console.error("Error fetching meeting:", error);
-      }
-    };
-    fetchOngoingMeeting();
-  }, []);
+  // useEffect(() => {
+  //   const fetchOngoingMeeting = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:3001/getAllOngoingMeetings?teamId=1`
+  //       );
+  //       const ongoingMeetingData = response.data;
+  //       setOngoingMeetings(ongoingMeetingData);
+  //       console.log(ongoingMeetingData);
+  //     } catch (error) {
+  //       console.error("Error fetching meeting:", error);
+  //     }
+  //   };
+  //   fetchOngoingMeeting();
+  // }, []);
 
   return (
     <Grid container>

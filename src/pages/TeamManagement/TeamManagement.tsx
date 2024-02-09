@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import TeamList from "../../components/TeamSettings/TeamList";
 import { Box, Card, Divider, Grid, useTheme } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
@@ -10,6 +9,8 @@ import SearchBar from "../../components/Search/SearchBar";
 import Banar from "../../components/Search/Banar";
 import getUserInformationById from "./api/fetchUserData";
 import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingMeetings";
+import fetchOngoingMeetingById from "./api/fetchOngoingMeetingsByUser";
+import fetchRecentMeetingsOfUser from "./api/fetchRecentMeetingsOfUser";
 
 const TeamManagement = () => {
   const theme = useTheme();
@@ -28,17 +29,21 @@ const TeamManagement = () => {
     });
 
   interface OngoingMeetingProps {
+    id: number;
     sessionTitle: string;
     createDateTime: string;
   }
   const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
+  const [recentMeetings, setRecentMeetings] = useState<OngoingMeetingProps[]>(
+    []
+  );
 
-  useEffect(() => {
-    fetchOngoingMeeting()
+  React.useEffect(() => {
+    fetchOngoingMeetingById(userId as string)
       .then((response: any) => {
-        console.log("Response from addSessionParticipants:", response);
+        console.log("Response from .......:", response);
         setOngoingMeetings(response);
       })
       .catch((error) => {
@@ -48,6 +53,29 @@ const TeamManagement = () => {
         );
       });
   }, []);
+
+  // Fetch recent meetings of the user
+  useEffect(() => {
+    if (userId) {
+      const requestBody = {
+        sortBy: "createDateTime",
+        sortOrder: "DESC",
+        fromDate: "2024-01-01",
+        toDate: "2024-02-01",
+        offset: 0,
+        limit: 10,
+      };
+
+      fetchRecentMeetingsOfUser(userId, requestBody)
+        .then((response: any) => {
+          console.log("Recent meetings:", response);
+          setRecentMeetings(response);
+        })
+        .catch((error) => {
+          console.error("Error fetching recent meetings:", error);
+        });
+    }
+  }, [userId]);
 
   return (
     <>
@@ -71,7 +99,7 @@ const TeamManagement = () => {
             <SearchBar />
             <Banar names={name} />
             <OngoingMeetings ongoingMeetings={ongoingMeetings} />
-            <RecentActivities />
+            <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>
       </Grid>
