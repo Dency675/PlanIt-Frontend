@@ -20,7 +20,11 @@ interface TeamLists {
   };
 }
 
-export default function SideNav() {
+interface SideNavProps {
+  onSelectTeam: (teamId: number) => void;
+}
+
+const SideNav: React.FC<SideNavProps> = ({ onSelectTeam }) => {
   const navigate = useNavigate();
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
@@ -70,7 +74,15 @@ export default function SideNav() {
           {teamLists.map((teamList, index) => (
             <React.Fragment key={index}>
               <ListItem>
-                <ListItemButton>{teamList.teamName}</ListItemButton>
+                <ListItemButton
+                  onClick={() => {
+                    onSelectTeam(teamList.id);
+                    console.log(teamList.id);
+                  }}
+                >
+                  {teamList.teamName}
+                </ListItemButton>
+                {/* <ListItemButton>{teamList.teamName}</ListItemButton> */}
               </ListItem>
               <ListDivider />
             </React.Fragment>
@@ -79,7 +91,6 @@ export default function SideNav() {
       </div>
     </Box>
   );
-}
-function onTeamIdClick(teamId: any) {
-  throw new Error("Function not implemented.");
-}
+};
+
+export default SideNav;
