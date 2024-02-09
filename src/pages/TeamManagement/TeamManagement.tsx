@@ -11,6 +11,7 @@ import getUserInformationById from "./api/fetchUserData";
 import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingMeetings";
 import fetchOngoingMeetingById from "./api/fetchOngoingMeetingsByUser";
 import fetchRecentMeetingsOfUser from "./api/fetchRecentMeetingsOfUser";
+import axios from "axios";
 
 const TeamManagement = () => {
   const theme = useTheme();
@@ -19,14 +20,16 @@ const TeamManagement = () => {
 
   const userId = localStorage.getItem("userId");
 
-  getUserInformationById(userId as string)
-    .then((givenName: string) => {
-      console.log("Given name:", givenName);
-      setName(givenName);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  React.useEffect(() => {
+    getUserInformationById(userId as string)
+      .then((givenName: string) => {
+        console.log("Given name:", givenName);
+        setName(givenName);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   interface OngoingMeetingProps {
     id: number;
@@ -77,6 +80,39 @@ const TeamManagement = () => {
     }
   }, [userId]);
 
+  const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
+
+  const handleTeamSelect = (teamId: number) => {
+    setSelectedTeamId(teamId);
+    console.log(teamId);
+  };
+
+  React.useEffect(() => {
+    const fetchTeamLists = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/getMembers`, {
+          params: {
+            teamId: selectedTeamId,
+          },
+        });
+        const teamListData = response.data;
+
+        console.log("teamListData");
+        console.log(teamListData);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+    fetchTeamLists();
+  }, [selectedTeamId]);
+
+  const [selectedUserId, setSelectedUserId] = React.useState<string>("");
+
+  React.useEffect(() => {
+    console.log("selectedUserArrayWithId");
+    console.log(selectedUserId);
+  }, [selectedUserId]);
+
   return (
     <>
       <Header />
@@ -89,14 +125,14 @@ const TeamManagement = () => {
               height: "100%",
             }}
           >
-            {/* <SideNav></SideNav> */}
+            <SideNav onSelectTeam={handleTeamSelect}></SideNav>
           </Box>
 
           {isSmallScreen ? <Drawer variant="temporary"></Drawer> : <Box></Box>}
         </Grid>
         <Grid xs={16} md={12} px={3} pb={2} sx={{ flexGrow: 1 }} mx="auto">
           <Box>
-            <SearchBar />
+            <SearchBar setSelectedUserId={setSelectedUserId} />
             <Banar names={name} />
             <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
