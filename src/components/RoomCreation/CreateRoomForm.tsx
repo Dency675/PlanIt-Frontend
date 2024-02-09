@@ -198,7 +198,7 @@ const CreateRoomForm: React.FC = () => {
                 height: "100%",
               }}
             >
-              <SideNav></SideNav>
+              {/* <SideNav></SideNav> */}
             </Box>
 
             {isSmallScreen ? (

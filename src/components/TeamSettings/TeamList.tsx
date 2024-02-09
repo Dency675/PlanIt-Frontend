@@ -7,10 +7,19 @@ import axios from "axios";
 import { TeamMemberProps } from "./TeamMember";
 import AddMember from "./AddMember";
 
-const TeamList = () => {
+interface TeamListProps {
+  teamId: number; // Define the type of the teamId prop
+}
+
+const TeamList: React.FC<TeamListProps> = ({ teamId }) => {
   const [teamMembers, setTeamMembers] = useState<
     TeamMemberProps["teamMember"][]
   >([]);
+
+  // const TeamList = ({ teamId }) => {
+  //   const [teamMembers, setTeamMembers] = useState<
+  //     TeamMemberProps["teamMember"][]
+  //   >([]);
 
   const [selectedUserArrayWithId, setSelectedUserArrayWithId] = React.useState<
     {
@@ -29,11 +38,11 @@ const TeamList = () => {
     const fetchTeamMembers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/getMembers?teamId=1"
+          `http://localhost:3001/getMembers?teamId=${teamId}`
         );
 
         const teamMembersData = response.data.activeTeamMembers;
-        // console.log(teamMembersData);
+        console.log(teamMembersData);
         setTeamMembers(teamMembersData);
       } catch (error) {
         console.error("Error fetching team members:", error);
@@ -42,7 +51,7 @@ const TeamList = () => {
 
     console.log("IM useeffect");
     fetchTeamMembers();
-  }, []);
+  }, [teamId]);
 
   console.log("IM HERE");
   // console.log(teamMembers);

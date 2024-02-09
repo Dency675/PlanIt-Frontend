@@ -89,7 +89,7 @@ const TeamManagement = () => {
               height: "100%",
             }}
           >
-            <SideNav></SideNav>
+            {/* <SideNav></SideNav> */}
           </Box>
 
           {isSmallScreen ? <Drawer variant="temporary"></Drawer> : <Box></Box>}
