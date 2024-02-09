@@ -11,6 +11,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, ListDivider, Divider } from "@mui/joy";
+import { AnyARecord } from "dns";
 
 interface TeamLists {
   teamInfoList: {
@@ -78,4 +79,7 @@ export default function SideNav() {
       </div>
     </Box>
   );
+}
+function onTeamIdClick(teamId: any) {
+  throw new Error("Function not implemented.");
 }

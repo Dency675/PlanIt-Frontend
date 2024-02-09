@@ -31,6 +31,7 @@ const TeamList = () => {
         const response = await axios.get(
           "http://localhost:3001/getMembers?teamId=1"
         );
+
         const teamMembersData = response.data.activeTeamMembers;
         // console.log(teamMembersData);
         setTeamMembers(teamMembersData);
@@ -48,7 +49,7 @@ const TeamList = () => {
   const handleRemoveMember = async (id: number) => {
     try {
       await axios.put(
-        `http://localhost:3001/removeMember?id=${id}`
+        `http://localhost:3001/removeMember?id=1`
         // , { userId: id }
       );
       setTeamMembers((prevMembers) =>
