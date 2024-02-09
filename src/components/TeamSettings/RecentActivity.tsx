@@ -16,8 +16,19 @@ import {
 } from "@mui/joy";
 import React from "react";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
+import { Link, useNavigate } from "react-router-dom";
 
-const RecentActivity = () => {
+export interface RecentActivityProps {
+  recentActivity: {
+    id: number;
+    sessionTitle: string;
+    createDateTime: string;
+  };
+}
+
+const RecentActivity = ({ recentActivity }: RecentActivityProps) => {
+  const navigate = useNavigate();
+
   return (
     <Box>
       <ListDivider />
@@ -34,8 +45,8 @@ const RecentActivity = () => {
             display: "flex",
             alignItems: "center",
             gap: 1,
-            mr: { xs: 0, sm: 2 }, // Margin right based on screen size
-            mb: { xs: 1, sm: 0 }, // Margin bottom based on screen size
+            mr: { xs: 0, sm: 2 },
+            mb: { xs: 1, sm: 0 },
           }}
         >
           <ListItemDecorator>
@@ -43,15 +54,22 @@ const RecentActivity = () => {
           </ListItemDecorator>
           <ListItemContent>
             <Typography level="title-sm" textColor={"black"}>
-              Dencymol Baby
+              {recentActivity.sessionTitle}
             </Typography>
             <Typography level="body-xs" noWrap>
-              Project Manager
+              {recentActivity.createDateTime}
             </Typography>
           </ListItemContent>
         </Box>
-        <Button sx={{ mt: { xs: 1, sm: 0 } }}>View Report</Button>{" "}
-        {/* Margin top based on screen size */}
+        <Button
+          // component={Link}
+          // to={`/report/${recentActivity.id}`}
+          sx={{ mt: { xs: 1, sm: 0 } }}
+          onClick={() => navigate(`/report/${recentActivity.id}`)}
+        >
+          {/* <Link to={`/report/${recentActivity.id}`} /> */}
+          View Report
+        </Button>{" "}
       </ListItem>
     </Box>
   );

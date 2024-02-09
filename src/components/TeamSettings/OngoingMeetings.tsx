@@ -17,14 +17,36 @@ import { CardContent } from "@mui/joy";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import fetchOngoingMeeting from "./api/fetchOngoingMeetings";
-// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 interface OngoingMeetingProps {
-  ongoingMeetings: { sessionTitle: string; createDateTime: string }[];
+  id: number;
+  sessionTitle: string;
+  createDateTime: string;
 }
 
-const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
+const OngoingMeetings = () => {
+  const navigate = useNavigate();
+  const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchOngoingMeeting = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/getAllOngoingMeetings?teamId=1`
+        );
+        const ongoingMeetingData = response.data;
+        setOngoingMeetings(ongoingMeetingData);
+        console.log(ongoingMeetingData);
+      } catch (error) {
+        console.error("Error fetching meeting:", error);
+      }
+    };
+    fetchOngoingMeeting();
+  }, []);
+
   return (
     <Grid container>
       <Grid xs={12}>
@@ -70,7 +92,12 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     borderColor: "divider",
                   }}
                 >
-                  JOIN
+                  <ListItemButton
+                    onClick={() => navigate(`/room/${ongoingMeeting.id}`)}
+                  >
+                    Join
+                  </ListItemButton>
+                  {/* JOIN */}
                   {/* <Link to="/">JOIN</Link> */}
                 </CardOverflow>
               </Card>
