@@ -37,6 +37,8 @@ function App() {
      </BrowserRouter> */}
           {/* <ReportPage /> */}
 
+          {/* <ReportPage /> */}
+          {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
           {/* <RoomCreation /> */}
           <AppRouter />

@@ -11,6 +11,9 @@ import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingM
 const TeamSettings = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [selectedTeamId, setSelectedTeamId] = React.useState<number | null>(
+    null
+  );
 
   interface OngoingMeetingProps {
     sessionTitle: string;

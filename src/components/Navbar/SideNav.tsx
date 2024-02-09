@@ -7,8 +7,37 @@ import ListItemButton from "@mui/joy/ListItemButton";
 import Typography from "@mui/joy/Typography";
 import Home from "@mui/icons-material/Home";
 import TeamName from "../TeamSettings/TeamName";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface TeamLists {
+  teamInfoList: {
+    id: number;
+    teamName: string;
+  };
+}
 
 export default function SideNav() {
+  const navigate = useNavigate();
+  const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
+
+  useEffect(() => {
+    const fetchTeamLists = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/getAllTeamInformation`
+        );
+        const teamListData = response.data.teamInfoList;
+        setTeamLists(teamListData);
+        console.log(teamListData);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+    fetchTeamLists();
+  }, []);
+
   return (
     <Box
       pr={4}
@@ -36,7 +65,13 @@ export default function SideNav() {
             </ListItemDecorator>
             Team List
           </ListItem>
-          <TeamName />
+          {teamLists.map((teamList, index) => (
+            <React.Fragment key={index}>
+              <ListItem>
+                <ListItemButton>{teamList.teamName}</ListItemButton>
+              </ListItem>
+            </React.Fragment>
+          ))}
         </List>
       </div>
     </Box>
