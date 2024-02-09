@@ -5,18 +5,33 @@ import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import { TeamMember } from "./TeamMember";
 import axios from "axios";
 import { TeamMemberProps } from "./TeamMember";
+import AddMember from "./AddMember";
 
 const TeamList = () => {
   const [teamMembers, setTeamMembers] = useState<
     TeamMemberProps["teamMember"][]
   >([]);
 
+  const [selectedUserArrayWithId, setSelectedUserArrayWithId] = React.useState<
+    {
+      sessionId: number | null;
+      userId: string;
+      roleId: number;
+    }[]
+  >([]);
+
+  React.useEffect(() => {
+    console.log(" selectedUserArrayWithId from room creation");
+    console.log(selectedUserArrayWithId);
+  }, [selectedUserArrayWithId]);
+
   useEffect(() => {
     const fetchTeamMembers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/getMembers?team_id=1"
+          "http://localhost:3001/getMembers?teamId=1"
         );
+
         const teamMembersData = response.data.activeTeamMembers;
         // console.log(teamMembersData);
         setTeamMembers(teamMembersData);
@@ -25,15 +40,16 @@ const TeamList = () => {
       }
     };
 
+    console.log("IM useeffect");
     fetchTeamMembers();
   }, []);
 
   console.log("IM HERE");
-  console.log(teamMembers);
+  // console.log(teamMembers);
   const handleRemoveMember = async (id: number) => {
     try {
       await axios.put(
-        `http://localhost:3001/removeMember?id=${id}`
+        `http://localhost:3001/removeMember?id=1`
         // , { userId: id }
       );
       setTeamMembers((prevMembers) =>
@@ -97,7 +113,8 @@ const TeamList = () => {
           p: { xs: 2, sm: 0 },
         }}
       >
-        <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} />
+        <AddMember setSelectedUserArrayWithId={setSelectedUserArrayWithId} />
+        {/* <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} /> */}
       </Box>
     </Box>
   );

@@ -85,13 +85,15 @@ const RightComponent = () => {
       </Button>
       <Divider />
 
-      <Typography
-        endDecorator={<Link href="/sign-up"> Continue with Outlook</Link>}
-        fontSize="sm"
-        sx={{ alignSelf: "center" }}
-      >
-        Don&apos;t have an account?
-      </Typography>
+      <center>
+        <Typography
+          // endDecorator={<Link href="/sign-up"> Continue with Outlook</Link>}
+          fontSize="sm"
+          sx={{ alignSelf: "center" }}
+        >
+          "Story Points on the Table:<br></br> Let's Play the Agile Way!"
+        </Typography>
+      </center>
     </Sheet>
   );
 };
