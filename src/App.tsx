@@ -20,7 +20,7 @@ import TeamManagement from "./pages/TeamManagement/TeamManagement";
 import AppRouter from "./Routes";
 import Admin from "./pages/Admin/Admin";
 import Users from "./pages/Admin/Admin";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const materialTheme = materialExtendTheme();
 function App() {
