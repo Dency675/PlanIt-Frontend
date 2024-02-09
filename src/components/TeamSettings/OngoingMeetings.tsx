@@ -18,28 +18,14 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
-<<<<<<< HEAD
-import fetchOngoingMeeting from "./api/fetchOngoingMeetings";
-// import { Link } from "react-router-dom";
 
 interface OngoingMeetingProps {
-  ongoingMeetings: { sessionTitle: string; createDateTime: string }[];
-}
-
-const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
-=======
-import { useNavigate } from "react-router";
-// import { Link } from "react-router-dom";
-
-interface OngoingMeetingProps {
-  id: number;
   id: number;
   sessionTitle: string;
   createDateTime: string;
 }
 
 const OngoingMeetings = () => {
-  const navigate = useNavigate();
   const navigate = useNavigate();
   const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
     []
