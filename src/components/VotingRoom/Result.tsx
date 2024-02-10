@@ -28,7 +28,7 @@ const Result = () => {
       
     </Card>
     
-
+    
   )
 }
 

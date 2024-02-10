@@ -8,15 +8,18 @@ import VotingCards from './VotingCards'
 
 
 const LeftComponent = () => {
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
   const startTimer = () => {
-    setIsTimerRunning(true);
+    setIsTimerRunning(!isTimerRunning);
+  };
+  const stopTimer = () => {
+    setIsTimerRunning(!isTimerRunning);
   };
   return (
     <Box> 
      <UserStories/>
      <Timer isRunning={isTimerRunning}/>
-     <CustomButtonGroup onStartTimer={startTimer}/>
+     <CustomButtonGroup onStartTimer={startTimer}  stopTimer={stopTimer}/>
      <VotingCards/>
     </Box>
   )

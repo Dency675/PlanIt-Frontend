@@ -42,8 +42,9 @@ function App() {
           <ReportPage /> */}
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
+          <VotingRoom/>
           {/* <RoomCreation /> */}
-          <AppRouter />
+          {/* <AppRouter /> */}
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>

@@ -11,29 +11,30 @@ const Timer: React.FC<TimerProps> = ({ isRunning }) => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-
+  
     if (isRunning) {
+      setSeconds(0); // Reset the timer to 0 if isRunning becomes true
+    } else {
       interval = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds + 1);
+        setSeconds((prevSeconds) => {
+          if (prevSeconds < 10) {
+            return prevSeconds + 1;
+          } else {
+            clearInterval(interval); // Clear interval after 10 seconds
+            return prevSeconds;
+          }
+        });
       }, 1000);
-
-      // Clear the interval after 10 seconds
-      setTimeout(() => {
-        clearInterval(interval);
-      }, 10000);
     }
-
+  
     return () => clearInterval(interval);
   }, [isRunning]);
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const remainingSeconds = time % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
-
   return (
     <Card
       variant="outlined"
