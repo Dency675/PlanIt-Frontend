@@ -107,7 +107,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/project_manager/vote"
+            path="/vote/:sessionId"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}

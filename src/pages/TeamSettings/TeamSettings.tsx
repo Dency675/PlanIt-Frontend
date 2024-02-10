@@ -25,6 +25,8 @@ const TeamSettings = () => {
     id: number;
     sessionTitle: string;
     createDateTime: string;
+    scrumMasterId: string;
+    status: string;
   }
   const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
     []

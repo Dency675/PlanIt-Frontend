@@ -18,36 +18,50 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import io from "socket.io-client";
+import editSessions from "./api/editSessions";
 
 interface OngoingMeetingProps {
   ongoingMeetings: {
     id: number;
     sessionTitle: string;
     createDateTime: string;
+    scrumMasterId: string;
+    status: string;
   }[];
 }
 
+const userId = localStorage.getItem("userId");
+
 const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   const navigate = useNavigate();
-  // const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
-  //   []
-  // );
+  const socket = io("http://localhost:3001", {
+    transports: ["websocket"],
+  });
+  const [roomCreated, setRoomCreated] = useState(false);
 
   // useEffect(() => {
-  //   const fetchOngoingMeeting = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3001/getAllOngoingMeetings?teamId=1`
-  //       );
-  //       const ongoingMeetingData = response.data;
-  //       setOngoingMeetings(ongoingMeetingData);
-  //       console.log(ongoingMeetingData);
-  //     } catch (error) {
-  //       console.error("Error fetching meeting:", error);
-  //     }
-  //   };
-  //   fetchOngoingMeeting();
+  socket.on("roomCreated", (sessionId) => {
+    editSessions(sessionId)
+      .then((response: any) => {
+        console.log("session status is ", response);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+  });
+
+  // return () => {
+  //   // Cleanup socket on unmount
+  //   socket.disconnect();
+  // };
   // }, []);
+
+  const handleStartButtonClick = (sessionId: number) => {
+    console.log("createRoom");
+
+    socket.emit("createRoom", sessionId);
+  };
 
   return (
     <Grid container>
@@ -94,13 +108,37 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     borderColor: "divider",
                   }}
                 >
-                  <ListItemButton
-                    onClick={() => navigate(`/room/${ongoingMeeting.id}`)}
+                  {/* <ListItemButton
+                    onClick={() => {
+                      navigate(`/room/${ongoingMeeting.id}`);
+                      handleStartButtonClick(ongoingMeeting.id);
+                      // {userId===ongoingMeeting.scrumMasterId ? handleStartButtonClick(ongoingMeeting.id):()=>{}}
+                    }}
+                    disabled={userId !== ongoingMeeting.scrumMasterId}
                   >
-                    Join
-                  </ListItemButton>
-                  {/* JOIN */}
-                  {/* <Link to="/">JOIN</Link> */}
+                    {userId === ongoingMeeting.scrumMasterId ? "Start" : "Join"}
+                  </ListItemButton> */}
+
+                  {userId === ongoingMeeting.scrumMasterId ? (
+                    <ListItemButton
+                      onClick={() => {
+                        navigate(`/vote/${ongoingMeeting.id}`);
+                        handleStartButtonClick(ongoingMeeting.id);
+                      }}
+                    >
+                      Start
+                    </ListItemButton>
+                  ) : (
+                    <ListItemButton
+                      onClick={() => {
+                        navigate(`/vote/${ongoingMeeting.id}`);
+                      }}
+                      disabled={ongoingMeeting.status !== "active"}
+                    >
+                      Join {ongoingMeeting.status}
+                      {/* ${ongoingMeeting.scrumMasterId} */}
+                    </ListItemButton>
+                  )}
                 </CardOverflow>
               </Card>
             </React.Fragment>
