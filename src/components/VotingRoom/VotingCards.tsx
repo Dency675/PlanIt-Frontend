@@ -11,7 +11,7 @@ const VotingCards: React.FC = () => {
     { title: " 4", content: "5" },
     { title: " 3", content: "8" },
     { title: " 4", content: "13" },
-    { title: " 4", content: "21" },
+    { title: " 4", content: "?" },
   ];
 
   const [selectedCard, setSelectedCard] = useState<number | null>(null);

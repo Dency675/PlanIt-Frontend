@@ -4,13 +4,29 @@ import CardContent from '@mui/joy/CardContent';
 import Button from '@mui/joy/Button';
 import MuiButtonGroup from '@mui/joy/ButtonGroup'; 
 import Typography from '@mui/joy/Typography';
+import { useState } from 'react';
 
 
 interface CustomButtonGroupProps {
   onStartTimer: () => void; 
+  stopTimer:()=>void;
 }
 //timer function 
-const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer }) => {
+const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer,stopTimer }) => {
+  const [isTimerOn, setIsTimerOn] = useState(false)
+
+  const handleButtonClick = () => {
+
+  if(isTimerOn){
+    setIsTimerOn(!isTimerOn);
+    onStartTimer();
+   
+  }else
+  stopTimer()
+   // Call the first function
+   setIsTimerOn(!isTimerOn);
+  };
+
   return (
     <Card
       variant="outlined"
@@ -28,8 +44,9 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer }) =
           buttonFlex="0 1 200px"
           sx={{ width: '100%', justifyContent: 'center' }}
         >
-          <Button onClick={onStartTimer}>Start Voting</Button>
+          <Button onClick={handleButtonClick}>{isTimerOn ? 'End Voting':'Start Voting'  }</Button>
           <Button>Reveal</Button>
+          <Button>Skip</Button>
           <Button>Save Result</Button>
           <Button>Exit</Button>
         </MuiButtonGroup>
