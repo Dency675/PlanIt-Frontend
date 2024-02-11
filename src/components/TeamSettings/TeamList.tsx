@@ -6,6 +6,7 @@ import { TeamMember } from "./TeamMember";
 import axios from "axios";
 import { TeamMemberProps } from "./TeamMember";
 import AddMember from "./AddMember";
+import { identifier } from "stylis";
 
 interface TeamListProps {
   teamId: number; // Define the type of the teamId prop
@@ -42,6 +43,7 @@ const TeamList: React.FC<TeamListProps> = ({ teamId }) => {
         );
 
         const teamMembersData = response.data.activeTeamMembers;
+        console.log("teamMembersData");
         console.log(teamMembersData);
         setTeamMembers(teamMembersData);
       } catch (error) {
@@ -58,7 +60,7 @@ const TeamList: React.FC<TeamListProps> = ({ teamId }) => {
   const handleRemoveMember = async (id: number) => {
     try {
       await axios.put(
-        `http://localhost:3001/removeMember?id=1`
+        `http://localhost:3001/removeMember?id=${id}`
         // , { userId: id }
       );
       setTeamMembers((prevMembers) =>

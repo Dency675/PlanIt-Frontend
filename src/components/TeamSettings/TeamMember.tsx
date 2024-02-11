@@ -15,23 +15,29 @@ import React from "react";
 export interface TeamMemberProps {
   teamMember: {
     id: number;
-
-    userInformation: {
-      givenName: string;
-    };
-
-    role: {
-      roleName: string;
-    };
+    givenName: string;
+    roleName: string;
   };
+
+  // teamMember: {
+  //   id: number;
+
+  //   userInformation: {
+  //     givenName: string;
+  //   };
+
+  //   role: {
+  //     roleName: string;
+  //   };
+  // };
 
   onRemove: (id: number) => void;
 }
 
 const TeamMember = ({ teamMember, onRemove }: TeamMemberProps) => {
-  const { givenName } = teamMember.userInformation;
+  const { givenName } = teamMember;
 
-  const { roleName } = teamMember.role;
+  const { roleName } = teamMember;
 
   // console.log("check2");
 

@@ -47,6 +47,10 @@ const RecentActivities = ({ recentMeetings }: RecentMeetingProps) => {
   //   fetchRecentActivities();
   // }, []);
 
+  useEffect(() => {
+    console.log("recentActivities below");
+    console.log(recentActivities);
+  }, [recentActivities]);
   return (
     <Box>
       {" "}

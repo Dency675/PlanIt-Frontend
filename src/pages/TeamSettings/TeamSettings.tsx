@@ -6,9 +6,8 @@ import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import TeamList from "../../components/TeamSettings/TeamList";
 import Header from "../../components/Navbar/Header";
 import { Drawer, useMediaQuery } from "@mui/material";
-import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingMeetings";
-import fetchRecentMeetingsOfUser from "../TeamManagement/api/fetchRecentMeetingsOfUser";
-import fetchOngoingMeetingById from "../TeamManagement/api/fetchOngoingMeetingsByUser";
+import fetchRecentMeetingsOfTeam from "../TeamSettings/apis/fetchRecentMeetingsOfTeam";
+import fetchOngoingMeetingsByTeam from "../TeamSettings/apis/fetchOngoingMeetingsByTeam";
 
 const TeamSettings = () => {
   const theme = useTheme();
@@ -18,13 +17,15 @@ const TeamSettings = () => {
 
   const handleTeamSelect = (teamId: number) => {
     setSelectedTeamId(teamId);
-    console.log(teamId);
+    console.log(`team id here:`, teamId);
   };
 
   interface OngoingMeetingProps {
     id: number;
     sessionTitle: string;
     createDateTime: string;
+    scrumMasterId: string;
+    status: string;
   }
   const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
     []
@@ -32,10 +33,10 @@ const TeamSettings = () => {
   const [recentMeetings, setRecentMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
-  const userId = localStorage.getItem("userId");
+  // const userId = localStorage.getItem("userId");
 
   React.useEffect(() => {
-    fetchOngoingMeetingById(userId as string)
+    fetchOngoingMeetingsByTeam(selectedTeamId as number)
       .then((response: any) => {
         console.log("Response from .......:", response);
         setOngoingMeetings(response);
@@ -46,21 +47,24 @@ const TeamSettings = () => {
           error
         );
       });
-  }, []);
+  }, [selectedTeamId]);
 
   // Fetch recent meetings of the user
   useEffect(() => {
-    if (userId) {
-      const requestBody = {
-        sortBy: "createDateTime",
-        sortOrder: "DESC",
-        fromDate: "2024-01-01",
-        toDate: "2024-02-01",
-        offset: 0,
-        limit: 10,
-      };
+    if (selectedTeamId) {
+      // const requestBody = {
+      //   sortBy: "createDateTime",
+      //   sortOrder: "DESC",
+      //   fromDate: "2024-01-01",
+      //   toDate: "2024-02-01",
+      //   offset: 0,
+      //   limit: 10,
+      // };
 
-      fetchRecentMeetingsOfUser(userId, requestBody)
+      fetchRecentMeetingsOfTeam(
+        selectedTeamId
+        // , requestBody
+      )
         .then((response: any) => {
           console.log("Recent meetings:", response);
           setRecentMeetings(response);
@@ -69,7 +73,11 @@ const TeamSettings = () => {
           console.error("Error fetching recent meetings:", error);
         });
     }
-  }, [userId]);
+  }, [selectedTeamId]);
+
+  useEffect(() => {
+    console.log(ongoingMeetings);
+  }, [ongoingMeetings]);
 
   return (
     <>
@@ -99,7 +107,7 @@ const TeamSettings = () => {
             <Card sx={{ m: 3, display: "flex" }}>
               <TeamList teamId={selectedTeamId} />
             </Card>
-            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
+            {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>
