@@ -30,13 +30,14 @@ import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import { fetchUsersData } from '../../pages/Admin/apis/usersList';
 import { useState,useEffect } from 'react';
 import { UserList } from '../../pages/Admin/types/UserList';
-import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
 import Snackbar from '@mui/joy/Snackbar';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
 import { AspectRatio, Card, Skeleton } from '@mui/joy';
+import { fetchUsersData } from '../../pages/Admin/apis/usersList';
+import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
+import { searchUsers } from '../../pages/Admin/apis/SearchUser';
 
 
 
@@ -118,6 +119,8 @@ export default function UsersList() {
     setPage(prevPage => prevPage - 7); 
   };
 
+ 
+
 
 
   function RowMenu({ userId }: { userId: string }) {
@@ -176,8 +179,18 @@ export default function UsersList() {
   );
 }
 
-  const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  // const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  //   setSearchQuery(e.target.value);
+  // };
+
+  const handleSearch = async (e:any) => {
     setSearchQuery(e.target.value);
+    try {
+      const searchResults = await searchUsers(e.target.value); 
+      setData(searchResults);
+    } catch (error) {
+      console.error('Error searching users:', error);
+    }
   };
 
   const filteredRows = data.filter((row) =>
@@ -198,6 +211,8 @@ export default function UsersList() {
         }}
       >
         <Input
+            onChange={handleSearch}
+         value={searchQuery}        
           size="sm"
           placeholder="Search"
           startDecorator={<SearchIcon />}
