@@ -1,56 +1,108 @@
-import * as React from 'react';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import Button from '@mui/joy/Button';
-import MuiButtonGroup from '@mui/joy/ButtonGroup'; 
-import Typography from '@mui/joy/Typography';
-import { useState } from 'react';
-
+import * as React from "react";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import Button from "@mui/joy/Button";
+import MuiButtonGroup from "@mui/joy/ButtonGroup";
+import Typography from "@mui/joy/Typography";
+import { useState } from "react";
 
 interface CustomButtonGroupProps {
-  onStartTimer: () => void; 
-  stopTimer:()=>void;
+  onStartTimer: () => void;
+  stopTimer: () => void;
+  isUserStrorySelected: boolean;
+  setIsUserStrorySelected: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsStartButtonStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
-//timer function 
-const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer,stopTimer }) => {
-  const [isTimerOn, setIsTimerOn] = useState(false)
+//timer function
+const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
+  onStartTimer,
+  stopTimer,
+  isUserStrorySelected,
+  setIsUserStrorySelected,
+  setIsStartButtonStarted,
+}) => {
+  const [isTimerOn, setIsTimerOn] = useState(false);
+  const [isRevealButtonDisabled, setIsRevealButtonDisabled] = useState(true);
+  const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(true);
+  const [isStartName, setIsStartName] = useState("Start Voting");
+
+  React.useEffect(() => {
+    console.log("isUserStrorySelected", isUserStrorySelected);
+    console.log(isUserStrorySelected);
+    setIsStartButtonDisabled(isUserStrorySelected);
+  }, [isUserStrorySelected]);
 
   const handleButtonClick = () => {
-
-  if(isTimerOn){
+    if (isTimerOn) {
+      setIsTimerOn(!isTimerOn);
+      onStartTimer();
+      setIsRevealButtonDisabled(false);
+      setIsStartName("Start Voting");
+      setIsStartButtonStarted(false);
+    } else {
+      stopTimer();
+      setIsRevealButtonDisabled(true);
+      setIsStartName("End Voting");
+      setIsStartButtonStarted(true);
+    }
     setIsTimerOn(!isTimerOn);
-    onStartTimer();
-   
-  }else
-  stopTimer()
-   // Call the first function
-   setIsTimerOn(!isTimerOn);
   };
 
+  const handleRevelButtonClick = () => {};
+
+  const handleSaveButtonClick = () => {
+    setIsRevealButtonDisabled(!isRevealButtonDisabled);
+    setIsUserStrorySelected(false);
+    setIsStartButtonDisabled(!isStartButtonDisabled);
+    setIsStartName("Start Voting");
+  };
+
+  React.useEffect(() => {
+    console.log(
+      "isRevealButtonDisabled",
+      isRevealButtonDisabled,
+      isRevealButtonDisabled === false
+    );
+
+    if (isRevealButtonDisabled === false) setIsStartName("Re-voting");
+  }, [isRevealButtonDisabled]);
   return (
     <Card
       variant="outlined"
       sx={{
         mx: 6,
-        mt:2,
-        width: '85%',
-        overflow: 'auto',
+        mt: 2,
+        width: "85%",
+        overflow: "auto",
       }}
     >
-      <CardContent sx={{ textAlign: 'center', alignItems: 'center' }}>
-        <MuiButtonGroup 
+      <CardContent sx={{ textAlign: "center", alignItems: "center" }}>
+        <MuiButtonGroup
           variant="soft"
           aria-label="outlined primary button group"
           buttonFlex="0 1 200px"
-          sx={{ width: '100%', justifyContent: 'center' }}
+          sx={{ width: "100%", justifyContent: "center" }}
         >
-          <Button onClick={handleButtonClick}>{isTimerOn ? 'End Voting':'Start Voting'  }</Button>
-          <Button>Reveal</Button>
-          <Button>Skip</Button>
-          <Button>Save Result</Button>
+          <Button disabled={!isStartButtonDisabled} onClick={handleButtonClick}>
+            {/* {isTimerOn ? "End Voting" : "Start Voting"} */}
+            {isStartName}
+          </Button>
+          <Button
+            disabled={isRevealButtonDisabled}
+            onClick={handleRevelButtonClick}
+          >
+            Reveal
+          </Button>
+          <Button disabled={isRevealButtonDisabled}>Skip</Button>
+          <Button
+            disabled={isRevealButtonDisabled}
+            onClick={handleSaveButtonClick}
+          >
+            Save Result
+          </Button>
           <Button>Exit</Button>
         </MuiButtonGroup>
-      </CardContent>  
+      </CardContent>
     </Card>
   );
 };

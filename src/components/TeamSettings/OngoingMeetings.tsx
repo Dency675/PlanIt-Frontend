@@ -18,8 +18,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import io from "socket.io-client";
 import editSessions from "./api/editSessions";
+import { useSocket } from "../Socket/SocketContext";
 
 interface OngoingMeetingProps {
   ongoingMeetings: {
@@ -35,12 +35,9 @@ const userId = localStorage.getItem("userId");
 
 const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   const navigate = useNavigate();
-  const socket = io("http://localhost:3001", {
-    transports: ["websocket"],
-  });
-  const [roomCreated, setRoomCreated] = useState(false);
 
-  // useEffect(() => {
+  const socket = useSocket();
+
   socket.on("roomCreated", (sessionId) => {
     editSessions(sessionId)
       .then((response: any) => {
@@ -51,17 +48,23 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
       });
   });
 
-  // return () => {
-  //   // Cleanup socket on unmount
-  //   socket.disconnect();
-  // };
-  // }, []);
-
   const handleStartButtonClick = (sessionId: number) => {
     console.log("createRoom");
 
     socket.emit("createRoom", sessionId);
   };
+
+  const handleJoinButtonClick = (sessionId: number) => {
+    console.log("joinRoom");
+
+    socket.emit("joinRoom", sessionId, userId);
+  };
+
+  React.useEffect(() => {
+    socket.on("userJoined", (data: { sessionId: string }) => {
+      console.log("userJoined", data.sessionId);
+    });
+  }, []);
 
   return (
     <Grid container>
@@ -108,17 +111,6 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     borderColor: "divider",
                   }}
                 >
-                  {/* <ListItemButton
-                    onClick={() => {
-                      navigate(`/room/${ongoingMeeting.id}`);
-                      handleStartButtonClick(ongoingMeeting.id);
-                      // {userId===ongoingMeeting.scrumMasterId ? handleStartButtonClick(ongoingMeeting.id):()=>{}}
-                    }}
-                    disabled={userId !== ongoingMeeting.scrumMasterId}
-                  >
-                    {userId === ongoingMeeting.scrumMasterId ? "Start" : "Join"}
-                  </ListItemButton> */}
-
                   {userId === ongoingMeeting.scrumMasterId ? (
                     <ListItemButton
                       onClick={() => {
@@ -126,17 +118,17 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                         handleStartButtonClick(ongoingMeeting.id);
                       }}
                     >
-                      Start
+                      Start {ongoingMeeting.scrumMasterId}
                     </ListItemButton>
                   ) : (
                     <ListItemButton
                       onClick={() => {
                         navigate(`/vote/${ongoingMeeting.id}`);
+                        handleJoinButtonClick(ongoingMeeting.id);
                       }}
                       disabled={ongoingMeeting.status !== "active"}
                     >
                       Join {ongoingMeeting.status}
-                      {/* ${ongoingMeeting.scrumMasterId} */}
                     </ListItemButton>
                   )}
                 </CardOverflow>

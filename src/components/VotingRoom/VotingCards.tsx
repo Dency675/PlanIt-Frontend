@@ -2,22 +2,56 @@ import React, { useState } from "react";
 import { Card, CardContent, Typography } from "@mui/joy";
 import Stack from "@mui/joy/Stack";
 import Slide from "@mui/material/Slide";
+import getScales from "./api/getScale";
+import { useSocket } from "../Socket/SocketContext";
+interface votingCardsPropType {
+  estimationId: number;
+}
 
-const VotingCards: React.FC = () => {
-  const cardData = [
-    { title: " 1", content: "1" },
-    { title: " 2", content: "2" },
-    { title: " 3", content: "3" },
-    { title: " 4", content: "5" },
-    { title: " 3", content: "8" },
-    { title: " 4", content: "13" },
-    { title: " 4", content: "?" },
-  ];
+interface scaleDataProps {
+  scaleName: string;
+  scaleValue: number;
+}
+
+const VotingCards: React.FC<votingCardsPropType> = ({ estimationId }) => {
+  const [scaleData, setScaleData] = useState<scaleDataProps[]>([
+    { scaleName: "", scaleValue: 0 },
+  ]);
+
+  const [isStartButtonStarted, setIsStartButtonStarted] =
+    useState<boolean>(true);
+
+  const socket = useSocket();
+
+  React.useEffect(() => {
+    getScales(estimationId)
+      .then((response: any) => {
+        console.log("get Scales:", response.formattedData);
+        setScaleData(response.formattedData);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+  }, [estimationId]);
 
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
-  const handleCardClick = (index: number) => {
-    setSelectedCard(index === selectedCard ? null : index);
+  React.useEffect(() => {
+    socket.on("votingStarted", async (sessionId, isStartButtonStarted) => {
+      console.log("votingStarted", sessionId, isStartButtonStarted);
+      setIsStartButtonStarted(isStartButtonStarted);
+    });
+
+    return () => {
+      socket.off("votingStarted");
+    };
+  }, []);
+
+  const handleCardClick = (index: number, scaleValue: number) => {
+    if (isStartButtonStarted) {
+      setSelectedCard(index === selectedCard ? null : index);
+      console.log(scaleValue);
+    }
   };
 
   return (
@@ -29,7 +63,7 @@ const VotingCards: React.FC = () => {
         spacing={2}
         sx={{ mt: 5 }}
       >
-        {cardData.map((card, index) => (
+        {scaleData.map((card, index) => (
           <Slide
             in={true}
             direction={"right"}
@@ -50,10 +84,10 @@ const VotingCards: React.FC = () => {
                   selectedCard === index ? "2px solid blue" : "1px solid ",
                 overflow: "auto",
               }}
-              onClick={() => handleCardClick(index)}
+              onClick={() => handleCardClick(index, card.scaleValue)}
             >
               <CardContent>
-                <Typography level="h1">{card.content}</Typography>
+                <Typography level="h1">{card.scaleName}</Typography>
               </CardContent>
             </Card>
           </Slide>
