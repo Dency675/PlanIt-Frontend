@@ -127,17 +127,6 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     borderColor: "divider",
                   }}
                 >
-                  {/* <ListItemButton
-                    onClick={() => {
-                      navigate(`/room/${ongoingMeeting.id}`);
-                      handleStartButtonClick(ongoingMeeting.id);
-                      // {userId===ongoingMeeting.scrumMasterId ? handleStartButtonClick(ongoingMeeting.id):()=>{}}
-                    }}
-                    disabled={userId !== ongoingMeeting.scrumMasterId}
-                  >
-                    {userId === ongoingMeeting.scrumMasterId ? "Start" : "Join"}
-                  </ListItemButton> */}
-
                   {userId === ongoingMeeting.scrumMasterId ? (
                     <ListItemButton
                       onClick={() => {
@@ -145,17 +134,17 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                         handleStartButtonClick(ongoingMeeting.id);
                       }}
                     >
-                      Start
+                      Start {ongoingMeeting.scrumMasterId}
                     </ListItemButton>
                   ) : (
                     <ListItemButton
                       onClick={() => {
                         navigate(`/vote/${ongoingMeeting.id}`);
+                        handleJoinButtonClick(ongoingMeeting.id);
                       }}
                       disabled={ongoingMeeting.status !== "active"}
                     >
                       Join {ongoingMeeting.status}
-                      {/* ${ongoingMeeting.scrumMasterId} */}
                     </ListItemButton>
                   )}
                 </CardOverflow>

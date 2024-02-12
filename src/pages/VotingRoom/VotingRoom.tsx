@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Container, Grid } from "@mui/joy";
-import { useEffect, useState } from "react";
 import LeftComponent from "../../components/VotingRoom/LeftComponent";
 import RightComponent from "../../components/VotingRoom/RightComponent";
 import { useParams } from "react-router-dom";
 import { sessionDetailsData } from "../ReportPage/apis/SessionDetailsAPI";
-// import { TeamIdProvider } from "./TeamIdContext";
 
 function VotingRoom() {
   const { sessionId } = useParams();

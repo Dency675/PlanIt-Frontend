@@ -42,7 +42,6 @@ function App() {
           <ReportPage /> */}
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
-          {/* <Admin/> */}
           {/* <VotingRoom/> */}
           {/* <RoomCreation /> */}
           <AppRouter />
