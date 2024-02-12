@@ -20,7 +20,6 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import editSessions from "./api/editSessions";
 import { useSocket } from "../Socket/SocketContext";
-import io from "socket.io-client";
 
 interface OngoingMeetingProps {
   ongoingMeetings: {
