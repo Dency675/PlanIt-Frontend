@@ -115,11 +115,10 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     <ListItemButton
                       onClick={() => {
                         navigate(`/vote/${ongoingMeeting.id}`);
-                        // handleStartButtonClick(ongoingMeeting.id);
+                        handleStartButtonClick(ongoingMeeting.id);
                       }}
                     >
-                      {/* Start {ongoingMeeting.scrumMasterId} */}
-                      Start
+                      Start {ongoingMeeting.scrumMasterId}
                     </ListItemButton>
                   ) : (
                     <ListItemButton
