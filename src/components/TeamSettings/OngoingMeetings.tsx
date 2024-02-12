@@ -18,8 +18,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
-// import editSessions from "./api/editSessions";
-// import { useSocket } from "../Socket/SocketContext";
+import editSessions from "./api/editSessions";
+import { useSocket } from "../Socket/SocketContext";
 
 interface OngoingMeetingProps {
   ongoingMeetings: {
@@ -35,38 +35,37 @@ const userId = localStorage.getItem("userId");
 
 const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   const navigate = useNavigate();
-  const [ongoingSessions, setOngoingSessions] = useState<
-    OngoingMeetingProps["ongoingMeetings"][]
-  >([]);
 
-  // const socket = useSocket();
+  const socket = useSocket();
 
-  // socket.on("roomCreated", (sessionId) => {
-  //   editSessions(sessionId)
-  //     .then((response: any) => {
-  //       console.log("session status is ", response);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error occurred while changing status :", error);
-  //     });
-  // });
+  socket.on("roomCreated", (sessionId) => {
+    editSessions(sessionId)
+      .then((response: any) => {
+        console.log("session status is ", response);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+  });
 
-  // const handleStartButtonClick = (sessionId: number) => {
-  //   console.log("createRoom");
+  const handleStartButtonClick = (sessionId: number) => {
+    console.log("createRoom");
 
-  //   socket.emit("createRoom", sessionId);
-  // };
+    socket.emit("createRoom", sessionId);
+  };
 
-  // const handleJoinButtonClick = (sessionId: number) => {
-  //   console.log("joinRoom");
+  const handleJoinButtonClick = (sessionId: number) => {
+    console.log("joinRoom");
 
-  //   socket.emit("joinRoom", sessionId, userId);
-  // };
+    socket.emit("joinRoom", sessionId, userId);
+  };
 
-  useEffect(() => {
-    console.log("ongoingMeetings below");
-    console.log(ongoingMeetings);
-  }, [ongoingMeetings]);
+  React.useEffect(() => {
+    socket.on("userJoined", (data: { sessionId: string }) => {
+      console.log("userJoined", data.sessionId);
+    });
+  }, []);
+
   return (
     <Grid container>
       <Grid xs={12}>
@@ -126,12 +125,11 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     <ListItemButton
                       onClick={() => {
                         navigate(`/vote/${ongoingMeeting.id}`);
-                        // handleJoinButtonClick(ongoingMeeting.id);
+                        handleJoinButtonClick(ongoingMeeting.id);
                       }}
                       disabled={ongoingMeeting.status !== "active"}
                     >
-                      Join
-                      {/* {ongoingMeeting.status} */}
+                      Join {ongoingMeeting.status}
                     </ListItemButton>
                   )}
                 </CardOverflow>
