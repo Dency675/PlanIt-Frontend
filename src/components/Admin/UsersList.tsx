@@ -30,13 +30,13 @@ import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import { fetchUsersData } from '../../pages/Admin/apis/usersList';
 import { useState,useEffect } from 'react';
 import { UserList } from '../../pages/Admin/types/UserList';
-import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
 import Snackbar from '@mui/joy/Snackbar';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
 import { AspectRatio, Card, Skeleton } from '@mui/joy';
+import { fetchUsersData } from '../../pages/Admin/apis/usersList';
+import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 
 
 
