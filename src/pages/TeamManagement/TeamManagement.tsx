@@ -8,7 +8,6 @@ import { Drawer, useMediaQuery } from "@mui/material";
 import SearchBar from "../../components/Search/SearchBar";
 import Banar from "../../components/Search/Banar";
 import getUserInformationById from "./api/fetchUserData";
-import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingMeetings";
 import fetchOngoingMeetingById from "./api/fetchOngoingMeetingsByUser";
 import fetchRecentMeetingsOfUser from "./api/fetchRecentMeetingsOfUser";
 import axios from "axios";
@@ -30,6 +29,16 @@ const TeamManagement = () => {
         console.error("Error:", error);
       });
   }, []);
+
+  const [selectedUserArray, setSelectedUserArray] = React.useState([]);
+
+  const handleSelectTeam = (teamId: number) => {
+    setSelectedTeamId(teamId);
+  };
+
+  const handleResetSelectedUserArray = () => {
+    setSelectedUserArray([]);
+  };
 
   interface OngoingMeetingProps {
     id: number;
@@ -127,7 +136,10 @@ const TeamManagement = () => {
               height: "100%",
             }}
           >
-            {/* <SideNav onSelectTeam={handleTeamSelect}></SideNav> */}
+            <SideNav
+              onSelectTeam={handleSelectTeam}
+              resetSelectedUserArray={handleResetSelectedUserArray}
+            />
           </Box>
 
           {isSmallScreen ? <Drawer variant="temporary"></Drawer> : <Box></Box>}
@@ -136,7 +148,7 @@ const TeamManagement = () => {
           <Box>
             {/* <SearchBar setSelectedUserId={setSelectedUserId} /> */}
             <Banar names={name} />
-            {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
+            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>

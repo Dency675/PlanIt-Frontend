@@ -187,6 +187,7 @@ const ReportPage = () => {
     <>
       <Header></Header>
       <Grid
+        id="reportPage"
         style={{ backgroundColor: "#f0f3f7" }}
         container
         spacing={3}

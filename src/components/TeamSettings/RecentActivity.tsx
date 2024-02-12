@@ -57,7 +57,7 @@ const RecentActivity = ({ recentActivity }: RecentActivityProps) => {
               {recentActivity.sessionTitle}
             </Typography>
             <Typography level="body-xs" noWrap>
-              {recentActivity.createDateTime.slice(0, 10)}
+              {recentActivity.createDateTime}
             </Typography>
           </ListItemContent>
         </Box>
