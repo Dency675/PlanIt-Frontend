@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent, Typography } from "@mui/joy";
-import Stack from "@mui/joy/Stack";
+import { Card, CardContent, Typography, Grid } from "@mui/joy";
 import Slide from "@mui/material/Slide";
 
 const VotingCards: React.FC = () => {
@@ -21,34 +20,26 @@ const VotingCards: React.FC = () => {
   };
 
   return (
-    <div>
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={2}
-        sx={{ mt: 5 }}
-      >
-        {cardData.map((card, index) => (
-          <Slide
-            in={true}
-            direction={"right"}
-            timeout={(1000 * index) / 2}
-            key={index}
-          >
+    <Grid container justifyContent="center" spacing={0} sx={{ mt: 1 }}>
+      {cardData.map((card, index) => (
+        <Grid  key={index} xs={6} sm={4} md={3}>
+          <Slide in={true} direction={"right"} timeout={(1000 * index) / 2}>
             <Card
               variant="solid"
+              
               sx={{
                 backgroundImage: "linear-gradient(to right, #FD726F, #B2D5D9)",
                 color: "white",
-                width: 80,
+                width: 90,
+                // mt:0,
                 height: 120,
                 mx: "auto",
-                my: 5,
+                my: 0.5, 
                 cursor: "pointer",
                 border:
                   selectedCard === index ? "2px solid blue" : "1px solid ",
                 overflow: "auto",
+                
               }}
               onClick={() => handleCardClick(index)}
             >
@@ -57,9 +48,9 @@ const VotingCards: React.FC = () => {
               </CardContent>
             </Card>
           </Slide>
-        ))}
-      </Stack>
-    </div>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

@@ -3,7 +3,6 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Button from '@mui/joy/Button';
 import MuiButtonGroup from '@mui/joy/ButtonGroup'; 
-import Typography from '@mui/joy/Typography';
 import { useState } from 'react';
 
 
@@ -46,7 +45,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer,stop
         >
           <Button onClick={handleButtonClick}>{isTimerOn ? 'End Voting':'Start Voting'  }</Button>
           <Button>Reveal</Button>
-          <Button>Skip</Button>
+          {/* <Button>Skip</Button> */}
           <Button>Save Result</Button>
           <Button>Exit</Button>
         </MuiButtonGroup>
