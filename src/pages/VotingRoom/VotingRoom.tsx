@@ -1,19 +1,19 @@
 import React from "react";
-import { Box, Container } from "@mui/joy";
+import { Box, Container, Grid } from "@mui/joy";
 import LeftComponent from "../../components/VotingRoom/LeftComponent";
 import RightComponent from "../../components/VotingRoom/RightComponent";
 
 function VotingRoom() {
   return (
     <Container>
-      <Box display="flex" flexDirection="row">
-        <Box flex={5}>
+      <Grid container spacing={2}>
+        <Grid  xs={12} sm={8} md={8} lg={8}>
           <LeftComponent />
-        </Box>
-        <Box flex={2}>
+        </Grid>
+        <Grid  xs={12} sm={4} md={4} lg={4}>
           <RightComponent />
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 }

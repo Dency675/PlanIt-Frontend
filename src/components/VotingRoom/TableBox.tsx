@@ -15,24 +15,28 @@ export default function TableBox() {
           </thead>
           <tbody>
             <tr>
-              <td>Frozen yoghurt</td>
-              <td>159</td>
+              <td>Aljo</td>
+              <td>4</td>
             </tr>
             <tr>
-              <td>Ice cream sandwich</td>
-              <td>237</td>
+              <td>Dency</td>
+              <td>3</td>
             </tr>
             <tr>
-              <td>Eclair</td>
-              <td>262</td>
+              <td>Mariyam</td>
+              <td>4</td>
             </tr>
             <tr>
-              <td>Cupcake</td>
-              <td>305</td>
+              <td>Hari</td>
+              <td>3</td>
             </tr>
             <tr>
-              <td>Gingerbread</td>
-              <td>356</td>
+              <td>Geevarghese</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Angelkina</td>
+              <td>4</td>
             </tr>
           </tbody>
         </Table>

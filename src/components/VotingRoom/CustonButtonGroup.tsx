@@ -45,7 +45,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({ onStartTimer,stop
         >
           <Button onClick={handleButtonClick}>{isTimerOn ? 'End Voting':'Start Voting'  }</Button>
           <Button>Reveal</Button>
-          <Button>Skip</Button>
+          {/* <Button>Skip</Button> */}
           <Button>Save Result</Button>
           <Button>Exit</Button>
         </MuiButtonGroup>
