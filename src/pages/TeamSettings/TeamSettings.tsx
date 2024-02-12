@@ -15,9 +15,14 @@ const TeamSettings = () => {
   const [selectedTeamId, setSelectedTeamId] = useState<number>(0);
   // const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
 
-  const handleTeamSelect = (teamId: number) => {
+  const [selectedUserArray, setSelectedUserArray] = React.useState([]);
+
+  const handleSelectTeam = (teamId: number) => {
     setSelectedTeamId(teamId);
-    console.log(`team id here:`, teamId);
+  };
+
+  const handleResetSelectedUserArray = () => {
+    setSelectedUserArray([]);
   };
 
   interface OngoingMeetingProps {
@@ -91,7 +96,10 @@ const TeamSettings = () => {
               height: "100%",
             }}
           >
-            <SideNav onSelectTeam={handleTeamSelect}></SideNav>
+            <SideNav
+              onSelectTeam={handleSelectTeam}
+              resetSelectedUserArray={handleResetSelectedUserArray}
+            />
           </Box>
           {isSmallScreen ? (
             <Drawer variant="temporary">
@@ -105,7 +113,10 @@ const TeamSettings = () => {
         <Grid xs={16} md={12} px={3} pb={2} sx={{ flexGrow: 1 }} mx="auto">
           <Box>
             <Card sx={{ m: 3, display: "flex" }}>
-              <TeamList teamId={selectedTeamId} />
+              <TeamList
+                teamId={selectedTeamId}
+                selectedUserArray={selectedUserArray}
+              />
             </Card>
             {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
             <RecentActivities recentMeetings={recentMeetings} />

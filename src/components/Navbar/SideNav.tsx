@@ -22,20 +22,29 @@ interface TeamLists {
 
 interface SideNavProps {
   onSelectTeam: (teamId: number) => void;
+  resetSelectedUserArray: () => void;
 }
 
-const SideNav: React.FC<SideNavProps> = ({ onSelectTeam }) => {
+const SideNav: React.FC<SideNavProps> = ({
+  onSelectTeam,
+  resetSelectedUserArray,
+}) => {
   const navigate = useNavigate();
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
+
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchTeamLists = async () => {
       try {
+        console.log("here before");
+        console.log(userId);
         const response = await axios.get(
-          `http://localhost:3001/getAllTeamInformation`
+          `http://localhost:3001/getTeamInformationByUserId?userId=${userId}`
         );
         const teamListData = response.data.teamInfoList;
         setTeamLists(teamListData);
+        console.log("teamListData");
         console.log(teamListData);
       } catch (error) {
         console.error("Error fetching teams:", error);
@@ -43,6 +52,13 @@ const SideNav: React.FC<SideNavProps> = ({ onSelectTeam }) => {
     };
     fetchTeamLists();
   }, []);
+
+  const handleSelectTeam = (teamId: number) => {
+    // Call the onSelectTeam callback function to handle team selection
+    onSelectTeam(teamId);
+    // Reset the selectedUserArray by calling the resetSelectedUserArray callback function
+    resetSelectedUserArray();
+  };
 
   return (
     <Box
@@ -76,7 +92,8 @@ const SideNav: React.FC<SideNavProps> = ({ onSelectTeam }) => {
               <ListItem>
                 <ListItemButton
                   onClick={() => {
-                    onSelectTeam(teamList.id);
+                    handleSelectTeam(teamList.id);
+                    // onSelectTeam(teamList.id);
                     console.log(teamList.id);
                   }}
                 >
