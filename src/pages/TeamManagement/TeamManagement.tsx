@@ -127,7 +127,7 @@ const TeamManagement = () => {
               height: "100%",
             }}
           >
-            <SideNav onSelectTeam={handleTeamSelect}></SideNav>
+            {/* <SideNav onSelectTeam={handleTeamSelect}></SideNav> */}
           </Box>
 
           {isSmallScreen ? <Drawer variant="temporary"></Drawer> : <Box></Box>}
@@ -136,7 +136,7 @@ const TeamManagement = () => {
           <Box>
             {/* <SearchBar setSelectedUserId={setSelectedUserId} /> */}
             <Banar names={name} />
-            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
+            {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>
