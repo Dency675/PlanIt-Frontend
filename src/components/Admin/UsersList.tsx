@@ -36,8 +36,10 @@ import Snackbar from '@mui/joy/Snackbar';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
 import { AspectRatio, Card, Skeleton } from '@mui/joy';
 import { fetchUsersData } from '../../pages/Admin/apis/usersList';
-import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
+// import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 import { searchUsers } from '../../pages/Admin/apis/SearchUser';
+import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
+import { assignTeamManager } from '../../pages/Admin/apis/AssignManager';
 
 
 
@@ -119,11 +121,8 @@ export default function UsersList() {
     setPage(prevPage => prevPage - 7); 
   };
 
- 
 
-
-
-  function RowMenu({ userId }: { userId: string }) {
+  function RowMenu({ userId,status }: { userId: string ,status: string}) {
     
     const handleDelete = async () => {
       try {
@@ -141,6 +140,22 @@ export default function UsersList() {
       }
     };
 
+    const assignManager = async () => {
+      try {
+        await assignTeamManager(userId);
+        console.log(`User with ID ${userId} assigned as manager.`);
+        // setOpen(true)
+        // setOpenSnackbar(true);
+     
+      // setData(data.filter(user => user.id !== userId));
+      // setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
+      // console.log("Member:", data);
+        
+      } catch (error) {
+        console.error('Error assigning user :', error);
+      }
+    };
+
   return (
     <Dropdown>
       <MenuButton
@@ -150,9 +165,9 @@ export default function UsersList() {
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Assign Team Manager</MenuItem>
+        <MenuItem disabled={status === 'inactive'} onClick={assignManager}>Assign Team Manager </MenuItem>
         <Divider />
-        <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem color="danger" disabled={status === 'inactive'}  onClick={handleDelete}>Delete</MenuItem>
       </Menu>
      
       <Snackbar
@@ -382,7 +397,7 @@ export default function UsersList() {
                     {/* <Link level="body-xs" component="button">
                       Download
                     </Link> */}
-                    <RowMenu userId={row.id}  />
+                    <RowMenu userId={row.id} status={row.status}    />
 
                   </Box>
                 </td>
