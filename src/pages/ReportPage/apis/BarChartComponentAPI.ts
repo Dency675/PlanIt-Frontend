@@ -7,8 +7,6 @@ export const BarChartComponentData = async (
   return await axiosInstance
     .get(`/getAllUserStoriesBySessionId?sessionId=${sessionId}`)
     .then((data) => {
-      console.log("data.data");
-      console.log(data.data);
       return data.data;
     })
     .catch((err) => err);
