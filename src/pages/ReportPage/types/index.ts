@@ -45,3 +45,24 @@ export interface ParticipantDataListResponsesData {
 export interface ParticipantDataListResponsesParent {
   participantData: ParticipantDataListResponsesData;
 }
+
+export interface UserStoryDataResponse {
+  userStoryId: number;
+  storyPointResult: number;
+  comment: string;
+  userStory: {
+    userStory: string;
+  };
+}
+
+export type UserStoryTitleAndPointResponse = UserStoryDataResponse[];
+
+export interface ParticipantScore {
+  storyPoint: string;
+  participantName: string;
+}
+
+export interface UserStory {
+  userStoryId: number;
+  participantScores: ParticipantScore[];
+}

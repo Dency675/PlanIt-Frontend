@@ -30,9 +30,9 @@ const DetailedReportComponent: React.FC<DetailedReportComponentProps> = ({
         justifyContent: "space-evenly",
       }}
     >
-      <Grid item xs={12} sm={4} md={4.5}>
+      {/* <Grid item xs={12} sm={4} md={4.5}>
         <DetailedReportChartComponent barChartData={barChartData} />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12} sm={4} md={4}>
         <DetailedReportSessionComponent sessionData={sessionData} />
       </Grid>

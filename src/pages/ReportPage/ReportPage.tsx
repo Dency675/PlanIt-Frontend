@@ -1,22 +1,30 @@
-import { Typography } from "@mui/joy";
 import React, { useEffect, useState, useRef } from "react";
+import { Typography, Button, Grid } from "@mui/material";
 import OverViewComponents from "../../components/ReportPage/OverView/OverViewComponents";
 import UserStoryComponent from "../../components/ReportPage/UserStory/UserStoryComponent";
 import DetailedReportComponent from "../../components/ReportPage/DetailedReport/DetailedReportComponent";
 import Header from "../../components/Navbar/Header";
-import { Grid } from "@mui/material";
 import { OverViewComponentData } from "./apis/OverviewComponentsAPI";
 import { ParticiantListData } from "./apis/ParticipantListAPI";
+import { sessionDetailsData } from "./apis/SessionDetailsAPI";
+import { BarChartComponentData } from "./apis/BarChartComponentAPI";
+import { getAllParticipantScoreBySessionIdData } from "./apis/UserStoryTitleAndPointAPI";
+import { getParticipantScoreData } from "./apis/ParticipantScoreAPI";
 import {
   BarChartComponentResponsesData,
   OverviewComponentDataResponse,
   ParticipantDataListResponsesData,
   SessionDetailsResponsesData,
+  UserStoryTitleAndPointResponse,
+  UserStory,
 } from "./types";
-import { sessionDetailsData } from "./apis/SessionDetailsAPI";
-import { BarChartComponentData } from "./apis/BarChartComponentAPI";
 
 const ReportPage = () => {
+  const [viewMode, setViewMode] = useState("detailed");
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "detailed" ? "short" : "detailed"));
+  };
+
   const [overViewData, setOverViewData] =
     useState<OverviewComponentDataResponse>({
       totalCount: 0,
@@ -24,6 +32,8 @@ const ReportPage = () => {
       incompleteUserStoryCount: 0,
       participantCount: 0,
     });
+
+  const [offset, setOffset] = useState<number>(0);
 
   const [sessionData, setSessionData] = useState<SessionDetailsResponsesData>({
     data: {
@@ -52,11 +62,21 @@ const ReportPage = () => {
       },
     });
 
-  const [visibleUserStoryCount, setVisibleUserStoryCount] = useState(6);
+  const [visibleUserStoryCount, setVisibleUserStoryCount] = useState(
+    offset + 6
+  );
+
+  const [userStoryData, setUserStoryData] =
+    useState<UserStoryTitleAndPointResponse>([]);
 
   const loadMoreUserStories = () => {
     setVisibleUserStoryCount((prevCount) => prevCount + 6);
+    setOffset((prev) => prev + 6);
   };
+
+  const [participantScoreData, setParticipantScoreData] = useState<UserStory[]>(
+    []
+  );
 
   const observer = useRef(
     new IntersectionObserver(
@@ -131,6 +151,36 @@ const ReportPage = () => {
     fetchBarChartData();
   }, []);
 
+  useEffect(() => {
+    const fetchgetAllParticipantScoreBySessionIdData = async () => {
+      try {
+        const userStoryData = await getAllParticipantScoreBySessionIdData(
+          1,
+          offset
+        );
+        setUserStoryData((prevUserStoryData) => [
+          ...prevUserStoryData,
+          ...userStoryData,
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchgetAllParticipantScoreBySessionIdData();
+  }, [visibleUserStoryCount]);
+
+  useEffect(() => {
+    const fetchgetParticipantScoreData = async () => {
+      try {
+        const participantScoreData = await getParticipantScoreData(1);
+        setParticipantScoreData(participantScoreData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchgetParticipantScoreData();
+  }, []);
+
   const totalUserStories = overViewData.completeStoryCount;
 
   return (
@@ -142,6 +192,13 @@ const ReportPage = () => {
         spacing={3}
         sx={{ padding: 2 }}
       >
+        <Grid item xs={12} sm={12} md={12}>
+          <Button onClick={toggleViewMode} variant="outlined" color="primary">
+            {viewMode === "detailed"
+              ? "Show Short Report"
+              : "Show Detailed Report"}
+          </Button>
+        </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <Typography
             sx={{
@@ -160,26 +217,30 @@ const ReportPage = () => {
             sessionData={sessionData}
           />
         </Grid>
-        <Grid item xs={12} sm={12} md={12}>
-          <Typography
-            sx={{
-              fontSize: "27px",
-              fontWeight: "bold",
-              marginLeft: 6,
-              marginBottom: 1,
-              marginTop: 2,
-            }}
-          >
-            Detailed Report
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12}>
-          <DetailedReportComponent
-            participantData={participantData}
-            sessionData={sessionData}
-            barChartData={barChartData}
-          />
-        </Grid>
+        {viewMode === "detailed" && (
+          <>
+            <Grid item xs={12} sm={12} md={12}>
+              <Typography
+                sx={{
+                  fontSize: "27px",
+                  fontWeight: "bold",
+                  marginLeft: 6,
+                  marginBottom: 1,
+                  marginTop: 2,
+                }}
+              >
+                Detailed Report
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <DetailedReportComponent
+                participantData={participantData}
+                sessionData={sessionData}
+                barChartData={barChartData}
+              />
+            </Grid>
+          </>
+        )}
         <Grid item xs={12} sm={12} md={12}>
           <Typography
             sx={{
@@ -192,10 +253,15 @@ const ReportPage = () => {
             User Story
           </Typography>
           <Grid />
-          {Array.from({ length: totalUserStories }, (_, index) => (
+          {Array.from({ length: userStoryData.length }, (_, index) => (
             <Grid item xs={12} sm={12} md={12} key={index}>
               {index < visibleUserStoryCount && (
-                <UserStoryComponent index={index + 1} />
+                <UserStoryComponent
+                  userStoryData={userStoryData}
+                  index={index}
+                  participantScoreData={participantScoreData}
+                  viewMode={viewMode}
+                />
               )}
             </Grid>
           ))}

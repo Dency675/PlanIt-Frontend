@@ -11,8 +11,8 @@ import { ParticipantDataListResponsesParent } from "../../../pages/ReportPage/ty
 const DetailedReportParticipantListComponent = ({
   participantData,
 }: ParticipantDataListResponsesParent) => {
-  console.log("partivipnat data", participantData.data);
-  console.log("partivipnat data", typeof participantData.data);
+  // console.log("partivipnat data", participantData.data);
+  // console.log("partivipnat data", typeof participantData.data);
 
   const participantDataArray = Object.values(participantData.data).map(
     (item) => ({

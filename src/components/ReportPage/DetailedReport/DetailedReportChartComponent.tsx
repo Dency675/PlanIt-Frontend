@@ -8,23 +8,23 @@ import { BarChartComponentResponsesParent } from "../../../pages/ReportPage/type
 const DetailedReportChartComponent = ({
   barChartData,
 }: BarChartComponentResponsesParent) => {
-  console.log("barchartdata", barChartData);
-  console.log("barchartdata.data", barChartData.data);
+  // console.log("barchartdata", barChartData);
+  // console.log("barchartdata.data", barChartData.data);
 
   const calculationArray = Object.values(barChartData.data).map((item) => ({
     storyPointResult: item.storyPointResult,
     userStoryId: item.userStoryId,
   }));
 
-  console.log("calculationArray");
-  console.log(calculationArray);
-  console.log(typeof calculationArray);
+  // console.log("calculationArray");
+  // console.log(calculationArray);
+  // console.log(typeof calculationArray);
 
   const storyPointArray = calculationArray.map((item) => item.storyPointResult);
   const userStoryIdArray = calculationArray.map((item) => item.userStoryId);
 
-  console.log("Story Point Array:", storyPointArray);
-  console.log("User Story Id Array:", userStoryIdArray);
+  // console.log("Story Point Array:", storyPointArray);
+  // console.log("User Story Id Array:", userStoryIdArray);
 
   return (
     <Card

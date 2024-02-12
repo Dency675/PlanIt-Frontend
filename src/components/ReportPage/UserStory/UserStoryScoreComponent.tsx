@@ -2,8 +2,14 @@ import { Box, Card } from "@mui/joy";
 import CardHeader from "@mui/material/CardHeader";
 import { Clock } from "lucide-react";
 import React from "react";
+import { UserStoryTitleAndPointResponse } from "../../../pages/ReportPage/types";
 
-const UserStoryScoreComponent = () => {
+interface UserStoryProps {
+  index: number;
+  userStoryData: UserStoryTitleAndPointResponse;
+}
+
+const UserStoryScoreComponent = ({ userStoryData, index }: UserStoryProps) => {
   return (
     <Card
       variant="outlined"
@@ -27,7 +33,9 @@ const UserStoryScoreComponent = () => {
         {/* <CardHeader title="Another Card" />
     <CardContent>Score is 50</CardContent> */}
         <Clock size={85} />
-        <CardHeader title="Story Point : 2" />
+        <CardHeader
+          title={`Story Point : ${userStoryData[index].storyPointResult}`}
+        />
       </Box>
     </Card>
   );

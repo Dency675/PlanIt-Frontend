@@ -6,20 +6,21 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { ParticipantScore, UserStory } from "../../../pages/ReportPage/types";
 
-const UserStoryParicipantComponent = () => {
-  const participants = [
-    { name: "Participant 1", score: 3 },
-    { name: "Participant 2", score: 1 },
-    { name: "Participant 3", score: 4 },
-    { name: "Participant 4", score: 2 },
-    { name: "Participant 5", score: 1 },
-    { name: "Participant 6", score: 3 },
-    { name: "Participant 7", score: 4 },
-    { name: "Participant 8", score: 3 },
-    { name: "Participant 9", score: 2 },
-    { name: "Participant 10", score: 2 },
-  ];
+interface UserStoryParicipantComponentProps {
+  participantScores: ParticipantScore[];
+}
+
+const UserStoryParicipantComponent = ({
+  participantScores,
+}: UserStoryParicipantComponentProps) => {
+  console.log("3", participantScores);
+  // console.log(
+  //   "4",
+  //   participantScoreData[0].participantScores[0].participantName
+  // );
+
   return (
     <Card
       style={{ width: 900, border: "0.5px solid #9DBEFF" }}
@@ -54,13 +55,13 @@ const UserStoryParicipantComponent = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {participants.map((participant, index) => (
+            {Object.values(participantScores).map((participant, index) => (
               <TableRow
                 key={index}
                 sx={{ "&:hover": { backgroundColor: "#FEF0C0" } }}
               >
-                <TableCell>{participant.name}</TableCell>
-                <TableCell>{participant.score}</TableCell>
+                <TableCell>{participant.participantName}</TableCell>
+                <TableCell>{participant.storyPoint}</TableCell>
               </TableRow>
             ))}
           </TableBody>
