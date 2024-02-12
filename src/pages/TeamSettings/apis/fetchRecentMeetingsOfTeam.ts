@@ -58,6 +58,7 @@ const fetchRecentMeetingsOfTeam = async (
       //   { data: requestBody }
     );
 
+    console.log("response.data");
     console.log(response.data);
 
     const ongoingMeetingData = response.data.map((meeting: any) => ({
