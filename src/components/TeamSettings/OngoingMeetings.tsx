@@ -119,7 +119,8 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                         // handleStartButtonClick(ongoingMeeting.id);
                       }}
                     >
-                      Start {ongoingMeeting.scrumMasterId}
+                      {/* Start {ongoingMeeting.scrumMasterId} */}
+                      Start
                     </ListItemButton>
                   ) : (
                     <ListItemButton

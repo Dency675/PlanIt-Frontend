@@ -136,7 +136,7 @@ const TeamManagement = () => {
           <Box>
             {/* <SearchBar setSelectedUserId={setSelectedUserId} /> */}
             <Banar names={name} />
-            {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
+            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>
