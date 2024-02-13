@@ -333,9 +333,16 @@ const CreateRoomForm: React.FC = () => {
                     </Grid>
 
                     <Grid xs={12} mt={2}>
-                      <Button type="Create" color="success">
-                        Submit
-                      </Button>
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-end"
+                        alignItems="center"
+                      >
+                        <Button type="Create" color="success">
+                          Submit
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Card>
