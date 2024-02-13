@@ -198,7 +198,7 @@ const TeamManagement = () => {
         </Grid>
         <Grid xs={16} md={12} px={3} pb={2} sx={{ flexGrow: 1 }} mx="auto">
           <Box>
-            {/* <SearchBar setSelectedUserId={setSelectedUserId} /> */}
+            <SearchBar setSelectedUserId={setSelectedUserId} />
             <Banar names={name} />
 
             <Button variant="outlined" onClick={() => setOpen(true)}>
@@ -233,7 +233,7 @@ const TeamManagement = () => {
                 </DialogActions>
               </ModalDialog>
             </Modal>
-            {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
+            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>

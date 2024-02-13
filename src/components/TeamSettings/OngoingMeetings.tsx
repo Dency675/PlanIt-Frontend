@@ -10,7 +10,13 @@ import {
   ListSubheader,
   Typography,
 } from "@mui/joy";
-import React from "react";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import editSessions from "./api/editSessions";
+import { useSocket } from "../Socket/SocketContext";
+import editSessionParticipants from "./api/editSessionParticipants";
 import RecentActivity from "./RecentActivity";
 
 interface OngoingMeetingProps {
@@ -26,7 +32,53 @@ interface OngoingMeetingProps {
 const userId = localStorage.getItem("userId");
 
 const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
-  console.log("ongoingMeetings", ongoingMeetings);
+  const navigate = useNavigate();
+
+  const socket = useSocket();
+
+  socket.on("roomCreated", (sessionId: string) => {
+    editSessions(parseInt(sessionId), "active")
+      .then((response: any) => {
+        console.log("session status is ", response);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+
+    editSessionParticipants(sessionId, userId as string)
+      .then((response: any) => {
+        console.log("session status is ", response);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+  });
+
+  const handleStartButtonClick = (sessionId: number) => {
+    console.log("createRoom");
+
+    socket.emit("createRoom", sessionId);
+  };
+
+  const handleJoinButtonClick = (sessionId: number) => {
+    console.log("joinRoom");
+
+    socket.emit("joinRoom", sessionId, userId);
+  };
+
+  React.useEffect(() => {
+    socket.on("userJoined", (data: { sessionId: string }) => {
+      console.log("userJoined", data.sessionId);
+      editSessionParticipants(data.sessionId, userId as string)
+        .then((response: any) => {
+          console.log("session status is ", response);
+        })
+        .catch((error) => {
+          console.error("Error occurred while changing status :", error);
+        });
+    });
+  }, []);
+
   return (
     <Grid container>
       <Grid xs={12}>
@@ -75,8 +127,8 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                   {userId === ongoingMeeting.scrumMasterId ? (
                     <ListItemButton
                       onClick={() => {
-                        // navigate(`/vote/${ongoingMeeting.id}`);
-                        // handleStartButtonClick(ongoingMeeting.id);
+                        navigate(`/vote/${ongoingMeeting.id}`);
+                        handleStartButtonClick(ongoingMeeting.id);
                       }}
                     >
                       Start {ongoingMeeting.scrumMasterId}
@@ -84,13 +136,12 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                   ) : (
                     <ListItemButton
                       onClick={() => {
-                        // navigate(`/vote/${ongoingMeeting.id}`);
-                        // handleJoinButtonClick(ongoingMeeting.id);
+                        navigate(`/vote/${ongoingMeeting.id}`);
+                        handleJoinButtonClick(ongoingMeeting.id);
                       }}
                       disabled={ongoingMeeting.status !== "active"}
                     >
-                      Join
-                      {/* {ongoingMeeting.status} */}
+                      Join {ongoingMeeting.status}
                     </ListItemButton>
                   )}
                 </CardOverflow>

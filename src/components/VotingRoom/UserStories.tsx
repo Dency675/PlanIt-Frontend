@@ -1,24 +1,94 @@
-import * as React from 'react';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import Typography from '@mui/joy/Typography';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Book } from 'lucide-react';
-import Select, { selectClasses } from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
+import * as React from "react";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import Typography from "@mui/joy/Typography";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import { Book } from "lucide-react";
+// import Select, { selectClasses } from "@mui/joy/Select";
+import { InputLabel, Select, SelectChangeEvent } from "@mui/material";
+import Option from "@mui/joy/Option";
+import getAllUserStoriesBySessionId from "./api/getAllUserStoriesBySessionId";
+import { selectClasses } from "@mui/joy/Select";
+import { MenuItem } from "@mui/material";
+import { useSocket } from "../Socket/SocketContext";
 
-export default function UserStories() {
+interface userStoryType {
+  roundNumber: number;
+  storyPointResult: number;
+  userStory: string;
+  userStoryId: string;
+  userStoryMappingId: string;
+}
+interface sessionIdType {
+  sessionId: string;
+  setSelectedUserStoryId: React.Dispatch<React.SetStateAction<number>>;
+  userStoryList: userStoryType[];
+}
+
+interface userStoryType {
+  roundNumber: number;
+  storyPointResult: number;
+  userStory: string;
+  userStoryId: string;
+  userStoryMappingId: string;
+}
+const initialUserStory: userStoryType = {
+  roundNumber: 0,
+  storyPointResult: 0,
+  userStory: "",
+  userStoryId: "",
+  userStoryMappingId: "",
+};
+
+const UserStories: React.FC<sessionIdType> = ({
+  sessionId,
+  setSelectedUserStoryId,
+  userStoryList,
+}) => {
+  const socket = useSocket();
+  // const [userStoryList, setUserStoryList] = React.useState<userStoryType[]>([
+  //   initialUserStory,
+  // ]);
+
+  // React.useEffect(() => {
+  //   getAllUserStoriesBySessionId(sessionId)
+  //     .then((response: any) => {
+  //       setUserStoryList(response.data);
+  //       console.log("userStoryList:", userStoryList);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error occurred while changing status :", error);
+  //     });
+  // }, []);
+
+  const HandleUserStoryChange = (e: SelectChangeEvent<string>) => {
+    const selectedUserStoryName = e.target.value as string;
+    console.log(selectedUserStoryName);
+    const selectedUserStory = userStoryList.find(
+      (item) => item.userStory === selectedUserStoryName
+    );
+    if (selectedUserStory) {
+      console.log(selectedUserStory.userStoryMappingId);
+      setSelectedUserStoryId(parseInt(selectedUserStory.userStoryMappingId));
+      // socket.emit(
+      //   "userStoryMappingId",
+      //   selectedUserStory.userStoryMappingId,
+      //   sessionId
+      // );
+    }
+  };
+
   return (
     <Card
       variant="outlined"
       sx={{
-        maxHeight: 'max-content',
-        maxWidth: '100%',
-        mx: 'auto',
-        mt:5,
-        overflow: 'auto',
+        maxHeight: "max-content",
+        maxWidth: "100%",
+        mx: "auto",
+        mt: 5,
+        overflow: "auto",
       }}
     >
       <Typography level="title-lg" startDecorator={<Book />}>
@@ -27,32 +97,57 @@ export default function UserStories() {
       <Divider inset="none" />
       <CardContent
         sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, minmax(80px, 1fr))',
+          display: "grid",
+          gridTemplateColumns: "repeat(2, minmax(80px, 1fr))",
           gap: 1.5,
         }}
       >
-        <FormControl sx={{ gridColumn: '1/-1' }}>
+        <FormControl sx={{ gridColumn: "1/-1" }}>
+          {/* <Select
+            placeholder="Select User Story"
+            // indicator={<KeyboardArrowDown />}
+            sx={{
+              [`& .${selectClasses.indicator}`]: {
+                transition: "0.2s",
+                [`&.${selectClasses.expanded}`]: {
+                  transform: "rotate(-180deg)",
+                },
+              },
+            }}
+          >
+            {" "}
+            {userStoryList.map((userStory) => (
+              <Option key={userStory.userStoryId} value={userStory.userStoryId}>
+                {userStory.userStory}
+              </Option>
+            ))}
+          </Select> */}
+
           <Select
-      placeholder="Select User Story"
-      indicator={<KeyboardArrowDown />}
-      sx={{
-        [`& .${selectClasses.indicator}`]: {
-          transition: '0.2s',
-          [`&.${selectClasses.expanded}`]: {
-            transform: 'rotate(-180deg)',
-          },
-        },
-      }}
-    >
-      <Option value="1">As a user, I want to be able to create a new account</Option>
-      <Option value="2">As a user, I want to be able to log in to the system</Option>
-      <Option value="3">As a user, I want to be able to reset my password</Option>
-      <Option value="4">As a user, I want to be able to update my profile information</Option>
-      <Option value="4">As a user, I want to be able to search for other users by their username.</Option>
-    </Select>
+            placeholder="Select user story"
+            fullWidth
+            size="small"
+            onChange={HandleUserStoryChange}
+            IconComponent={KeyboardArrowDown}
+            sx={{
+              [`& .${selectClasses.indicator}`]: {
+                transition: "0.2s",
+                [`&.${selectClasses.expanded}`]: {
+                  transform: "rotate(-180deg)",
+                },
+              },
+            }}
+            displayEmpty
+          >
+            {userStoryList.map((item, index) => (
+              <MenuItem key={index} value={item.userStory}>
+                {item.userStory}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
       </CardContent>
     </Card>
   );
-}
+};
+export default UserStories;

@@ -116,20 +116,6 @@ const CreateRoomForm: React.FC = () => {
           error
         );
       });
-
-    // addSessionParticipants({
-    //   sessionId: 1,
-    //   participants: teamMember,
-    // })
-    //   .then((response: any) => {
-    //     console.log("Response from addSessionParticipants:", response);
-    //   })
-    //   .catch((error) => {
-    //     console.error(
-    //       "Error occurred while adding session participants:",
-    //       error
-    //     );
-    //   });
   }, []);
 
   React.useEffect(() => {

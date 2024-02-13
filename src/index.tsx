@@ -6,11 +6,20 @@ import reportWebVitals from "./reportWebVitals";
 import "@fontsource/inter";
 import AppRouter from "./Routes";
 import RoomCreation from "./pages/RoomCreation/RoomCreation";
+import { SocketProvider } from "./components/Socket/SocketContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-root.render(<App></App>);
+root.render(
+  <React.StrictMode>
+    {/* <AppRouter /> */}
+    {/* <RoomCreation /> */}
+    <SocketProvider>
+      <App></App>
+    </SocketProvider>
+  </React.StrictMode>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
