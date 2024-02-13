@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const editSessions = async (sessionId: number) => {
+const editSessions = async (sessionId: number, status: string) => {
   try {
     const response = await axios.patch("http://localhost:3001/editSessions", {
       sessionId: sessionId,
-      status: "active",
+      status: status,
     });
 
     return response.data;

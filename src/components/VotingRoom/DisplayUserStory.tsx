@@ -23,10 +23,8 @@ const DisplayUserStory: React.FC<selectedUserStoryType> = ({
 }) => {
   const socket = useSocket();
 
-  console.log("selectedUserStoryId from display");
-  console.log(selectedUserStoryId);
-  console.log("userStoryList from display");
-  console.log(userStoryList);
+  console.log("selectedUserStoryId from display", selectedUserStoryId);
+  console.log("userStoryList from display", userStoryList);
 
   const [selectedUserStoryMappingId, setSelectedUserStoryMappingId] =
     useState<string>("");

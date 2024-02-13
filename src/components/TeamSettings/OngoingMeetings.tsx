@@ -20,6 +20,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import editSessions from "./api/editSessions";
 import { useSocket } from "../Socket/SocketContext";
+import editSessionParticipants from "./api/editSessionParticipants";
 
 interface OngoingMeetingProps {
   ongoingMeetings: {
@@ -38,8 +39,16 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
 
   const socket = useSocket();
 
-  socket.on("roomCreated", (sessionId) => {
-    editSessions(sessionId)
+  socket.on("roomCreated", (sessionId: string) => {
+    editSessions(parseInt(sessionId), "active")
+      .then((response: any) => {
+        console.log("session status is ", response);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+
+    editSessionParticipants(sessionId, userId as string)
       .then((response: any) => {
         console.log("session status is ", response);
       })
@@ -63,6 +72,13 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   React.useEffect(() => {
     socket.on("userJoined", (data: { sessionId: string }) => {
       console.log("userJoined", data.sessionId);
+      editSessionParticipants(data.sessionId, userId as string)
+        .then((response: any) => {
+          console.log("session status is ", response);
+        })
+        .catch((error) => {
+          console.error("Error occurred while changing status :", error);
+        });
     });
   }, []);
 
@@ -129,7 +145,8 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                       }}
                       disabled={ongoingMeeting.status !== "active"}
                     >
-                      Join {ongoingMeeting.status}
+                      {/* Join {ongoingMeeting.status} */}
+                      Join
                     </ListItemButton>
                   )}
                 </CardOverflow>

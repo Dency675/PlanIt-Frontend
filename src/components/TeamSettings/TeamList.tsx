@@ -19,11 +19,6 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
     TeamMemberProps["teamMember"][]
   >([]);
 
-  // const TeamList = ({ teamId }) => {
-  //   const [teamMembers, setTeamMembers] = useState<
-  //     TeamMemberProps["teamMember"][]
-  //   >([]);
-
   const [selectedUserArrayWithId, setSelectedUserArrayWithId] = React.useState<
     {
       userId: string;

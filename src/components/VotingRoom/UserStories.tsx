@@ -7,7 +7,7 @@ import Typography from "@mui/joy/Typography";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import { Book } from "lucide-react";
 // import Select, { selectClasses } from "@mui/joy/Select";
-import { Select, SelectChangeEvent } from "@mui/material";
+import { InputLabel, Select, SelectChangeEvent } from "@mui/material";
 import Option from "@mui/joy/Option";
 import getAllUserStoriesBySessionId from "./api/getAllUserStoriesBySessionId";
 import { selectClasses } from "@mui/joy/Select";
@@ -122,8 +122,9 @@ const UserStories: React.FC<sessionIdType> = ({
               </Option>
             ))}
           </Select> */}
+
           <Select
-            placeholder="Select Scale"
+            placeholder="Select user story"
             fullWidth
             size="small"
             onChange={HandleUserStoryChange}
@@ -136,6 +137,7 @@ const UserStories: React.FC<sessionIdType> = ({
                 },
               },
             }}
+            displayEmpty
           >
             {userStoryList.map((item, index) => (
               <MenuItem key={index} value={item.userStory}>

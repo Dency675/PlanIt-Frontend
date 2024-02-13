@@ -5,13 +5,16 @@ import LeftComponent from "../../components/VotingRoom/LeftComponent";
 import RightComponent from "../../components/VotingRoom/RightComponent";
 import { useParams } from "react-router-dom";
 import { sessionDetailsData } from "../ReportPage/apis/SessionDetailsAPI";
+// import { TeamIdProvider } from "./TeamIdContext";
 
 function VotingRoom() {
   const { sessionId } = useParams();
   const [userId, setUserId] = useState("");
   const [scrumMasterId, setScrumMasterId] = useState("");
   const [estimationId, setEstimationId] = useState(0);
+  const [teamId, setTeamId] = useState(0);
   const [timer, setTimer] = useState("");
+
   const userIdd = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -20,6 +23,7 @@ function VotingRoom() {
         .then((response: any) => {
           setEstimationId(response.data.estimationId);
           setScrumMasterId(response.data.scrumMasterId);
+          setTeamId(response.data.teamId);
           console.log("response.data.estimationId", response.data.estimationId);
           console.log(typeof response.data.estimationId);
           setTimer(response.data.timer);
@@ -27,7 +31,7 @@ function VotingRoom() {
         .catch((error) => {
           console.error("Error occurred while changing status :", error);
         });
-  }, [sessionId]);
+  }, [sessionId, teamId]);
 
   useEffect(() => {
     setUserId(userIdd as string);
@@ -52,10 +56,11 @@ function VotingRoom() {
             scrumMasterId={scrumMasterId}
             timer={timer}
             estimationId={estimationId}
+            teamId={teamId}
           />
         </Grid>
         <Grid xs={12} sm={4} md={4} lg={4}>
-          <RightComponent />
+          <RightComponent sessionId={sessionId as string} />
         </Grid>
       </Grid>
     </Container>

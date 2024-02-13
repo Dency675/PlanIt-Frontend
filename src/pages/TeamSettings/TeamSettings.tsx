@@ -118,7 +118,7 @@ const TeamSettings = () => {
                 selectedUserArray={selectedUserArray}
               />
             </Card>
-            {/* <OngoingMeetings ongoingMeetings={ongoingMeetings} /> */}
+            <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
         </Grid>

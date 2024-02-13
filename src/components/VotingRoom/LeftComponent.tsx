@@ -16,6 +16,7 @@ interface propType {
   scrumMasterId: string;
   timer: string;
   estimationId: number;
+  teamId: number;
 }
 const LeftComponent = ({
   userId,
@@ -23,6 +24,7 @@ const LeftComponent = ({
   scrumMasterId,
   timer,
   estimationId,
+  teamId,
 }: propType) => {
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
   const [isTimerRunningSession, setIsTimerRunningSession] =
@@ -30,6 +32,7 @@ const LeftComponent = ({
   const [selectedUserStoryId, setSelectedUserStoryId] = useState<number>(0);
 
   const [isStartButtonStarted, setIsStartButtonStarted] = useState(false);
+  const [teamIdL, setTeamId] = useState(0);
 
   const startTimer = () => {
     setIsTimerRunning(!isTimerRunning);
@@ -37,6 +40,11 @@ const LeftComponent = ({
   const stopTimer = () => {
     setIsTimerRunning(!isTimerRunning);
   };
+
+  React.useEffect(() => {
+    console.log("teamId from left,", teamId);
+    setTeamId(teamId);
+  }, [teamId]);
 
   React.useEffect(() => {
     console.log("isStartButtonStarted,", isStartButtonStarted);
@@ -140,8 +148,7 @@ const LeftComponent = ({
 
   let testValue: number;
   React.useEffect(() => {
-    console.log("selectedUserStoryId from left");
-    console.log(selectedUserStoryId);
+    console.log("selectedUserStoryId from left", selectedUserStoryId);
   }, [selectedUserStoryId]);
 
   testValue = selectedUserStoryId;
@@ -188,7 +195,11 @@ const LeftComponent = ({
       {userId === scrumMasterId ? (
         <></>
       ) : (
-        <VotingCards estimationId={estimationId} />
+        <VotingCards
+          estimationId={estimationId}
+          selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
+          teamId={teamIdL}
+        />
       )}
     </Box>
   );

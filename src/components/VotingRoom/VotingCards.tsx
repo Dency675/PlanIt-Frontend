@@ -3,8 +3,12 @@ import { Card, CardContent, Typography, Grid } from "@mui/joy";
 import Slide from "@mui/material/Slide";
 import getScales from "./api/getScale";
 import { useSocket } from "../Socket/SocketContext";
+import addParticipantScores from "./api/addParticipantScores";
+import getTeamMemberInformationByUserId from "./api/getTeamMemberInformationByUserId";
 interface votingCardsPropType {
   estimationId: number;
+  selectedUserStoryId: number;
+  teamId: number;
 }
 
 interface scaleDataProps {
@@ -12,10 +16,31 @@ interface scaleDataProps {
   scaleValue: number;
 }
 
-const VotingCards: React.FC<votingCardsPropType> = ({ estimationId }) => {
+const VotingCards: React.FC<votingCardsPropType> = ({
+  estimationId,
+  selectedUserStoryId,
+  teamId,
+}) => {
   const [scaleData, setScaleData] = useState<scaleDataProps[]>([
     { scaleName: "", scaleValue: 0 },
   ]);
+
+  const [userId, setUserId] = useState("");
+  const [teamMemberId, setTeamMemberId] = useState("");
+  const userIdd = localStorage.getItem("userId");
+
+  React.useEffect(() => {
+    console.log("selectedUserStoryId from votind card", selectedUserStoryId);
+  }, [selectedUserStoryId]);
+
+  React.useEffect(() => {
+    console.log("teamId from voting cards,", teamId);
+  }, [teamId]);
+
+  React.useEffect(() => {
+    setUserId(userIdd as string);
+    console.log("userIdd", userIdd);
+  }, [userIdd]);
 
   const [isStartButtonStarted, setIsStartButtonStarted] =
     useState<boolean>(true);
@@ -46,10 +71,33 @@ const VotingCards: React.FC<votingCardsPropType> = ({ estimationId }) => {
     };
   }, []);
 
+  React.useEffect(() => {
+    getTeamMemberInformationByUserId(teamId, userId)
+      .then((response) => {
+        console.log("API call successful,", response.teamMemberId);
+        setTeamMemberId(response.teamMemberId);
+      })
+      .catch((error: any) => {
+        console.error("Error making API call:", error);
+      });
+  }, [userId, teamId]);
+
   const handleCardClick = (index: number, scaleValue: number) => {
     if (isStartButtonStarted) {
       setSelectedCard(index === selectedCard ? null : index);
       console.log(scaleValue);
+
+      addParticipantScores({
+        teamMemberId: teamMemberId,
+        userStorySessionMappingId: selectedUserStoryId,
+        storyPoint: scaleValue,
+      })
+        .then(() => {
+          console.log("API call successful");
+        })
+        .catch((error: any) => {
+          console.error("Error making API call:", error);
+        });
     }
   };
 

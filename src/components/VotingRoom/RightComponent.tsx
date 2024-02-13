@@ -1,12 +1,15 @@
-import React from 'react'
-import Result from './Result'
-const RightComponent = () => {
-  return (
-    <div>
-     
-<Result/>
-      </div>
-  )
+import React from "react";
+import Result from "./Result";
+interface tablePropType {
+  sessionId: string;
 }
 
-export default RightComponent
+const RightComponent: React.FC<tablePropType> = ({ sessionId }) => {
+  return (
+    <div>
+      <Result sessionId={sessionId} />
+    </div>
+  );
+};
+
+export default RightComponent;
