@@ -85,7 +85,12 @@ const ReportPage = () => {
   };
 
   const [participantScoreData, setParticipantScoreData] = useState<UserStory[]>(
-    []
+    [
+      {
+        userStoryId: 0,
+        participantScores: [{ storyPoint: " ", participantName: " " }],
+      },
+    ]
   );
 
   const observer = useRef(
@@ -112,6 +117,19 @@ const ReportPage = () => {
       currentObserver.disconnect();
     };
   }, [userStoryRef.current]);
+
+  useEffect(() => {
+    const fetchgetParticipantScoreData = async () => {
+      try {
+        const participantScoreData = await getParticipantScoreData(1);
+        console.log("1", participantScoreData);
+        setParticipantScoreData(participantScoreData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchgetParticipantScoreData();
+  }, []);
 
   useEffect(() => {
     const fetchOverViewComponentData = async () => {
@@ -178,23 +196,6 @@ const ReportPage = () => {
     };
     fetchgetAllParticipantScoreBySessionIdData();
   }, [visibleUserStoryCount]);
-
-  useEffect(() => {
-    const fetchgetParticipantScoreData = async () => {
-      try {
-        const participantScoreData = await getParticipantScoreData(1);
-        console.log("1", participantScoreData);
-        setParticipantScoreData(participantScoreData);
-        console.log(
-          "participantScoreData from report page",
-          participantScoreData
-        );
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchgetParticipantScoreData();
-  }, []);
 
   const totalUserStories = overViewData.completeStoryCount;
 
@@ -343,6 +344,7 @@ const ReportPage = () => {
             </Button>
           </Box>
         </Grid>
+        <div ref={userStoryRef} />
       </Grid>
     </>
   );

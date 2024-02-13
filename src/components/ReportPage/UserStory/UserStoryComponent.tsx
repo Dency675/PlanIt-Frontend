@@ -22,12 +22,8 @@ const UserStoryComponent = ({
   participantScoreData,
   viewMode,
 }: UserStoryProps) => {
-  console.log("participantScoreData from parent ", participantScoreData);
-  console.log("participantScoreData from parent [0]", participantScoreData[0]);
-  console.log(
-    "participantScoreData from parent [0].participantScores",
-    participantScoreData[0].participantScores
-  );
+  console.log("2 ", participantScoreData);
+  console.log("2-index", index);
 
   return (
     <Grid
