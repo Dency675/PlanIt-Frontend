@@ -1,5 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Typography, Button, Grid } from "@mui/material";
+import {
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup,
+  Grid,
+} from "@mui/material";
 import OverViewComponents from "../../components/ReportPage/OverView/OverViewComponents";
 import UserStoryComponent from "../../components/ReportPage/UserStory/UserStoryComponent";
 import DetailedReportComponent from "../../components/ReportPage/DetailedReport/DetailedReportComponent";
@@ -21,8 +26,11 @@ import {
 
 const ReportPage = () => {
   const [viewMode, setViewMode] = useState("detailed");
-  const toggleViewMode = () => {
-    setViewMode((prevMode) => (prevMode === "detailed" ? "short" : "detailed"));
+  const toggleViewMode = (
+    event: any,
+    newMode: React.SetStateAction<string>
+  ) => {
+    setViewMode(newMode);
   };
 
   const [overViewData, setOverViewData] =
@@ -194,11 +202,28 @@ const ReportPage = () => {
         sx={{ padding: 2 }}
       >
         <Grid item xs={12} sm={12} md={12}>
-          <Button onClick={toggleViewMode} variant="outlined" color="primary">
-            {viewMode === "detailed"
-              ? "Show Short Report"
-              : "Show Detailed Report"}
-          </Button>
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={toggleViewMode}
+            aria-label="report view mode"
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginRight: 125,
+            }}
+          >
+            <ToggleButton
+              value="detailed"
+              aria-label="detailed"
+              color="primary"
+            >
+              Detailed Report
+            </ToggleButton>
+            <ToggleButton value="short" aria-label="short" color="primary">
+              Brief Report
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <Typography
