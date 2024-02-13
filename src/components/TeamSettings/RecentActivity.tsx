@@ -29,6 +29,8 @@ export interface RecentActivityProps {
 const RecentActivity = ({ recentActivity }: RecentActivityProps) => {
   const navigate = useNavigate();
 
+  console.log("recentactivity", recentActivity);
+
   return (
     <Box>
       <ListDivider />

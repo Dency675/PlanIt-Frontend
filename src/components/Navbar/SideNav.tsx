@@ -23,11 +23,13 @@ interface TeamLists {
 interface SideNavProps {
   onSelectTeam: (teamId: number) => void;
   resetSelectedUserArray: () => void;
+  updateTeamList: (newTeamList: TeamLists["teamInfoList"][]) => void; // Add this prop
 }
 
 const SideNav: React.FC<SideNavProps> = ({
   onSelectTeam,
   resetSelectedUserArray,
+  updateTeamList,
 }) => {
   const navigate = useNavigate();
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
@@ -46,6 +48,7 @@ const SideNav: React.FC<SideNavProps> = ({
         setTeamLists(teamListData);
         console.log("teamListData");
         console.log(teamListData);
+        updateTeamList(teamListData);
       } catch (error) {
         console.error("Error fetching teams:", error);
       }
@@ -58,6 +61,7 @@ const SideNav: React.FC<SideNavProps> = ({
     onSelectTeam(teamId);
     // Reset the selectedUserArray by calling the resetSelectedUserArray callback function
     resetSelectedUserArray();
+    navigate(`/teamSettings/${teamId}`);
   };
 
   return (

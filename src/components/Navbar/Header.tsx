@@ -29,6 +29,7 @@ import { useMsal } from "@azure/msal-react";
 import LightLogo from "../../assets/images/logo_Pi.png";
 import DarkLogo from "../../assets/images/logo_white.png";
 import getUserInformationById from "../../pages/TeamManagement/api/fetchUserData";
+import { useNavigate } from "react-router";
 
 function ColorSchemeToggle() {
   const [mounted, setMounted] = React.useState(false);
@@ -70,7 +71,9 @@ export default function Header() {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
+  const navigate = useNavigate();
   const { instance } = useMsal();
+
   const logOut = () => {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
@@ -82,15 +85,27 @@ export default function Header() {
   };
   React.useEffect(() => {
     getUserInformationById(userId as string)
-      .then(({ givenName, email }) => {
+      .then(({ givenName, email, surName }) => {
         console.log("Given name:", givenName);
-        setName(givenName);
+
+        setName(givenName + " " + surName);
         setEmail(email);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
+
+  function stringAvatar(givenName: string) {
+    console.log(givenName);
+    return {
+      sx: {
+        bgcolor: "lightgrey",
+      },
+      children: `${givenName.split(" ")[0][0]}`,
+    };
+  }
+
   return (
     <Box
       sx={{
@@ -121,6 +136,9 @@ export default function Header() {
               }
               alt=""
               style={{ width: "100px", height: "45px" }}
+              onClick={() => {
+                navigate(`/home`);
+              }}
             />
           </Box>
         </Stack>
@@ -159,13 +177,14 @@ export default function Header() {
           sx={{
             display: "flex",
             flexDirection: "row",
-            gap: 1.5,
+            gap: 3.5,
             alignItems: "left",
+            pb: 2,
           }}
         >
           <ColorSchemeToggle />
 
-          <Tooltip title="Joy UI overview" variant="outlined">
+          {/* <Tooltip title="Joy UI overview" variant="outlined">
             <IconButton
               size="sm"
               variant="plain"
@@ -176,7 +195,7 @@ export default function Header() {
             >
               <NotificationsActiveIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           {/* <ColorSchemeToggle /> */}
           <Dropdown>
             <MenuButton
@@ -188,11 +207,13 @@ export default function Header() {
                 borderRadius: "9999999px",
               }}
             >
-              <Avatar
+              {/* <Avatar
                 src="https://i.pravatar.cc/40?img=2"
                 srcSet="https://i.pravatar.cc/80?img=2"
                 sx={{ maxWidth: "32px", maxHeight: "32px" }}
-              />
+              /> */}
+
+              <Avatar {...stringAvatar(name)} />
             </MenuButton>
             <Menu
               placement="bottom-end"
@@ -211,11 +232,7 @@ export default function Header() {
                     alignItems: "center",
                   }}
                 >
-                  <Avatar
-                    src="https://i.pravatar.cc/40?img=2"
-                    srcSet="https://i.pravatar.cc/80?img=2"
-                    sx={{ borderRadius: "50%" }}
-                  />
+                  <Avatar {...stringAvatar(name)} />
                   <Box sx={{ ml: 1.5 }}>
                     <Typography level="title-sm" textColor="text.primary">
                       {name}

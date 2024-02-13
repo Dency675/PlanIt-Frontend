@@ -8,12 +8,13 @@ const fetchOngoingMeetingById = async (userId: string) => {
     );
     // const ongoingMeetingData = response.data;
 
-    const ongoingMeetingData = response.data.map((meeting: any) => ({
-      ...meeting,
-      createDateTime: formatDateTime(meeting.createDateTime),
-    }));
+    // const ongoingMeetingData = response.data.map((meeting: any) => ({
+    //   ...meeting,
+    //   createDateTime: formatDateTime(meeting.createDateTime),
+    // }));
 
-    return ongoingMeetingData;
+    // return ongoingMeetingData;
+    return response;
   } catch (error) {
     console.error("Error fetching meeting:", error);
   }

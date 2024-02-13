@@ -32,25 +32,37 @@ const RecentActivities = ({ recentMeetings }: RecentMeetingProps) => {
     RecentActivityProps["recentActivity"][]
   >([]);
 
-  // useEffect(() => {
-  //   const fetchRecentActivities = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3001/getAllRecentMeetings?teamId=1`
-  //       );
-  //       const pastMeetingData = response.data;
-  //       setRecentActivities(pastMeetingData);
-  //     } catch (error) {
-  //       console.error("Error fetching past meetings:", error);
-  //     }
-  //   };
-  //   fetchRecentActivities();
-  // }, []);
-
   useEffect(() => {
     console.log("recentActivities below");
     console.log(recentActivities);
   }, [recentActivities]);
+
+  const [sortBy, setSortBy] = useState<string>("createDateTime");
+  const [sortOrder, setSortOrder] = useState<string>("DESC");
+
+  const sortedMeetings = [...recentMeetings].sort((a, b) => {
+    if (sortBy === "createDateTime") {
+      const dateA = new Date(a.createDateTime).getTime();
+      const dateB = new Date(b.createDateTime).getTime();
+      console.log("dateA");
+      console.log(dateA);
+      return sortOrder === "ASC" ? dateA - dateB : dateB - dateA;
+    } else {
+      return sortOrder === "ASC"
+        ? a.sessionTitle.localeCompare(b.sessionTitle)
+        : b.sessionTitle.localeCompare(a.sessionTitle);
+    }
+  });
+
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
+    } else {
+      setSortBy(field);
+      setSortOrder("ASC");
+    }
+  };
+
   return (
     <Box>
       {" "}
@@ -62,16 +74,34 @@ const RecentActivities = ({ recentMeetings }: RecentMeetingProps) => {
           <ListItem nested>
             <ListSubheader sticky>Past Meetings</ListSubheader>
 
-            <List
-              aria-labelledby="ellipsis-list-demo"
-              sx={{ "--ListItemDecorator-size": "50px", padding: 2 }}
-            >
-              {recentMeetings.map((recentActivity, index) => (
-                <React.Fragment key={index}>
-                  <RecentActivity recentActivity={recentActivity} />
-                </React.Fragment>
-              ))}
-            </List>
+            <ButtonGroup aria-label="sort">
+              {/* <Button
+                onClick={() => handleSort("createDateTime")}
+                // color={sortBy === "createDateTime" ? "primary" : "default"}
+              >
+                Sort by Date
+              </Button> */}
+              <Button
+                onClick={() => handleSort("sessionTitle")}
+                // color={sortBy === "sessionTitle" ? "primary" : "default"}
+              >
+                Sort by Title
+              </Button>
+            </ButtonGroup>
+            {recentMeetings.length === 0 ? (
+              <Typography sx={{ p: 2 }}>No Past Meetings</Typography>
+            ) : (
+              <List
+                aria-labelledby="ellipsis-list-demo"
+                sx={{ "--ListItemDecorator-size": "50px", padding: 2 }}
+              >
+                {sortedMeetings.map((recentActivity, index) => (
+                  <React.Fragment key={index}>
+                    <RecentActivity recentActivity={recentActivity} />
+                  </React.Fragment>
+                ))}
+              </List>
+            )}
             {/* </Sheet> */}
           </ListItem>
         </List>

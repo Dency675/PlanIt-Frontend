@@ -23,6 +23,8 @@ import {
   UserStoryTitleAndPointResponse,
   UserStory,
 } from "./types";
+import html2pdf from "html2pdf.js";
+import { Box, Button } from "@mui/joy";
 
 const ReportPage = () => {
   const [viewMode, setViewMode] = useState("detailed");
@@ -183,6 +185,10 @@ const ReportPage = () => {
         const participantScoreData = await getParticipantScoreData(1);
         console.log("1", participantScoreData);
         setParticipantScoreData(participantScoreData);
+        console.log(
+          "participantScoreData from report page",
+          participantScoreData
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -191,6 +197,11 @@ const ReportPage = () => {
   }, []);
 
   const totalUserStories = overViewData.completeStoryCount;
+
+  const handleDownloadPDF = () => {
+    const element = document.getElementById("reportPage");
+    html2pdf().from(element).save();
+  };
 
   return (
     <>
@@ -291,9 +302,44 @@ const ReportPage = () => {
                 />
               )}
             </Grid>
+            // </>
           ))}
-          <div ref={userStoryRef} />
+          {/* <Grid item xs={12} sm={12} md={12}>
+            <Typography
+              sx={{
+                fontSize: "27px",
+                fontWeight: "bold",
+                marginLeft: 6,
+                marginBottom: 5,
+              }}
+            >
+              User Story
+            </Typography>
+            <Grid />
+            {Array.from({ length: userStoryData.length }, (_, index) => (
+              <Grid item xs={12} sm={12} md={12} key={index}>
+                {index < visibleUserStoryCount && (
+                  <UserStoryComponent
+                    userStoryData={userStoryData}
+                    index={index}
+                    participantScoreData={participantScoreData}
+                    viewMode={viewMode}
+                  />
+                )}
+              </Grid>
+            ))}
+            <div ref={userStoryRef} />
+          </Grid> */}
+          {/* <Button onClick={handleDownloadPDF}>Download PDF</Button> */}
         </Grid>
+
+        <Box
+          sx={{ display: "flex", justifyContent: "flex-end", pb: 3, mr: 10 }}
+        >
+          <Button onClick={handleDownloadPDF} color="primary">
+            Download PDF
+          </Button>
+        </Box>
       </Grid>
     </>
   );
