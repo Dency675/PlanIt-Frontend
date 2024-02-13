@@ -73,6 +73,7 @@ export default function Header() {
   const [email, setEmail] = React.useState<string>("");
   const navigate = useNavigate();
   const { instance } = useMsal();
+  const { mode } = useJoyColorScheme();
 
   const logOut = () => {
     localStorage.removeItem("roleID");
@@ -100,7 +101,7 @@ export default function Header() {
     console.log(givenName);
     return {
       sx: {
-        bgcolor: "lightgrey",
+        bgcolor: mode === "light" ? "lightgrey" : "darkgrey", // Adjusting background color based on theme mode
       },
       children: `${givenName.split(" ")[0][0]}`,
     };
