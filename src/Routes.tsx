@@ -35,7 +35,7 @@ const AppRoutes = () => {
 
           {/* Routes for developers */}
           <Route
-            path="/developer"
+            path="/home"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}
@@ -65,7 +65,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/developer/report"
+            path="/report/:sessionId"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}
@@ -97,7 +97,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/project_manager/settings"
+            path="/teamSettings/:teamId"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}
@@ -247,7 +247,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/scrum_master/room"
+            path="/roomCreation/:teamId"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "project manager", "developer"]}

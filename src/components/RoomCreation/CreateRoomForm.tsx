@@ -19,17 +19,25 @@ import { Box } from "@mui/joy";
 import CalculationMethodsDropdown from "./CalculationMethodsDropdown";
 import fetchMembers from "./api/fetchTeamMembers";
 import addSessionParticipants from "./api/addSessionParticipants";
+import { useNavigate, useParams } from "react-router";
 
 const CreateRoomForm: React.FC = () => {
+  const { teamId } = useParams();
   const [userFile, setUserFile] = useState<File | null>(null);
 
+  const [selectedTeamId, setSelectedTeamId] = useState("");
   const [sessionId, setSessionId] = useState<number>(0);
-  const teamId: string = "1";
+
+  const navigate = useNavigate();
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
     setUserFile(file);
   };
+
+  React.useEffect(() => {
+    setSelectedTeamId(teamId as string);
+  }, []);
 
   const [teamMember, setTeamMember] = useState<
     { userId: string; roleId: number }[]
@@ -41,13 +49,14 @@ const CreateRoomForm: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    navigate(`/teamSettings/${teamId}`);
 
     const formData = new FormData();
 
     formData.append("sessionTitle", roomName);
     formData.append("createDateTime", new Date().toLocaleDateString());
     formData.append("timer", voteTime);
-    formData.append("teamId", teamId);
+    formData.append("teamId", selectedTeamId);
     formData.append("scrumMasterId", storedUserId as string);
     formData.append("estimationId", selectedEstimationScaleId.toString());
     formData.append("calculationId", selectedCalculationMethodId.toString());
@@ -105,7 +114,7 @@ const CreateRoomForm: React.FC = () => {
   }, [sessionId]);
 
   React.useEffect(() => {
-    fetchMembers(teamId)
+    fetchMembers(selectedTeamId)
       .then((response) => {
         console.log("Response from fetchMembers:", response);
         setTeamMember(response);

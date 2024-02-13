@@ -15,7 +15,7 @@ interface UserStoryParicipantComponentProps {
 const UserStoryParicipantComponent = ({
   participantScores,
 }: UserStoryParicipantComponentProps) => {
-  console.log("3", participantScores);
+  console.log("participantScores", participantScores);
   // console.log(
   //   "4",
   //   participantScoreData[0].participantScores[0].participantName
