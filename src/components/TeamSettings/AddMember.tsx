@@ -63,11 +63,16 @@ const AddMember: React.FC<AddMemberProps & { teamId: number }> = ({
       );
 
       console.log("Users added successfully:", response.data);
-      // Reset selected users
-      setSelectedUserArray([]);
-      // Open modal
-      setModalMessage("Successfully Added!");
-      setIsModalOpen(true);
+      if (response.status === 201) {
+        setSelectedUserArray([]);
+        setModalMessage("Successfully Added!");
+        setIsModalOpen(true);
+      } else {
+        console.error(
+          "Error adding users: Unexpected response status",
+          response.status
+        );
+      }
     } catch (error) {
       console.error("Error adding users:", error);
     }

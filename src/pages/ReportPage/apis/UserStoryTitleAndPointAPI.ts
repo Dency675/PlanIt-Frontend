@@ -10,6 +10,7 @@ export const getAllParticipantScoreBySessionIdData = async (
       `/getUserStoryDetailBySessionId?sessionId=${sessionId}&offset=${offset}}`
     )
     .then((data) => {
+      console.log("getUserStoryDetailBySessionId", data.data);
       return data.data;
     })
     .catch((err) => err);

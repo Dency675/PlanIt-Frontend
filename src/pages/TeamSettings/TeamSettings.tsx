@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SideNav from "../../components/Navbar/SideNav";
-import { Box, Card, Divider, Grid, useTheme } from "@mui/joy";
+import { Box, Button, Card, Divider, Grid, useTheme } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import TeamList from "../../components/TeamSettings/TeamList";
@@ -8,6 +8,17 @@ import Header from "../../components/Navbar/Header";
 import { Drawer, useMediaQuery } from "@mui/material";
 import fetchRecentMeetingsOfTeam from "../TeamSettings/apis/fetchRecentMeetingsOfTeam";
 import fetchOngoingMeetingsByTeam from "../TeamSettings/apis/fetchOngoingMeetingsByTeam";
+import { useNavigate, useParams } from "react-router";
+import { formatDateTime } from "./apis/formatDateTime";
+import { identifier } from "stylis";
+import AddIcon from "@mui/icons-material/Add";
+
+interface TeamLists {
+  teamInfoList: {
+    id: number;
+    teamName: string;
+  };
+}
 
 const TeamSettings = () => {
   const theme = useTheme();
@@ -15,8 +26,18 @@ const TeamSettings = () => {
   const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
   // const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
 
+  const navigate = useNavigate();
+
   const [selectedUserArray, setSelectedUserArray] = React.useState([]);
 
+  const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]); // New state for team list
+
+  // Function to update the team list state
+  const updateTeamList = (newTeamList: TeamLists["teamInfoList"][]) => {
+    setTeamLists(newTeamList);
+  };
+
+  const { teamId } = useParams();
   const handleSelectTeam = (teamId: number) => {
     setSelectedTeamId(teamId);
   };
@@ -43,8 +64,15 @@ const TeamSettings = () => {
   React.useEffect(() => {
     fetchOngoingMeetingsByTeam(selectedTeamId as number)
       .then((response: any) => {
-        console.log("Response from .......:", response);
-        setOngoingMeetings(response);
+        if (response.status === 200) {
+          const ongoingMeetingData = response.data.map((meeting: any) => ({
+            ...meeting,
+            createDateTime: formatDateTime(meeting.createDateTime),
+          }));
+          setOngoingMeetings(ongoingMeetingData);
+        } else if (response.status === 204) {
+          setOngoingMeetings([]);
+        }
       })
       .catch((error) => {
         console.error(
@@ -57,22 +85,30 @@ const TeamSettings = () => {
   // Fetch recent meetings of the user
   useEffect(() => {
     if (selectedTeamId) {
-      // const requestBody = {
-      //   sortBy: "createDateTime",
-      //   sortOrder: "DESC",
-      //   fromDate: "2024-01-01",
-      //   toDate: "2024-02-01",
-      //   offset: 0,
-      //   limit: 10,
-      // };
+      const requestBody = {
+        sortBy: "createDateTime",
+        sortOrder: "DESC",
+        fromDate: "2024-01-01",
+        toDate: "2024-02-01",
+        offset: 0,
+        limit: 10,
+      };
 
-      fetchRecentMeetingsOfTeam(
-        selectedTeamId
-        // , requestBody
-      )
+      fetchRecentMeetingsOfTeam(selectedTeamId, requestBody)
         .then((response: any) => {
           console.log("Recent meetings:", response);
-          setRecentMeetings(response);
+
+          console.log("Recent meetings ipo:", response.status);
+
+          if (response.status === 200) {
+            const ongoingMeetingData = response.data.map((meeting: any) => ({
+              ...meeting,
+              createDateTime: formatDateTime(meeting.createDateTime),
+            }));
+            setRecentMeetings(ongoingMeetingData);
+          } else if (response.status === 204) {
+            setRecentMeetings([]);
+          }
         })
         .catch((error) => {
           console.error("Error fetching recent meetings:", error);
@@ -101,6 +137,7 @@ const TeamSettings = () => {
             <SideNav
               onSelectTeam={handleSelectTeam}
               resetSelectedUserArray={handleResetSelectedUserArray}
+              updateTeamList={updateTeamList}
             />
           </Box>
           {isSmallScreen ? (
@@ -120,6 +157,24 @@ const TeamSettings = () => {
                 selectedUserArray={selectedUserArray}
               />
             </Card>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                pb: 2,
+                mr: 3,
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  navigate(`/roomCreation/${teamId}`);
+                }}
+              >
+                {" "}
+                Create Room
+              </Button>
+            </Box>
             <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>
@@ -128,4 +183,5 @@ const TeamSettings = () => {
     </>
   );
 };
+
 export default TeamSettings;

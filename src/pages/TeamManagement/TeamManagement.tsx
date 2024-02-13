@@ -16,7 +16,7 @@ import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import SideNav from "../../components/Navbar/SideNav";
 import Header from "../../components/Navbar/Header";
-import { Drawer, useMediaQuery } from "@mui/material";
+import { Drawer, useMediaQuery, Button as Button2 } from "@mui/material";
 import SearchBar from "../../components/Search/SearchBar";
 import Banar from "../../components/Search/Banar";
 import getUserInformationById from "./api/fetchUserData";
@@ -24,6 +24,15 @@ import fetchOngoingMeetingById from "./api/fetchOngoingMeetingsByUser";
 import fetchRecentMeetingsOfUser from "./api/fetchRecentMeetingsOfUser";
 import Modal from "@mui/joy/Modal";
 import axios from "axios";
+import { formatDateTime } from "./api/formatDateTime";
+import AddIcon from "@mui/icons-material/Add";
+
+interface TeamLists {
+  teamInfoList: {
+    id: number;
+    teamName: string;
+  };
+}
 
 const TeamManagement = () => {
   const theme = useTheme();
@@ -47,6 +56,12 @@ const TeamManagement = () => {
   }, []);
 
   const [selectedUserArray, setSelectedUserArray] = React.useState([]);
+
+  const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]); // New state for team list
+
+  const updateTeamList = (newTeamList: TeamLists["teamInfoList"][]) => {
+    setTeamLists(newTeamList);
+  };
 
   const handleSelectTeam = (teamId: number) => {
     setSelectedTeamId(teamId);
@@ -75,8 +90,15 @@ const TeamManagement = () => {
   React.useEffect(() => {
     fetchOngoingMeetingById(userId as string)
       .then((response: any) => {
-        console.log("Response from .......:", response);
-        setOngoingMeetings(response);
+        if (response.status === 200) {
+          const ongoingMeetingData = response.data.map((meeting: any) => ({
+            ...meeting,
+            createDateTime: formatDateTime(meeting.createDateTime),
+          }));
+          setOngoingMeetings(ongoingMeetingData);
+        } else if (response.status === 204) {
+          setOngoingMeetings([]);
+        }
       })
       .catch((error) => {
         console.error(
@@ -191,6 +213,7 @@ const TeamManagement = () => {
             <SideNav
               onSelectTeam={handleSelectTeam}
               resetSelectedUserArray={handleResetSelectedUserArray}
+              updateTeamList={updateTeamList}
             />
           </Box>
 
@@ -201,9 +224,22 @@ const TeamManagement = () => {
             <SearchBar setSelectedUserId={setSelectedUserId} />
             <Banar names={name} />
 
-            <Button variant="outlined" onClick={() => setOpen(true)}>
-              Create New Team
-            </Button>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                pb: 2,
+                mr: 2,
+              }}
+            >
+              <Button2
+                variant="outlined"
+                color="inherit"
+                onClick={() => setOpen(true)}
+              >
+                <AddIcon sx={{ pr: 1 }}></AddIcon> Create New Team
+              </Button2>
+            </Box>
             <Modal open={open} onClose={() => setOpen(false)}>
               <ModalDialog variant="outlined" role="alertdialog">
                 <DialogTitle>Confirmation</DialogTitle>

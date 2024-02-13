@@ -79,18 +79,20 @@ const fetchOngoingMeetingsByTeam = async (teamId: number) => {
       `http://localhost:3001/getAllOngoingMeetings?teamId=${teamId}`
     );
 
-    console.log("Response data:", response.data);
+    // const ongoingMeetingData = Array.isArray(response.data)
+    //   ? response.data.map((meeting: any) => ({
+    //       ...meeting,
+    //       createDateTime: formatDateTime(meeting.createDateTime),
+    //     }))
+    //   : [response.data];
 
-    const ongoingMeetingData = Array.isArray(response.data)
-      ? response.data.map((meeting: any) => ({
-          ...meeting,
-          createDateTime: formatDateTime(meeting.createDateTime),
-        }))
-      : [response.data];
+    // console.log("Ongoing meetings:", ongoingMeetingData);
 
-    console.log("Ongoing meetings:", ongoingMeetingData);
+    // return ongoingMeetingData;
 
-    return ongoingMeetingData;
+    console.log("ongoinggg", teamId);
+    console.log("ongoinggg activities", response);
+    return response;
   } catch (error) {
     console.error("Error fetching recent meetings:", error);
     throw error;
