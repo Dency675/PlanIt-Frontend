@@ -206,105 +206,106 @@ const ReportPage = () => {
   return (
     <>
       <Header></Header>
-      <Grid
-        id="reportPage"
-        style={{ backgroundColor: "#f0f3f7" }}
-        container
-        spacing={3}
-        sx={{ padding: 2 }}
-      >
-        <Grid item xs={12} sm={12} md={12}>
-          <ToggleButtonGroup
-            value={viewMode}
-            exclusive
-            onChange={toggleViewMode}
-            aria-label="report view mode"
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginRight: 125,
-            }}
-          >
-            <ToggleButton
-              value="detailed"
-              aria-label="detailed"
-              color="primary"
+      <Grid>
+        <Grid
+          id="reportPage"
+          style={{ backgroundColor: "#f0f3f7" }}
+          container
+          spacing={3}
+          sx={{ padding: 2 }}
+        >
+          <Grid item xs={12} sm={12} md={12}>
+            <ToggleButtonGroup
+              value={viewMode}
+              exclusive
+              onChange={toggleViewMode}
+              aria-label="report view mode"
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginRight: 125,
+              }}
             >
-              Detailed Report
-            </ToggleButton>
-            <ToggleButton value="short" aria-label="short" color="primary">
-              Brief Report
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12}>
-          <Typography
-            sx={{
-              fontSize: "27px",
-              fontWeight: "bold",
-              marginLeft: 6,
-              marginBottom: 1,
-            }}
-          >
-            Overview
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12}>
-          <OverViewComponents
-            overViewData={overViewData}
-            sessionData={sessionData}
-          />
-        </Grid>
-        {viewMode === "detailed" && (
-          <>
-            <Grid item xs={12} sm={12} md={12}>
-              <Typography
-                sx={{
-                  fontSize: "27px",
-                  fontWeight: "bold",
-                  marginLeft: 6,
-                  marginBottom: 1,
-                  marginTop: 2,
-                }}
+              <ToggleButton
+                value="detailed"
+                aria-label="detailed"
+                color="primary"
               >
                 Detailed Report
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-              <DetailedReportComponent
-                participantData={participantData}
-                sessionData={sessionData}
-                barChartData={barChartData}
-              />
-            </Grid>
-          </>
-        )}
-        <Grid item xs={12} sm={12} md={12}>
-          <Typography
-            sx={{
-              fontSize: "27px",
-              fontWeight: "bold",
-              marginLeft: 6,
-              marginBottom: 5,
-            }}
-          >
-            User Story
-          </Typography>
-          <Grid />
-          {Array.from({ length: userStoryData.length }, (_, index) => (
-            <Grid item xs={12} sm={12} md={12} key={index}>
-              {index < visibleUserStoryCount && (
-                <UserStoryComponent
-                  userStoryData={userStoryData}
-                  index={index}
-                  participantScoreData={participantScoreData}
-                  viewMode={viewMode}
+              </ToggleButton>
+              <ToggleButton value="short" aria-label="short" color="primary">
+                Brief Report
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <Typography
+              sx={{
+                fontSize: "27px",
+                fontWeight: "bold",
+                marginLeft: 6,
+                marginBottom: 1,
+              }}
+            >
+              Overview
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <OverViewComponents
+              overViewData={overViewData}
+              sessionData={sessionData}
+            />
+          </Grid>
+          {viewMode === "detailed" && (
+            <>
+              <Grid item xs={12} sm={12} md={12}>
+                <Typography
+                  sx={{
+                    fontSize: "27px",
+                    fontWeight: "bold",
+                    marginLeft: 6,
+                    marginBottom: 1,
+                    marginTop: 2,
+                  }}
+                >
+                  Detailed Report
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={12} md={12}>
+                <DetailedReportComponent
+                  participantData={participantData}
+                  sessionData={sessionData}
+                  barChartData={barChartData}
                 />
-              )}
-            </Grid>
-            // </>
-          ))}
-          {/* <Grid item xs={12} sm={12} md={12}>
+              </Grid>
+            </>
+          )}
+          <Grid item xs={12} sm={12} md={12}>
+            <Typography
+              sx={{
+                fontSize: "27px",
+                fontWeight: "bold",
+                marginLeft: 6,
+                marginBottom: 5,
+              }}
+            >
+              User Story
+            </Typography>
+            <Grid />
+            {Array.from({ length: userStoryData.length }, (_, index) => (
+              <Grid item xs={12} sm={12} md={12} key={index}>
+                {index < visibleUserStoryCount && (
+                  <UserStoryComponent
+                    userStoryData={userStoryData}
+                    index={index}
+                    participantScoreData={participantScoreData}
+                    viewMode={viewMode}
+                  />
+                )}
+              </Grid>
+              // </>
+            ))}
+            {/* <Grid item xs={12} sm={12} md={12}>
             <Typography
               sx={{
                 fontSize: "27px",
@@ -330,16 +331,18 @@ const ReportPage = () => {
             ))}
             <div ref={userStoryRef} />
           </Grid> */}
-          {/* <Button onClick={handleDownloadPDF}>Download PDF</Button> */}
+            {/* <Button onClick={handleDownloadPDF}>Download PDF</Button> */}
+          </Grid>
         </Grid>
-
-        <Box
-          sx={{ display: "flex", justifyContent: "flex-end", pb: 3, mr: 10 }}
-        >
-          <Button onClick={handleDownloadPDF} color="primary">
-            Download PDF
-          </Button>
-        </Box>
+        <Grid style={{ backgroundColor: "#f0f3f7" }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", pb: 3, mr: 10 }}
+          >
+            <Button onClick={handleDownloadPDF} color="primary">
+              Download PDF
+            </Button>
+          </Box>
+        </Grid>
       </Grid>
     </>
   );
