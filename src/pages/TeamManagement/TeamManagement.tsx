@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Divider, Grid, useTheme } from "@mui/joy";
+import {
+  Box,
+  Button,
+  Card,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  Input,
+  ModalDialog,
+  useTheme,
+} from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import SideNav from "../../components/Navbar/SideNav";
@@ -8,28 +20,41 @@ import { Drawer, useMediaQuery } from "@mui/material";
 import SearchBar from "../../components/Search/SearchBar";
 import Banar from "../../components/Search/Banar";
 import getUserInformationById from "./api/fetchUserData";
-import fetchOngoingMeeting from "../../components/TeamSettings/api/fetchOngoingMeetings";
 import fetchOngoingMeetingById from "./api/fetchOngoingMeetingsByUser";
 import fetchRecentMeetingsOfUser from "./api/fetchRecentMeetingsOfUser";
+import Modal from "@mui/joy/Modal";
 import axios from "axios";
 
 const TeamManagement = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [name, setName] = useState<string>("");
+  const [teamName, setTeamName] = useState<string>("");
 
   const userId = localStorage.getItem("userId");
 
   React.useEffect(() => {
     getUserInformationById(userId as string)
-      .then((givenName: string) => {
+      .then(({ givenName, email }) => {
         console.log("Given name:", givenName);
+        console.log("Email:", email);
+        // Assuming 'setName' is a function to update the state of 'name'
         setName(givenName);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
+
+  const [selectedUserArray, setSelectedUserArray] = React.useState([]);
+
+  const handleSelectTeam = (teamId: number) => {
+    setSelectedTeamId(teamId);
+  };
+
+  const handleResetSelectedUserArray = () => {
+    setSelectedUserArray([]);
+  };
 
   interface OngoingMeetingProps {
     id: number;
@@ -44,6 +69,8 @@ const TeamManagement = () => {
   const [recentMeetings, setRecentMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
+
+  const [open, setOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     fetchOngoingMeetingById(userId as string)
@@ -115,6 +142,40 @@ const TeamManagement = () => {
     console.log(selectedUserId);
   }, [selectedUserId]);
 
+  const handleCreateTeam = async () => {
+    try {
+      // Make a POST request to your addTeamInformation API
+      const response = await axios.post(
+        "http://localhost:3001/addTeamInformation",
+        {
+          teamName: teamName,
+          status: "active", // You can set the status based on your requirements
+        }
+      );
+
+      const teamId = response.data.teamInfo.id;
+
+      const teamMemberResponse = await axios.post(
+        "http://localhost:3001/addMember",
+        {
+          userId: userId, // Replace userId with the actual user ID you want to add
+          teamId: teamId,
+        }
+      );
+
+      // Handle the response as needed
+      console.log("Team created successfully:", response.data);
+      console.log("Team member added successfully:", teamMemberResponse.data);
+
+      // event.preventDefault();
+      // Close the modal after creating the team
+      setOpen(false);
+    } catch (error) {
+      console.error("Error creating team:", error);
+      // Handle the error as needed
+    }
+  };
+
   return (
     <>
       <Header />
@@ -127,7 +188,10 @@ const TeamManagement = () => {
               height: "100%",
             }}
           >
-            {/* <SideNav onSelectTeam={handleTeamSelect}></SideNav> */}
+            <SideNav
+              onSelectTeam={handleSelectTeam}
+              resetSelectedUserArray={handleResetSelectedUserArray}
+            />
           </Box>
 
           {isSmallScreen ? <Drawer variant="temporary"></Drawer> : <Box></Box>}
@@ -136,6 +200,39 @@ const TeamManagement = () => {
           <Box>
             <SearchBar setSelectedUserId={setSelectedUserId} />
             <Banar names={name} />
+
+            <Button variant="outlined" onClick={() => setOpen(true)}>
+              Create New Team
+            </Button>
+            <Modal open={open} onClose={() => setOpen(false)}>
+              <ModalDialog variant="outlined" role="alertdialog">
+                <DialogTitle>Confirmation</DialogTitle>
+                <Divider />
+                <DialogContent>
+                  <Input
+                    placeholder="Enter Team Name"
+                    onChange={(e) => setTeamName(e.target.value)}
+                    value={teamName}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    type="submit"
+                    variant="solid"
+                    onClick={handleCreateTeam}
+                  >
+                    Create
+                  </Button>
+                  <Button
+                    variant="plain"
+                    color="neutral"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </ModalDialog>
+            </Modal>
             <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />
           </Box>

@@ -12,7 +12,7 @@ import fetchOngoingMeetingsByTeam from "../TeamSettings/apis/fetchOngoingMeeting
 const TeamSettings = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [selectedTeamId, setSelectedTeamId] = useState<number>(0);
+  const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
   // const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
 
   const [selectedUserArray, setSelectedUserArray] = React.useState([]);
@@ -83,6 +83,8 @@ const TeamSettings = () => {
   useEffect(() => {
     console.log(ongoingMeetings);
   }, [ongoingMeetings]);
+
+  console.log("ongoing not API", ongoingMeetings);
 
   return (
     <>

@@ -28,6 +28,7 @@ import { useMsal } from "@azure/msal-react";
 
 import LightLogo from "../../assets/images/logo_Pi.png";
 import DarkLogo from "../../assets/images/logo_white.png";
+import getUserInformationById from "../../pages/TeamManagement/api/fetchUserData";
 
 function ColorSchemeToggle() {
   const [mounted, setMounted] = React.useState(false);
@@ -65,7 +66,10 @@ function ColorSchemeToggle() {
 }
 
 export default function Header() {
+  const userId = localStorage.getItem("userId");
   const [open, setOpen] = React.useState(false);
+  const [name, setName] = React.useState<string>("");
+  const [email, setEmail] = React.useState<string>("");
   const { instance } = useMsal();
   const logOut = () => {
     localStorage.removeItem("roleID");
@@ -76,6 +80,17 @@ export default function Header() {
       mainWindowRedirectUri: "/",
     });
   };
+  React.useEffect(() => {
+    getUserInformationById(userId as string)
+      .then(({ givenName, email }) => {
+        console.log("Given name:", givenName);
+        setName(givenName);
+        setEmail(email);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
   return (
     <Box
       sx={{
@@ -203,10 +218,10 @@ export default function Header() {
                   />
                   <Box sx={{ ml: 1.5 }}>
                     <Typography level="title-sm" textColor="text.primary">
-                      Rick Sanchez
+                      {name}
                     </Typography>
                     <Typography level="body-xs" textColor="text.tertiary">
-                      rick@email.com
+                      {email}
                     </Typography>
                   </Box>
                 </Box>
