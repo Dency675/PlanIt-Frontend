@@ -114,7 +114,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchOverViewComponentData = async () => {
       try {
-        const overViewData = await OverViewComponentData(31);
+        const overViewData = await OverViewComponentData(1);
         setOverViewData(overViewData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -126,7 +126,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchParticipantListData = async () => {
       try {
-        const participantData = await ParticiantListData(31);
+        const participantData = await ParticiantListData(1);
         SetParticipantData(participantData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -181,6 +181,7 @@ const ReportPage = () => {
     const fetchgetParticipantScoreData = async () => {
       try {
         const participantScoreData = await getParticipantScoreData(1);
+        console.log("1", participantScoreData);
         setParticipantScoreData(participantScoreData);
       } catch (error) {
         console.error("Error fetching data:", error);

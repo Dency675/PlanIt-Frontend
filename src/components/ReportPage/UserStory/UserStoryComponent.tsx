@@ -87,7 +87,7 @@ const UserStoryComponent = ({
               >
                 <UserStoryParicipantComponent
                   participantScores={
-                    participantScoreData[index].participantScores ?? "n/a"
+                    participantScoreData[index].participantScores
                   }
                 />
               </Grid>
