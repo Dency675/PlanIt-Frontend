@@ -168,7 +168,13 @@ export default function Header() {
                 style={{ width: "100px", height: "45px" }}
               />
             </Box>
-            {/* <SideNav /> */}
+            <SideNav
+              onSelectTeam={function (teamId: number): void {}}
+              resetSelectedUserArray={function (): void {}}
+              updateTeamList={function (
+                newTeamList: { id: number; teamName: string }[]
+              ): void {}}
+            />
 
             <Box sx={{ px: 1 }}>{/* <TeamNav /> */}</Box>
           </Drawer>

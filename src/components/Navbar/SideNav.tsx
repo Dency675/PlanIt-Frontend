@@ -44,11 +44,15 @@ const SideNav: React.FC<SideNavProps> = ({
         const response = await axios.get(
           `http://localhost:3001/getTeamInformationByUserId?userId=${userId}`
         );
-        const teamListData = response.data.teamInfoList;
-        setTeamLists(teamListData);
-        console.log("teamListData");
-        console.log(teamListData);
-        updateTeamList(teamListData);
+        if (response.status === 200) {
+          const teamListData = response.data.teamInfoList;
+          setTeamLists(teamListData);
+          console.log("teamListData");
+          console.log(teamListData);
+          updateTeamList(teamListData);
+        } else if (response.status === 204) {
+          setTeamLists([]);
+        }
       } catch (error) {
         console.error("Error fetching teams:", error);
       }
@@ -91,7 +95,28 @@ const SideNav: React.FC<SideNavProps> = ({
             </ListItemDecorator>
             Team List
           </ListItem>
-          {teamLists.map((teamList, index) => (
+          {teamLists.length === 0 ? (
+            <Typography level="body-xs" ml={2}>
+              No teams
+            </Typography>
+          ) : (
+            teamLists.map((teamList, index) => (
+              <React.Fragment key={index}>
+                <ListItem>
+                  <ListItemButton
+                    onClick={() => {
+                      handleSelectTeam(teamList.id);
+                      console.log(teamList.id);
+                    }}
+                  >
+                    {teamList.teamName}
+                  </ListItemButton>
+                </ListItem>
+                <ListDivider />
+              </React.Fragment>
+            ))
+          )}
+          {/* {teamLists.map((teamList, index) => (
             <React.Fragment key={index}>
               <ListItem>
                 <ListItemButton
@@ -103,11 +128,10 @@ const SideNav: React.FC<SideNavProps> = ({
                 >
                   {teamList.teamName}
                 </ListItemButton>
-                {/* <ListItemButton>{teamList.teamName}</ListItemButton> */}
               </ListItem>
               <ListDivider />
             </React.Fragment>
-          ))}
+          ))} */}
         </List>
       </div>
     </Box>
