@@ -25,9 +25,21 @@ import {
 } from "./types";
 import html2pdf from "html2pdf.js";
 import { Box, Button } from "@mui/joy";
+import { useParams } from "react-router-dom";
 
 const ReportPage = () => {
+  const { sessionId } = useParams();
+
+  const [currentSessionId, setCurrentSessionId] = useState<number>(
+    parseInt(sessionId as string)
+  );
+
   const [viewMode, setViewMode] = useState("detailed");
+
+  React.useEffect(() => {
+    return setCurrentSessionId(parseInt(sessionId as string));
+  }, [sessionId]);
+
   const toggleViewMode = (
     event: any,
     newMode: React.SetStateAction<string>
@@ -121,7 +133,9 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchgetParticipantScoreData = async () => {
       try {
-        const participantScoreData = await getParticipantScoreData(1);
+        const participantScoreData = await getParticipantScoreData(
+          currentSessionId
+        );
         console.log("1", participantScoreData);
         setParticipantScoreData(participantScoreData);
       } catch (error) {
@@ -134,7 +148,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchOverViewComponentData = async () => {
       try {
-        const overViewData = await OverViewComponentData(1);
+        const overViewData = await OverViewComponentData(currentSessionId);
         setOverViewData(overViewData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -146,7 +160,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchParticipantListData = async () => {
       try {
-        const participantData = await ParticiantListData(1);
+        const participantData = await ParticiantListData(currentSessionId);
         SetParticipantData(participantData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -158,7 +172,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchSessionDataDetails = async () => {
       try {
-        const sessionData = await sessionDetailsData(1);
+        const sessionData = await sessionDetailsData(currentSessionId);
         setSessionData(sessionData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -170,7 +184,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchBarChartData = async () => {
       try {
-        const barChartData = await BarChartComponentData(1);
+        const barChartData = await BarChartComponentData(currentSessionId);
         setBarChartData(barChartData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -183,7 +197,7 @@ const ReportPage = () => {
     const fetchgetAllParticipantScoreBySessionIdData = async () => {
       try {
         const userStoryData = await getAllParticipantScoreBySessionIdData(
-          1,
+          currentSessionId,
           offset
         );
         setUserStoryData((prevUserStoryData) => [
@@ -203,7 +217,7 @@ const ReportPage = () => {
     const element = document.getElementById("reportPage");
     html2pdf().from(element).save();
   };
-
+  console.log("sessionId", currentSessionId);
   return (
     <>
       <Header></Header>
