@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Link from '@mui/joy/Link';
@@ -11,60 +10,57 @@ import Checkbox from '@mui/joy/Checkbox';
 import Typography from '@mui/joy/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchTeamManagers } from '../../pages/Admin/apis/ProjectManager';
 import { User } from '../../pages/Admin/types/ProjectManager';
-import { iconButtonClasses } from '@mui/material';
 
- function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+type Order = 'asc' | 'desc';
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key,
+): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const data = comparator(a[0], b[0]);
+    if (data !== 0) {
+      return data;
     }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-  type Order = 'asc' | 'desc';
-  
-  function getComparator<Key extends keyof any>(
-    order: Order,
-    orderBy: Key,
-  ): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string },
-  ) => number {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-      const data = comparator(a[0], b[0]);
-      if (data !== 0) {
-        return data;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-  
-
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
 
 export default function ProjectManager() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
-  const [data, setData] = useState<User[]>([]);
+  const [data, setData] = useState<User[]>([]); // Provide initial value of empty array
+
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const fetchedData = await fetchTeamManagers();
         setData(fetchedData);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -82,9 +78,7 @@ export default function ProjectManager() {
       value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-  // const renderFilters = () => (
-  
-  // );
+
   return (
     <React.Fragment>
       <Box  
@@ -101,16 +95,21 @@ export default function ProjectManager() {
         }}
       >
         <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for team</FormLabel>
-          <Input  value={searchQuery}
-        onChange={handleSearch} size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
+          <FormLabel>Search for Project Manager</FormLabel>
+          <Input
+            value={searchQuery}
+            onChange={handleSearch}
+            size="sm"
+            placeholder="Search"
+            startDecorator={<SearchIcon />}
+          />
         </FormControl>
       </Box>
       <Sheet
         className="OrderTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: 'none', sm: 'initial' },
+          display: { xs: 'block', sm: 'initial' },
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
@@ -168,53 +167,57 @@ export default function ProjectManager() {
                     },
                   }}
                 >
-                 User ID
+                  User ID
                 </Link>
               </th>   
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 160, padding: '12px 6px' }}>Email</th>
-              <th style={{ width: 160, padding: '12px 6px' }}>Department</th>
-              {/* <th style={{ width: 180, padding: '12px 6px' }}> </th> */}
+              <th style={{ width: 100, padding: '12px 6px' }}>Name</th>
+              <th style={{ width: 250, padding: '12px 6px' }}>Email</th>
+              <th style={{ width: 120, padding: '12px 6px' }}>Department</th>
             </tr> 
           </thead>
           <tbody>
-            {stableSort(filteredRows, getComparator(order, 'id')).map((row) => (
-              
-              //  {filteredRows.map((row) => (
-              <tr key={row.id}>
-                <td style={{ textAlign: 'center', width: 120 }}>
-                  <Checkbox
-                    size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? 'primary' : undefined}
-                    onChange={(event) => {
-                      setSelected((ids) =>
-                        event.target.checked
-                          ? ids.concat(row.id)
-                          : ids.filter((itemId) => itemId !== row.id),
-                      );
-                    }}
-                    slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
-                    sx={{ verticalAlign: 'text-bottom' }}
-                  />
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.id}</Typography>
-                </td>
-                <td>
-                <Typography level="body-xs">{row.givenName}</Typography>
-                 
-                </td>
-                <td>
-                <Typography level="body-xs">{row.email}</Typography>
-                </td>
-                <td>
-                <Typography level="body-xs">{row.department}</Typography>
-                </td>
-               
-               
+            {loading ? (
+              <tr>
+                <td colSpan={5}>Loading...</td>
               </tr>
-            ))}
+            ) : filteredRows.length === 0 ? (
+              <tr>
+                <td colSpan={5}>No project managers</td>
+              </tr>
+            ) : (
+              stableSort(filteredRows, getComparator(order, 'id')).map((row) => (
+                <tr key={row.id}>
+                  <td style={{ textAlign: 'center', width: 120 }}>
+                    <Checkbox
+                      size="sm"
+                      checked={selected.includes(row.id)}
+                      color={selected.includes(row.id) ? 'primary' : undefined}
+                      onChange={(event) => {
+                        setSelected((ids) =>
+                          event.target.checked
+                            ? ids.concat(row.id)
+                            : ids.filter((itemId) => itemId !== row.id),
+                        );
+                      }}
+                      slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
+                      sx={{ verticalAlign: 'text-bottom' }}
+                    />
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.id}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.givenName}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.email}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.department}</Typography>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </Table>
       </Sheet>
