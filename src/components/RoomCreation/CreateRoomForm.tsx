@@ -1,3 +1,5 @@
+// CreateRoomForm.tsx
+
 import React, { useState } from "react";
 import { Button, useTheme } from "@mui/joy/";
 import RoomNameInput from "./RoomNameInput";
@@ -7,16 +9,12 @@ import TimerInput from "./TimerInput";
 import GuestInput from "./GuestInput";
 import { Drawer, useMediaQuery } from "@mui/material";
 import Grid from "@mui/joy/Grid";
-
 import Typography from "@mui/joy/Typography";
 import Card from "@mui/joy/Card";
 import SideNav from "../Navbar/SideNav";
-import { time } from "console";
 import axios from "axios";
 import { File } from "lucide-react";
-import { width } from "@mui/system";
 import { Box } from "@mui/joy";
-import CalculationMethodsDropdown from "./CalculationMethodsDropdown";
 import fetchMembers from "./api/fetchTeamMembers";
 import addSessionParticipants from "./api/addSessionParticipants";
 import { useNavigate, useParams } from "react-router";
@@ -24,15 +22,14 @@ import { useNavigate, useParams } from "react-router";
 const CreateRoomForm: React.FC = () => {
   const { teamId } = useParams();
   const [userFile, setUserFile] = useState<File | null>(null);
-
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [sessionId, setSessionId] = useState<number>(0);
-
   const navigate = useNavigate();
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
     setUserFile(file);
+    setFileUploadConfirmation("File has been selected, ready for upload!");
   };
 
   React.useEffect(() => {
@@ -44,15 +41,68 @@ const CreateRoomForm: React.FC = () => {
   >([{ userId: "", roleId: 0 }]);
 
   const storedUserId = localStorage.getItem("userId");
-  console.log(" from local storage storedUserId");
-  console.log(storedUserId);
+
+  const [roomNameError, setRoomNameError] = useState<string>("");
+  const [estimationError, setEstimationError] = useState<string>("");
+  const [timerError, setTimerError] = useState<string>("");
+  const [fileError, setFileError] = useState<string>("");
+  const [fileUploadConfirmation, setFileUploadConfirmation] =
+    useState<string>("");
+
+  const [roomName, setRoomName] = useState<string>("");
+  const [timer, setTimer] = useState<Date | null>(null);
+  const [voteTime, setVoteTime] = useState<string>("");
+  const [selectedUserArrayWithId, setSelectedUserArrayWithId] = React.useState<
+    {
+      userId: string;
+      roleId: number;
+    }[]
+  >([]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Validation
+    let isValid = true;
+
+    if (!roomName) {
+      setRoomNameError("Room Name is required");
+      isValid = false;
+    } else {
+      setRoomNameError("");
+    }
+
+    if (!selectedEstimationScale) {
+      setEstimationError("Estimation Value is required");
+      isValid = false;
+    } else {
+      setEstimationError("");
+    }
+
+    if (!timer) {
+      setTimerError("Timer is required");
+      isValid = false;
+    } else {
+      setTimerError("");
+    }
+
+    if (!userFile) {
+      setFileError("File is required");
+      isValid = false;
+    } else if (!userFile.name.toLowerCase().endsWith(".csv")) {
+      setFileError("File must be a CSV file");
+      isValid = false;
+    } else {
+      setFileError("");
+    }
+
+    if (!isValid) {
+      return;
+    }
+
     navigate(`/teamSettings/${teamId}`);
 
     const formData = new FormData();
-
     formData.append("sessionTitle", roomName);
     formData.append("createDateTime", new Date().toLocaleDateString());
     formData.append("timer", voteTime);
@@ -75,9 +125,10 @@ const CreateRoomForm: React.FC = () => {
           },
         }
       );
-      console.log("Response:", response.data);
-      console.log(response.data.data.id);
       setSessionId(response.data.data.id as number);
+
+      // Show file upload confirmation
+      setFileUploadConfirmation("File has been successfully uploaded!");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -89,9 +140,6 @@ const CreateRoomForm: React.FC = () => {
       ...selectedUserArrayWithId,
       { userId: storedUserId as string, roleId: 6 },
     ];
-
-    console.log("combinedArray");
-    console.log(combinedArray);
 
     addSessionParticipants({
       sessionId: sessionId,
@@ -109,11 +157,6 @@ const CreateRoomForm: React.FC = () => {
   }, [sessionId]);
 
   React.useEffect(() => {
-    console.log("sessionId ...");
-    console.log(sessionId);
-  }, [sessionId]);
-
-  React.useEffect(() => {
     fetchMembers(selectedTeamId)
       .then((response) => {
         console.log("Response from fetchMembers:", response);
@@ -127,11 +170,6 @@ const CreateRoomForm: React.FC = () => {
       });
   }, []);
 
-  React.useEffect(() => {
-    console.log("teamMember ");
-    console.log(teamMember);
-  }, [teamMember]);
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -143,20 +181,9 @@ const CreateRoomForm: React.FC = () => {
     useState<string>("");
   const [selectedCalculationMethodId, setSelectedCalculationMethodId] =
     useState<number>(0);
-  const [roomName, setRoomName] = useState<string>("");
-  const [timer, setTimer] = useState<Date | null>(null);
-  const [voteTime, setVoteTime] = useState<string>("");
-
-  const [selectedUserArrayWithId, setSelectedUserArrayWithId] = React.useState<
-    {
-      userId: string;
-      roleId: number;
-    }[]
-  >([]);
 
   React.useEffect(() => {
     console.log(" timer from room creation");
-    // console.log(timer);
     if (timer) {
       const formattedTime = `00:${
         timer.getMinutes() < 10 ? "0" : ""
@@ -186,16 +213,6 @@ const CreateRoomForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2} columns={16} sx={{ flexGrow: 1 }}>
           <Grid md={"auto"}>
-            <Box
-              pl={2}
-              sx={{
-                display: { xs: "none", md: "flex" },
-                height: "100%",
-              }}
-            >
-              {/* <SideNav></SideNav> */}
-            </Box>
-
             {isSmallScreen ? (
               <Drawer variant="temporary"></Drawer>
             ) : (
@@ -207,7 +224,6 @@ const CreateRoomForm: React.FC = () => {
               <Grid container mx="auto">
                 <Card>
                   <Typography level="h2">Create Room</Typography>
-
                   <Grid container xs={11} mx="auto" spacing={3}>
                     <Grid
                       container
@@ -221,6 +237,7 @@ const CreateRoomForm: React.FC = () => {
                       </Grid>
                       <Grid xs={12}>
                         <RoomNameInput setRoomName={setRoomName} />
+                        <Typography color="danger">{roomNameError}</Typography>
                       </Grid>
                     </Grid>
 
@@ -246,31 +263,9 @@ const CreateRoomForm: React.FC = () => {
                               setSelectedEstimationScaleId
                             }
                           />
-                        </Box>
-                      </Grid>
-                    </Grid>
-                    <Grid
-                      container
-                      xs={12}
-                      spacing={1}
-                      direction="column"
-                      alignItems="flex-start"
-                    >
-                      <Grid>
-                        <Typography level="title-lg">
-                          Calculation method
-                        </Typography>
-                      </Grid>
-                      <Grid xs={12}>
-                        <Box width={"100%"}>
-                          <CalculationMethodsDropdown
-                            setSelectedCalculationMethod={
-                              setSelectedCalculationMethod
-                            }
-                            setSelectedCalculationMethodId={
-                              setSelectedCalculationMethodId
-                            }
-                          />
+                          <Typography color="danger">
+                            {estimationError}
+                          </Typography>
                         </Box>
                       </Grid>
                     </Grid>
@@ -291,6 +286,7 @@ const CreateRoomForm: React.FC = () => {
                             setSelectedUserArrayWithId
                           }
                         />
+                        {/* Removed validation for Add Guest field */}
                       </Grid>
                     </Grid>
                     <Grid
@@ -311,6 +307,7 @@ const CreateRoomForm: React.FC = () => {
                           </Grid>
                           <Grid>
                             <TimerInput setTimer={setTimer} />
+                            <Typography color="danger">{timerError}</Typography>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -327,6 +324,10 @@ const CreateRoomForm: React.FC = () => {
                           </Grid>
                           <Grid>
                             <FileSelector onFileSelect={handleFileSelect} />
+                            <Typography color="danger">{fileError}</Typography>
+                            <Typography color="success">
+                              {fileUploadConfirmation}
+                            </Typography>
                           </Grid>
                         </Grid>
                       </Grid>

@@ -40,7 +40,7 @@ function App() {
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
           {/* <Admin/> */}
-          {/* <VotingRoom /> */}
+          {/* <VotingRoom/> */}
           {/* <RoomCreation /> */}
           <AppRouter />
         </Box>
