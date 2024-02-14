@@ -28,8 +28,18 @@ const CreateRoomForm: React.FC = () => {
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
+
+    // Reset file-related states and messages
     setUserFile(file);
-    setFileUploadConfirmation("File has been selected, ready for upload!");
+    setFileError("");
+
+    // Set confirmation message only if it's a CSV file
+    if (file.name.toLowerCase().endsWith(".csv")) {
+      setFileUploadConfirmation("File has been selected, ready for upload!");
+    } else {
+      setFileError("File must be a CSV file");
+      setFileUploadConfirmation(""); // Clear upload confirmation for non-CSV files
+    }
   };
 
   React.useEffect(() => {

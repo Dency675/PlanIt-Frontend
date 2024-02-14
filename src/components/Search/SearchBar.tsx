@@ -1,41 +1,8 @@
-// import * as React from "react";
-// import Input from "@mui/joy/Input";
-// import SearchIcon from "@mui/icons-material/Search";
-
-// export default function SearchBar() {
-//   return (
-//     <>
-//       <Input
-//         size="lg"
-//         placeholder="Search user and teams"
-//         endDecorator={<SearchIcon />}
-//         sx={{
-//           mt: 2,
-//           "&::before": {
-//             border: "0.1px solid var(--Input-focusedHighlight)",
-//             transform: "scaleX(0)",
-//             left: "2.5px",
-//             right: "2.5px",
-//             bottom: 0,
-//             top: "unset",
-//             transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
-//             borderRadius: 0,
-//             borderBottomLeftRadius: "64px 20px",
-//             borderBottomRightRadius: "64px 20px",
-//           },
-//           "&:focus-within::before": {
-//             transform: "scaleX(1)",
-//           },
-//         }}
-//       />
-//     </>
-//   );
-// }
-
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Autocomplete from "@mui/joy/Autocomplete";
+import { Modal, Backdrop, Fade } from "@mui/material";
 import axios from "axios";
-import { SearchIcon } from "lucide-react";
+import ProfilePage from "../../pages/ProfilePage/ProfilePage";
 
 interface UserData {
   id: string;
@@ -49,13 +16,29 @@ interface GuestInputProps {
 }
 
 const SearchBar: React.FC<GuestInputProps> = ({ setSelectedUserId }) => {
-  const [usersArray, setUsersArray] = React.useState<UserData[]>([]);
+  const [usersArray, setUsersArray] = useState<UserData[]>([]);
+  const [selectedUserArray, setSelectedUserArray] = useState<
+    UserData | undefined
+  >(undefined);
+  const [inputValue, setInputValue] = useState("");
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
 
-  const [selectedUserArray, setSelectedUserArray] = React.useState<UserData>();
+  const handleOpenProfileModal = () => {
+    setProfileModalOpen(true);
+  };
 
-  const [inputValue, setInputValue] = React.useState("");
+  const handleCloseProfileModal = () => {
+    setProfileModalOpen(false);
+  };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Clear user data when the component unmounts
+    return () => {
+      setSelectedUserArray(undefined);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(`http://localhost:3001/searchUser`, {
@@ -80,34 +63,52 @@ const SearchBar: React.FC<GuestInputProps> = ({ setSelectedUserId }) => {
     fetchUsers();
   }, [inputValue]);
 
-  React.useEffect(() => {
-    console.log(" selectedUserArray");
-    console.log(selectedUserArray);
-    if (selectedUserArray) setSelectedUserId(selectedUserArray.id as string);
+  useEffect(() => {
+    if (selectedUserArray) {
+      setSelectedUserId(selectedUserArray.id as string);
+      handleOpenProfileModal();
+    }
   }, [selectedUserArray]);
 
+  console.log("selected", usersArray);
+
   return (
-    <Autocomplete
-      id="tags-default"
-      placeholder="Enter user name"
-      options={usersArray}
-      // endDecorator={<SearchIcon />}
-      autoHighlight
-      getOptionLabel={(option) => `${option.name} (${option.email})`}
-      onChange={(event, newValue, inputValue) => {
-        console.log("inputValue");
+    <>
+      <Autocomplete
+        id="tags-default"
+        placeholder="Enter user name"
+        options={usersArray}
+        autoHighlight
+        getOptionLabel={(option) => `${option.name} (${option.email})`}
+        onChange={(event, newValue, inputValue) => {
+          setInputValue(inputValue);
+          setSelectedUserArray(newValue as UserData);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+      />
 
-        console.log("newValue");
-        console.log(newValue);
-
-        setSelectedUserArray(newValue as UserData);
-      }}
-      inputValue={inputValue}
-      onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue);
-        console.log(inputValue);
-      }}
-    />
+      <Modal
+        open={isProfileModalOpen}
+        onClose={handleCloseProfileModal}
+        closeAfterTransition
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+        }}
+      >
+        <Fade in={isProfileModalOpen}>
+          <div style={{ outline: 0, color: "white" }}>
+            {/* Render ProfilePage component inside the modal */}
+            <ProfilePage user={selectedUserArray} />
+          </div>
+        </Fade>
+      </Modal>
+    </>
   );
 };
 
