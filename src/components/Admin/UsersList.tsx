@@ -51,6 +51,7 @@ import {
 } from "@mui/joy";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { Console } from 'console';
+import { string } from 'yargs';
 
 
 
@@ -102,6 +103,9 @@ export default function UsersList() {
   const [loading, setLoading] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [open, setOpen] = React.useState<boolean>(false);
+  const [userIdToDelete, setUserIdToDelete] = useState<string>('');
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,20 +138,32 @@ export default function UsersList() {
 
 
   function RowMenu({ userId,status }: { userId: string ,status: string}) {
+    const handleDeleteClick = (userId: string) => {
+      setUserIdToDelete(userId); 
+      setOpen(true);
+    };
+
+
     const handleDelete = async () => {
+      if (userIdToDelete !== null) {
       try {
-        await deleteUser(userId);
-        console.log(`User with ID ${userId} deleted successfully.`);
+        await deleteUser(userIdToDelete);
+        console.log(`User with ID ${userIdToDelete} deleted successfully.`);
         // setOpen(true)
         setOpenSnackbar(true);
      
       // setData(data.filter(user => user.id !== userId));
-      setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
-      console.log("Member:", data);
+      setData(prevData => prevData.map(user => 
+        user.id === userIdToDelete ? { ...user, status: 'inactive' } : user
+      ));
         
       } catch (error) {
         console.error('Error deleting user :', error);
       }
+      finally {
+        setOpen(false);
+      }
+    }
     };
 
     const assignManager = async () => {
@@ -176,10 +192,7 @@ export default function UsersList() {
       <Menu size="sm" sx={{ minWidth: 140 }}>
         <MenuItem disabled={status === 'inactive'} onClick={assignManager}>Assign Team Manager </MenuItem>
         <Divider />
-        <MenuItem color="danger" disabled={status === 'inactive'}    onClick={() => {
-  setOpen(true);
-  console.log("id on delete",userId);
-}}>Delete</MenuItem>
+        <MenuItem color="danger" disabled={status === 'inactive'}     onClick={() => handleDeleteClick(userId)}>Delete</MenuItem>
       </Menu>
 
       <Modal open={open} onClose={() => setOpen(false)}>
@@ -196,11 +209,7 @@ export default function UsersList() {
               <Button
                 variant="solid"
                 color="danger"
-                onClick={() => {
-                  handleDelete();
-                  
-                  setOpen(false);
-                }}
+                onClick={handleDelete} 
               >
                 Remove
               </Button>

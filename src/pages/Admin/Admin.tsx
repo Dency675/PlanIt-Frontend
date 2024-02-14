@@ -17,11 +17,13 @@ import Header from '../../components/Admin/Header';
 import UsersList from '../../components/Admin/UsersList';
 import TeamsList from '../../components/Admin/TeamsList';
 import { Sidebar } from '../../components/Admin/Sidebar';
+import { Users } from 'lucide-react';
+import ProjectManager from '../../components/Admin/ProjectManager';
 
 
 
 export default function JoyOrderDashboardTemplate() {
-  const [selectedTab, setSelectedTab] = React.useState(null); // State for selected tab
+  const [selectedTab, setSelectedTab] = React.useState('users'); // State for selected tab
 
   console.log(selectedTab)
   const handleValueFromChild = (tabName:any) => {
@@ -67,17 +69,8 @@ export default function JoyOrderDashboardTemplate() {
               >
                 <HomeRoundedIcon />
               </Link>
-              {/* <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                fontSize={12}
-                fontWeight={500}
-              >
-                Dashboard
-              </Link> */}
               <Typography color="primary" fontWeight={500} fontSize={12}>
-              {selectedTab === 'teams' ? 'Teams' : 'Users'} {/* Conditionally render breadcrumb label */}
+              {selectedTab === 'teams' ? 'Teams' : selectedTab === 'users' ? 'Users' : 'Project Manager'}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -93,7 +86,7 @@ export default function JoyOrderDashboardTemplate() {
             }}
           >
             <Typography level="h2" component="h1">
-            {selectedTab === 'teams' ? 'Teams' : 'Users'} {/* Conditionally render breadcrumb label */}
+            {selectedTab === 'teams' ? 'Teams' : selectedTab === 'users' ? 'Users' : 'Project Manager'}
             </Typography>
             {/* <Button
               color="primary"
@@ -104,7 +97,12 @@ export default function JoyOrderDashboardTemplate() {
             </Button> */}
           </Box>
           {/* <UsersList/> */}
-          {selectedTab === 'teams' ? <TeamsList /> : <UsersList />} 
+          {
+  selectedTab === 'teams' ? <TeamsList /> :
+  selectedTab === 'users' ? <UsersList /> :
+  selectedTab === 'projectmanager' ? <ProjectManager /> :
+  null // Render null or another default component if needed
+}
         
           
         </Box>
