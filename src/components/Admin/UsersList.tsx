@@ -403,7 +403,7 @@ export default function UsersList() {
                 </Link>
               </th>
               <th style={{ width: 290, padding: '12px 10px' }}>Name</th>
-              <th style={{ width: 140, padding: '12px 10px' }}>Status</th>
+              <th style={{ width: 100, padding: '12px 10px' }}>Status</th>
               <th style={{ width: 140, padding: '12px 10px' }}>Department</th>
               <th style={{ width: 80, padding: '12px 10px' }}>Set Role </th>
             </tr>

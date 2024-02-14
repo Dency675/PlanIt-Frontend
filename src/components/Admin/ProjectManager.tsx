@@ -171,9 +171,9 @@ export default function ProjectManager() {
                   User ID
                 </Link>
               </th>   
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 160, padding: '12px 6px' }}>Email</th>
-              <th style={{ width: 160, padding: '12px 6px' }}>Department</th>
+              <th style={{ width: 100, padding: '12px 6px' }}>Name</th>
+              <th style={{ width: 250, padding: '12px 6px' }}>Email</th>
+              <th style={{ width: 120, padding: '12px 6px' }}>Department</th>
             </tr> 
           </thead>
           <tbody>
