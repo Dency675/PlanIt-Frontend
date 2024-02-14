@@ -92,9 +92,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
     localStorage.removeItem("userId");
-    instance.logoutPopup({
+    instance.logoutRedirect({
       postLogoutRedirectUri: "/",
-      mainWindowRedirectUri: "/",
     });
   };
 
@@ -200,8 +199,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected={selectedTab === 'projectmanager'} onClick={() => handleTabClick('projectmanager')}>
-            <MdRecordVoiceOver />
+            <ListItemButton
+              selected={selectedTab === "projectmanager"}
+              onClick={() => handleTabClick("projectmanager")}
+            >
+              <MdRecordVoiceOver />
               <ListItemContent>
                 <Typography level="title-sm">Project Manager</Typography>
               </ListItemContent>
