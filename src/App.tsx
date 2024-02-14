@@ -39,10 +39,10 @@ function App() {
           <ReportPage /> */}
           {/* <TeamManagement /> */}
           {/* <TeamSettings /> */}
-          {/* <Admin/> */}
+          <Admin/>
           {/* <VotingRoom/> */}
           {/* <RoomCreation /> */}
-          <AppRouter />
+          {/* <AppRouter /> */}
         </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>

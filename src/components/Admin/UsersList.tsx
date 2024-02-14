@@ -99,6 +99,7 @@ export default function UsersList() {
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openManagerSnack, setOpenManagerSnack] = useState(false);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -151,6 +152,7 @@ export default function UsersList() {
         console.log(`User with ID ${userIdToDelete} deleted successfully.`);
         // setOpen(true)
         setOpenSnackbar(true);
+        
      
       // setData(data.filter(user => user.id !== userId));
       setData(prevData => prevData.map(user => 
@@ -167,15 +169,11 @@ export default function UsersList() {
     };
 
     const assignManager = async () => {
+      setOpenManagerSnack(true);
       try {
         await assignTeamManager(userId);
         console.log(`User with ID ${userId} assigned as manager.`);
-        // setOpen(true)
-        // setOpenSnackbar(true);
-     
-      // setData(data.filter(user => user.id !== userId));
-      // setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
-      // console.log("Member:", data);
+        
         
       } catch (error) {
         console.error('Error assigning user :', error);
@@ -243,6 +241,27 @@ export default function UsersList() {
         }
       >
         Account has been deactivated
+      </Snackbar>
+
+      <Snackbar
+        variant="soft"
+        color="success"
+        open={openManagerSnack}
+        onClose={() => setOpenManagerSnack(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
+        endDecorator={
+          <Button
+            onClick={() => setOpenManagerSnack(false)}
+            size="sm"
+            variant="soft"
+            color="success"
+          >
+            Dismiss
+          </Button>
+        }
+      >
+        Project Manager Added
       </Snackbar>
     </Dropdown>
 
@@ -322,7 +341,7 @@ export default function UsersList() {
         className="OrderTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: 'none', sm: 'initial' },
+          display: { xs: 'block', sm: 'initial' },
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
@@ -383,10 +402,10 @@ export default function UsersList() {
                   User Id
                 </Link>
               </th>
-              <th style={{ width: 230, padding: '12px 10px' }}>Name</th>
-              <th style={{ width: 160, padding: '12px 10px' }}>Status</th>
-              <th style={{ width: 160, padding: '12px 10px' }}>Department</th>
-              <th style={{ width: 140, padding: '12px 10px' }}>Set Role </th>
+              <th style={{ width: 290, padding: '12px 10px' }}>Name</th>
+              <th style={{ width: 140, padding: '12px 10px' }}>Status</th>
+              <th style={{ width: 140, padding: '12px 10px' }}>Department</th>
+              <th style={{ width: 80, padding: '12px 10px' }}>Set Role </th>
             </tr>
           </thead>
           <tbody>

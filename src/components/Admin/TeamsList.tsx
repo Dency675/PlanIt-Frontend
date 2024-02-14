@@ -235,7 +235,7 @@ export default function TeamsList() {
         className="OrderTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: 'none', sm: 'initial' },
+          display: { xs: 'block', sm: 'initial' },
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,

@@ -10,9 +10,6 @@ import Typography from '@mui/joy/Typography';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-
-
-
 import Header from '../../components/Admin/Header';
 import UsersList from '../../components/Admin/UsersList';
 import TeamsList from '../../components/Admin/TeamsList';
@@ -58,7 +55,6 @@ export default function JoyOrderDashboardTemplate() {
             <Breadcrumbs
               size="sm"
               aria-label="breadcrumbs"
-            //   separator={<ChevronRightRoundedIcon fontSize="sm" />}
               sx={{ pl: 0 }}
             >
               <Link
@@ -88,13 +84,6 @@ export default function JoyOrderDashboardTemplate() {
             <Typography level="h2" component="h1">
             {selectedTab === 'teams' ? 'Teams' : selectedTab === 'users' ? 'Users' : 'Project Manager'}
             </Typography>
-            {/* <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button> */}
           </Box>
           {/* <UsersList/> */}
           {
@@ -103,7 +92,7 @@ export default function JoyOrderDashboardTemplate() {
   selectedTab === 'projectmanager' ? <ProjectManager /> :
   null // Render null or another default component if needed
 }
-        
+          
           
         </Box>
         
