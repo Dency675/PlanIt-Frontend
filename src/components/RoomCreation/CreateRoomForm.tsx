@@ -1,7 +1,10 @@
+// CreateRoomForm.tsx
+
 import React, { useState } from "react";
 import { Button, useTheme } from "@mui/joy/";
 import RoomNameInput from "./RoomNameInput";
 import EstimationScaleDropdown from "./EstimationScaleDropdown";
+import FileSelector from "./FileSelector";
 import TimerInput from "./TimerInput";
 import GuestInput from "./GuestInput";
 import { Drawer, useMediaQuery } from "@mui/material";
@@ -22,6 +25,22 @@ const CreateRoomForm: React.FC = () => {
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [sessionId, setSessionId] = useState<number>(0);
   const navigate = useNavigate();
+
+  const handleFileSelect = (file: File) => {
+    console.log("Selected file:", file);
+
+    // Reset file-related states and messages
+    setUserFile(file);
+    setFileError("");
+
+    // Set confirmation message only if it's a CSV file
+    if (file.name.toLowerCase().endsWith(".csv")) {
+      setFileUploadConfirmation("File has been selected, ready for upload!");
+    } else {
+      setFileError("File must be a CSV file");
+      setFileUploadConfirmation(""); // Clear upload confirmation for non-CSV files
+    }
+  };
 
   React.useEffect(() => {
     setSelectedTeamId(teamId as string);
@@ -53,6 +72,7 @@ const CreateRoomForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    // Validation
     let isValid = true;
 
     if (!roomName) {
@@ -99,7 +119,7 @@ const CreateRoomForm: React.FC = () => {
     formData.append("teamId", selectedTeamId);
     formData.append("scrumMasterId", storedUserId as string);
     formData.append("estimationId", selectedEstimationScaleId.toString());
-    formData.append("calculationId", selectedCalculationMethodId.toString());
+    formData.append("calculationId", "1");
 
     if (userFile) {
       formData.append("excelLink", userFile);
@@ -117,6 +137,7 @@ const CreateRoomForm: React.FC = () => {
       );
       setSessionId(response.data.data.id as number);
 
+      // Show file upload confirmation
       setFileUploadConfirmation("File has been successfully uploaded!");
     } catch (error) {
       console.error("Error:", error);
@@ -172,6 +193,7 @@ const CreateRoomForm: React.FC = () => {
     useState<number>(0);
 
   React.useEffect(() => {
+    console.log(" timer from room creation");
     if (timer) {
       const formattedTime = `00:${
         timer.getMinutes() < 10 ? "0" : ""
@@ -185,26 +207,16 @@ const CreateRoomForm: React.FC = () => {
   React.useEffect(() => console.log(voteTime), [voteTime]);
 
   React.useEffect(() => {
+    console.log(" selectedUserArrayWithId from room creation");
     console.log(selectedUserArrayWithId);
   }, [selectedUserArrayWithId]);
 
   React.useEffect(() => {
+    console.log(" roomName from room creation");
     console.log(roomName);
   }, [roomName]);
 
   const [sessions, setSessions] = useState([]);
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files && event.target.files[0];
-    if (selectedFile) {
-      if (selectedFile.name.toLowerCase().endsWith(".csv")) {
-        setFileError("");
-        setUserFile(selectedFile);
-        setFileUploadConfirmation("File has been selected, ready for upload!");
-      } else {
-        setFileError("File must be a CSV file");
-      }
-    }
-  };
 
   return (
     <Box>
@@ -284,6 +296,7 @@ const CreateRoomForm: React.FC = () => {
                             setSelectedUserArrayWithId
                           }
                         />
+                        {/* Removed validation for Add Guest field */}
                       </Grid>
                     </Grid>
                     <Grid
@@ -320,7 +333,7 @@ const CreateRoomForm: React.FC = () => {
                             <Typography level="title-lg">User Story</Typography>
                           </Grid>
                           <Grid>
-                            <input type="file" onChange={handleFileSelect} />
+                            <FileSelector onFileSelect={handleFileSelect} />
                             <Typography color="danger">{fileError}</Typography>
                             <Typography color="success">
                               {fileUploadConfirmation}
@@ -331,9 +344,16 @@ const CreateRoomForm: React.FC = () => {
                     </Grid>
 
                     <Grid xs={12} mt={2}>
-                      <Button type="Create" color="success">
-                        Submit
-                      </Button>
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-end"
+                        alignItems="center"
+                      >
+                        <Button type="Create" color="success">
+                          Submit
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Card>
