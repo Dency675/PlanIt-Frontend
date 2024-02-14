@@ -8,13 +8,10 @@ import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import Header from '../../components/Admin/Header';
 import UsersList from '../../components/Admin/UsersList';
 import TeamsList from '../../components/Admin/TeamsList';
 import { Sidebar } from '../../components/Admin/Sidebar';
-import { Users } from 'lucide-react';
 import ProjectManager from '../../components/Admin/ProjectManager';
 
 

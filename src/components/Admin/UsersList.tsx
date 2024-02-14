@@ -11,7 +11,6 @@ import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
@@ -21,8 +20,6 @@ import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
@@ -36,7 +33,6 @@ import Snackbar from '@mui/joy/Snackbar';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
 import { AspectRatio, Card, Skeleton } from '@mui/joy';
 import { fetchUsersData } from '../../pages/Admin/apis/usersList';
-// import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 import { searchUsers } from '../../pages/Admin/apis/SearchUser';
 import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 import { assignTeamManager } from '../../pages/Admin/apis/AssignManager';
@@ -50,8 +46,6 @@ import {
   ListItemDecorator
 } from "@mui/joy";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import { Console } from 'console';
-import { string } from 'yargs';
 
 
 
@@ -269,11 +263,6 @@ export default function UsersList() {
 
   );
 }
-
-  // const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-  //   setSearchQuery(e.target.value);
-  // };
-
   const handleSearch = async (e:any) => {
     setSearchQuery(e.target.value);
     try {
@@ -328,14 +317,6 @@ export default function UsersList() {
           <Input  value={searchQuery}
         onChange={handleSearch} size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
-        {/* <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button> */}
-        {/* {renderFilters()} */}
       </Box>
       <Sheet
         className="OrderTableContainer"
@@ -383,7 +364,7 @@ export default function UsersList() {
                   sx={{ verticalAlign: 'text-bottom' }}
                 />
               </th>
-              <th style={{ width: 140, padding: '12px 10px' }}>
+              <th style={{ width: 130, padding: '12px 10px' }}>
                 <Link
                   underline="none"
                   color="primary"
@@ -403,8 +384,8 @@ export default function UsersList() {
                 </Link>
               </th>
               <th style={{ width: 290, padding: '12px 10px' }}>Name</th>
-              <th style={{ width: 100, padding: '12px 10px' }}>Status</th>
-              <th style={{ width: 140, padding: '12px 10px' }}>Department</th>
+              <th style={{ width: 90, padding: '12px 10px' }}>Status</th>
+              <th style={{ width: 100, padding: '12px 10px' }}>Department</th>
               <th style={{ width: 80, padding: '12px 10px' }}>Set Role </th>
             </tr>
           </thead>
@@ -470,9 +451,6 @@ export default function UsersList() {
                 </td>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    {/* <Link level="body-xs" component="button">
-                      Download
-                    </Link> */}
                     <RowMenu userId={row.id} status={row.status}    />
 
                   </Box>

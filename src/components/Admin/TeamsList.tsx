@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ColorPaletteProp } from '@mui/joy/styles';
-import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
@@ -12,32 +11,20 @@ import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import ModalClose from '@mui/joy/ModalClose';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import { fetchUsersData } from '../../pages/Admin/apis/usersList';
 import { useState,useEffect } from 'react';
-import { UserList } from '../../pages/Admin/types/UserList';
-import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
 import { fetchTeamList } from '../../pages/Admin/apis/TeamList';
 import {TeamList} from '../../pages/Admin/types/TeamList';
 import { formatDateTime } from '../../pages/TeamSettings/apis/formatDateTime';
@@ -101,69 +88,17 @@ export default function TeamsList() {
   }, []);
 
 
-
-//   function RowMenu({ userId }: { userId: string }) {
-    
-//     const handleDelete = async () => {
-//       try {
-//         await deleteUser(userId);
-//         console.log(`User with ID ${userId} deleted successfully.`);
-        
-     
-//       // setData(data.filter(user => user.id !== userId));
-//       setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
-//       console.log("Member:", data);
-
-        
-//       } catch (error) {
-//         console.error('Error deleting user :', error);
-//       }
-//     };
-
-    
-
-//   return (
-//     <Dropdown>
-//       <MenuButton
-//         slots={{ root: IconButton }}
-//         slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-//       >
-//         <MoreHorizRoundedIcon />
-//       </MenuButton>
-//       <Menu size="sm" sx={{ minWidth: 140 }}>
-//         <MenuItem>Edit</MenuItem>
-//         <MenuItem>Rename</MenuItem>
-//         <MenuItem>Move</MenuItem>
-//         <Divider />
-//         <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
-//       </Menu>
-//     </Dropdown>
-//   );
-// }
-
-
-
-
   const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchQuery(e.target.value);
   };
-  // const handleDeleteUser = (deletedUserId: string) => {
-  //   setData(data.filter(user => user.id !== deletedUserId));
-  // };
-  // const handleDeleteUser = (deletedUserId: string) => {
-  //   // Filter the data to remove the user with the deletedUserId
-  //   const updatedData = data.filter(user => user.id !== deletedUserId);
-  //   setData([...updatedData]);
-  // };
+
 
   const filteredRows = data.filter((row) =>
     Object.values(row).some((value) =>
       value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-  // const renderFilters = () => (
-  
-  // );
+
   return (
     <React.Fragment>
       <Sheet
@@ -222,14 +157,6 @@ export default function TeamsList() {
           <Input  value={searchQuery}
         onChange={handleSearch} size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
-        {/* <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button> */}
-        {/* {renderFilters()} */}
       </Box>
       <Sheet
         className="OrderTableContainer"
@@ -355,15 +282,6 @@ export default function TeamsList() {
                 <td>
                 <Typography level="body-xs">{formatDateTime(row.createdAt)}</Typography>
                 </td>
-                {/* <td>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Link level="body-xs" component="button">
-                      Download
-                    </Link>
-                    <RowMenu userId={row.id}  />
-
-                  </Box>
-                </td> */}
               </tr>
             ))}
           </tbody>
@@ -389,19 +307,6 @@ export default function TeamsList() {
         >
           Previous
         </Button>
-
-        {/* <Box sx={{ flex: 1 }} />
-        {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? 'outlined' : 'plain'}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))}
-        <Box sx={{ flex: 1 }} /> */}
 
         <Button
           size="sm"
