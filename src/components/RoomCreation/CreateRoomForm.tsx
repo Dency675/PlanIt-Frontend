@@ -114,7 +114,8 @@ const CreateRoomForm: React.FC = () => {
 
     const formData = new FormData();
     formData.append("sessionTitle", roomName);
-    formData.append("createDateTime", new Date().toLocaleDateString());
+    // formData.append("createDateTime", new Date().toLocaleDateString());
+    formData.append("createDateTime", "2023-04-10 09:00:00");
     formData.append("timer", voteTime);
     formData.append("teamId", selectedTeamId);
     formData.append("scrumMasterId", storedUserId as string);
