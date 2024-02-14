@@ -40,6 +40,7 @@ import { UserList } from '../../pages/Admin/types/UserList';
 import {deleteUser} from '../../pages/Admin/apis/RemoveUser'
 import { fetchTeamList } from '../../pages/Admin/apis/TeamList';
 import {TeamList} from '../../pages/Admin/types/TeamList';
+import { formatDateTime } from '../../pages/TeamSettings/apis/formatDateTime';
 
  function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -298,7 +299,7 @@ export default function TeamsList() {
               <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
               <th style={{ width: 240, padding: '12px 6px' }}>Created At</th>
-              <th style={{ width: 140, padding: '12px 6px' }}> </th>
+              {/* <th style={{ width: 140, padding: '12px 6px' }}> </th> */}
             </tr>
           </thead>
           <tbody>
@@ -352,7 +353,7 @@ export default function TeamsList() {
                   </Chip>
                 </td>
                 <td>
-                <Typography level="body-xs">{row.createdAt}</Typography>
+                <Typography level="body-xs">{formatDateTime(row.createdAt)}</Typography>
                 </td>
                 {/* <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>

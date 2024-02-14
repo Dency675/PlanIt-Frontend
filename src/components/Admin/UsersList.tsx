@@ -40,6 +40,18 @@ import { fetchUsersData } from '../../pages/Admin/apis/usersList';
 import { searchUsers } from '../../pages/Admin/apis/SearchUser';
 import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 import { assignTeamManager } from '../../pages/Admin/apis/AssignManager';
+import {
+  ButtonGroup,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  ListItem,
+  ListItemContent,
+  ListItemDecorator
+} from "@mui/joy";
+import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import { Console } from 'console';
+import { string } from 'yargs';
 
 
 
@@ -83,7 +95,6 @@ import { assignTeamManager } from '../../pages/Admin/apis/AssignManager';
 export default function UsersList() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
-  // const [open, setOpen] = React.useState(false);
   // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,6 +102,10 @@ export default function UsersList() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [userIdToDelete, setUserIdToDelete] = useState<string>('');
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,21 +138,32 @@ export default function UsersList() {
 
 
   function RowMenu({ userId,status }: { userId: string ,status: string}) {
-    
+    const handleDeleteClick = (userId: string) => {
+      setUserIdToDelete(userId); 
+      setOpen(true);
+    };
+
+
     const handleDelete = async () => {
+      if (userIdToDelete !== null) {
       try {
-        await deleteUser(userId);
-        console.log(`User with ID ${userId} deleted successfully.`);
+        await deleteUser(userIdToDelete);
+        console.log(`User with ID ${userIdToDelete} deleted successfully.`);
         // setOpen(true)
         setOpenSnackbar(true);
      
       // setData(data.filter(user => user.id !== userId));
-      setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
-      console.log("Member:", data);
+      setData(prevData => prevData.map(user => 
+        user.id === userIdToDelete ? { ...user, status: 'inactive' } : user
+      ));
         
       } catch (error) {
         console.error('Error deleting user :', error);
       }
+      finally {
+        setOpen(false);
+      }
+    }
     };
 
     const assignManager = async () => {
@@ -155,7 +181,6 @@ export default function UsersList() {
         console.error('Error assigning user :', error);
       }
     };
-
   return (
     <Dropdown>
       <MenuButton
@@ -167,8 +192,37 @@ export default function UsersList() {
       <Menu size="sm" sx={{ minWidth: 140 }}>
         <MenuItem disabled={status === 'inactive'} onClick={assignManager}>Assign Team Manager </MenuItem>
         <Divider />
-        <MenuItem color="danger" disabled={status === 'inactive'}  onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem color="danger" disabled={status === 'inactive'}     onClick={() => handleDeleteClick(userId)}>Delete</MenuItem>
       </Menu>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+          <ModalDialog variant="outlined" role="alertdialog">
+            <DialogTitle>
+              <WarningRoundedIcon />
+              Confirmation
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              Are you sure you want to remove member?
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="solid"
+                color="danger"
+                onClick={handleDelete} 
+              >
+                Remove
+              </Button>
+              <Button
+                variant="plain"
+                color="neutral"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </ModalDialog>
+        </Modal>
      
       <Snackbar
         variant="soft"
@@ -191,6 +245,9 @@ export default function UsersList() {
         Account has been deactivated
       </Snackbar>
     </Dropdown>
+
+
+
   );
 }
 

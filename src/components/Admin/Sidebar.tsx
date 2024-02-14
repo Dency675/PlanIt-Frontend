@@ -38,6 +38,9 @@ import UsersList from "./UsersList";
 import TeamsList from "./TeamsList";
 import { useMsal } from "@azure/msal-react";
 
+import { GrUserManager } from "react-icons/gr";
+import { MdRecordVoiceOver } from "react-icons/md";
+
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -196,14 +199,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
             </ListItemButton>
           </ListItem>
 
-          {/* <ListItem>
-            <ListItemButton selected={selectedTab === 'orders'} onClick={() => handleTabClick('orders')}>
-              <ShoppingCartRoundedIcon />
+          <ListItem>
+            <ListItemButton selected={selectedTab === 'projectmanager'} onClick={() => handleTabClick('projectmanager')}>
+            <MdRecordVoiceOver />
               <ListItemContent>
-                <Typography level="title-sm">Orders</Typography>
+                <Typography level="title-sm">Project Manager</Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem> */}
+          </ListItem>
 
           {/* <ListItem nested>
             <Toggler
