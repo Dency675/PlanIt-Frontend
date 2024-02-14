@@ -40,6 +40,17 @@ import { fetchUsersData } from '../../pages/Admin/apis/usersList';
 import { searchUsers } from '../../pages/Admin/apis/SearchUser';
 import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 import { assignTeamManager } from '../../pages/Admin/apis/AssignManager';
+import {
+  ButtonGroup,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  ListItem,
+  ListItemContent,
+  ListItemDecorator
+} from "@mui/joy";
+import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import { Console } from 'console';
 
 
 
@@ -83,7 +94,6 @@ import { assignTeamManager } from '../../pages/Admin/apis/AssignManager';
 export default function UsersList() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
-  // const [open, setOpen] = React.useState(false);
   // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,6 +101,7 @@ export default function UsersList() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [open, setOpen] = React.useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,7 +134,6 @@ export default function UsersList() {
 
 
   function RowMenu({ userId,status }: { userId: string ,status: string}) {
-    
     const handleDelete = async () => {
       try {
         await deleteUser(userId);
@@ -155,7 +165,6 @@ export default function UsersList() {
         console.error('Error assigning user :', error);
       }
     };
-
   return (
     <Dropdown>
       <MenuButton
@@ -167,8 +176,44 @@ export default function UsersList() {
       <Menu size="sm" sx={{ minWidth: 140 }}>
         <MenuItem disabled={status === 'inactive'} onClick={assignManager}>Assign Team Manager </MenuItem>
         <Divider />
-        <MenuItem color="danger" disabled={status === 'inactive'}  onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem color="danger" disabled={status === 'inactive'}    onClick={() => {
+  setOpen(true);
+  console.log("id on delete",userId);
+}}>Delete</MenuItem>
       </Menu>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+          <ModalDialog variant="outlined" role="alertdialog">
+            <DialogTitle>
+              <WarningRoundedIcon />
+              Confirmation
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              Are you sure you want to remove member?
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="solid"
+                color="danger"
+                onClick={() => {
+                  handleDelete();
+                  
+                  setOpen(false);
+                }}
+              >
+                Remove
+              </Button>
+              <Button
+                variant="plain"
+                color="neutral"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </ModalDialog>
+        </Modal>
      
       <Snackbar
         variant="soft"
@@ -191,6 +236,9 @@ export default function UsersList() {
         Account has been deactivated
       </Snackbar>
     </Dropdown>
+
+
+
   );
 }
 
