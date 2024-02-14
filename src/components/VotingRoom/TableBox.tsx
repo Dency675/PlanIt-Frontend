@@ -6,6 +6,10 @@ import { useSocket } from "../Socket/SocketContext";
 
 interface tablePropType {
   sessionId: string;
+  currentUserStoryId: number;
+  setScoreCounts: React.Dispatch<
+    React.SetStateAction<{ [key: string]: number }>
+  >;
 }
 interface UserData {
   userName: string;
@@ -17,30 +21,46 @@ interface UserData {
   }[];
 }
 
-const TableBox: React.FC<tablePropType> = ({ sessionId }) => {
+const TableBox: React.FC<tablePropType> = ({
+  sessionId,
+  currentUserStoryId,
+  setScoreCounts,
+}) => {
   const [userData, setUserData] = useState<UserData[]>([]);
-  const [userStoryMappingId, setUserStoryMappingId] = useState(0);
+  const [userStoryMappingId, setUserStoryMappingId] = useState<number>(0);
 
   const socket = useSocket();
+
+  // React.useEffect(() => {
+  //   socket.emit("sessionParticipantsScore", sessionId, userData);
+  // }, [userData, sessionId, currentUserStoryId]);
+
+  React.useEffect(() => {
+    console.log("currentUserStoryId", currentUserStoryId);
+    console.log("currentUserStoryIduserStoryMappingId", userStoryMappingId);
+    setUserStoryMappingId(currentUserStoryId);
+  }, [currentUserStoryId, userStoryMappingId]);
 
   React.useEffect(() => {
     DeveloperListAPI(parseInt(sessionId))
       .then((response: any) => {
         console.log("Developer List from table:", response.data);
         setUserData(response.data);
+
+        const counts: { [key: string]: number } = {};
+        response.data.forEach((user: { score: any[] }) => {
+          user.score.forEach((score) => {
+            if (score.userStorySessionMappingId === userStoryMappingId) {
+              counts[score.storyPoint] = (counts[score.storyPoint] || 0) + 1;
+            }
+          });
+        });
+        setScoreCounts(counts);
       })
       .catch((error) => {
         console.error("Error occurred while changing status :", error);
       });
   }, [sessionId, userStoryMappingId]);
-
-  React.useEffect(() => {
-    socket.on("selectedUserStoryMappingId", async (userStoryMappingId) => {});
-    setUserStoryMappingId(userStoryMappingId);
-    return () => {
-      socket.off("selectedUserStoryMappingId");
-    };
-  }, [socket, userStoryMappingId]);
 
   return (
     <div style={{ maxHeight: "40%", overflow: "auto" }}>
@@ -69,7 +89,6 @@ const TableBox: React.FC<tablePropType> = ({ sessionId }) => {
                     )?.storyPoint
                   }
                 </td>
-                <td>{userStoryMappingId}</td>
               </tr>
             ))}
           </tbody>

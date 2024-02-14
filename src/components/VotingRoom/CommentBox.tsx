@@ -1,7 +1,7 @@
 import React, { useState, useRef, FormEvent } from "react";
 import cn from "classnames";
 import useDynamicHeightField from "./useDynamicHeightField";
-import "./styles.css";
+import "./styles.module.css";
 import { Input } from "@mui/joy";
 import axios from "axios";
 

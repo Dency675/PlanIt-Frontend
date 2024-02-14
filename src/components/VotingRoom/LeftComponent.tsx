@@ -17,6 +17,7 @@ interface propType {
   timer: string;
   estimationId: number;
   teamId: number;
+  setCurrentUserStoryId: React.Dispatch<React.SetStateAction<number>>;
 }
 const LeftComponent = ({
   userId,
@@ -25,6 +26,7 @@ const LeftComponent = ({
   timer,
   estimationId,
   teamId,
+  setCurrentUserStoryId,
 }: propType) => {
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
   const [isTimerRunningSession, setIsTimerRunningSession] =
@@ -96,6 +98,7 @@ const LeftComponent = ({
 
   React.useEffect(() => {
     socket.emit("userStoryMappingId", selectedUserStoryId, sessionId);
+    setCurrentUserStoryId(selectedUserStoryId);
   }, [sessionId, selectedUserStoryId]);
 
   const [participants, setParticipants] = useState<string[]>([]);
@@ -178,6 +181,7 @@ const LeftComponent = ({
           setIsUserStrorySelected={setIsUserStrorySelected}
           setIsStartButtonStarted={setIsStartButtonStarted}
           sessionId={sessionId}
+          selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
         />
       ) : (
         <></>
@@ -185,9 +189,7 @@ const LeftComponent = ({
 
       {userId === scrumMasterId ? (
         <>
-          <CommentBox
-            selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
-          />
+          <CommentBox selectedUserStoryId={selectedUserStoryId} />
         </>
       ) : (
         <VotingCards
