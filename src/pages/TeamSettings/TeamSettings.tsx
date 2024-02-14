@@ -10,6 +10,7 @@ import fetchRecentMeetingsOfTeam from "../TeamSettings/apis/fetchRecentMeetingsO
 import fetchOngoingMeetingsByTeam from "../TeamSettings/apis/fetchOngoingMeetingsByTeam";
 import { useNavigate, useParams } from "react-router";
 import { formatDateTime } from "./apis/formatDateTime";
+import getTeamMemberInformationByUserId from "../../components/VotingRoom/api/getTeamMemberInformationByUserId";
 
 interface TeamLists {
   teamInfoList: {
@@ -31,10 +32,22 @@ const TeamSettings = () => {
   const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
 
   const [selectedUserArray, setSelectedUserArray] = useState([]);
+  const [teamIds, setTeamIds] = useState(1);
+  const [userIds, setUserIds] = useState("");
 
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
+  const userRole = localStorage.getItem("teamUserRole");
   const { teamId } = useParams();
+  const userId = localStorage.getItem("userId");
+
+  React.useEffect(() => {
+    setTeamIds(parseInt(teamId as string));
+  }, [teamId, teamIds]);
+
+  React.useEffect(() => {
+    setUserIds(userIds);
+  }, [userIds, userId]);
 
   const updateTeamList = (newTeamList: TeamLists["teamInfoList"][]) => {
     setTeamLists(newTeamList);
@@ -54,6 +67,17 @@ const TeamSettings = () => {
   const [recentMeetings, setRecentMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
+
+  React.useEffect(() => {
+    getTeamMemberInformationByUserId(teamIds, userId as string)
+      .then((response) => {
+        console.log("API call successful,", response.roleName);
+        localStorage.setItem("teamUserRole", response.roleName);
+      })
+      .catch((error: any) => {
+        console.error("Error making API call:", error);
+      });
+  }, [userId, userIds, teamId, teamIds]);
 
   useEffect(() => {
     fetchOngoingMeetingsByTeam(selectedTeamId as number)
@@ -113,7 +137,7 @@ const TeamSettings = () => {
     console.log(ongoingMeetings);
   }, [ongoingMeetings]);
 
-  const role = "scrum master";
+  const role = localStorage.getItem("teamUserRole");
 
   return (
     <>
@@ -150,7 +174,7 @@ const TeamSettings = () => {
                 mr: 3,
               }}
             >
-              {role.includes("scrum master") && (
+              {role?.includes("scrum master") && (
                 <Button
                   variant="outlined"
                   onClick={() => {

@@ -16,6 +16,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import Groups2Icon from "@mui/icons-material/Groups2";
 import { useMsal } from "@azure/msal-react";
 import { MdRecordVoiceOver } from "react-icons/md";
+import getUserInformationById from "../../pages/TeamManagement/api/fetchUserData";
+import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 
 function Toggler({
   defaultExpanded = false,
@@ -30,6 +32,7 @@ function Toggler({
   }) => React.ReactNode;
 }) {
   const [open, setOpen] = React.useState(defaultExpanded);
+
   return (
     <React.Fragment>
       {renderToggle({ open, setOpen })}
@@ -55,24 +58,47 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
   const [selectedTab, setSelectedTab] = useState(null);
-  //  console.log(selectedTab)
+  const userId = localStorage.getItem("userId");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  React.useEffect(() => {
+    getUserInformationById(userId as string)
+      .then(({ givenName, email }) => {
+        setName(givenName);
+        setEmail(email);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   const handleTabClick = (tabName: any) => {
     setSelectedTab(tabName);
     SendValueToParent(tabName);
   };
 
+  const { setMode: setJoyMode } = useJoyColorScheme();
+  const { mode } = useJoyColorScheme();
   const { instance } = useMsal();
 
   const logOut = () => {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
     localStorage.removeItem("userId");
-    instance.logoutPopup({
+    instance.logoutRedirect({
       postLogoutRedirectUri: "/",
-      mainWindowRedirectUri: "/",
     });
   };
+
+  function stringAvatar(givenName: string) {
+    console.log(givenName);
+    return {
+      sx: {
+        bgcolor: mode === "light" ? "lightgrey" : "darkgrey", // Adjusting background color based on theme mode
+      },
+      children: `${givenName.split(" ")[0][0]}`,
+    };
+  }
 
   return (
     <Sheet
@@ -176,8 +202,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected={selectedTab === 'projectmanager'} onClick={() => handleTabClick('projectmanager')}>
-            <MdRecordVoiceOver />
+            <ListItemButton
+              selected={selectedTab === "projectmanager"}
+              onClick={() => handleTabClick("projectmanager")}
+            >
+              <MdRecordVoiceOver />
               <ListItemContent>
                 <Typography level="title-sm">Project Manager</Typography>
               </ListItemContent>
@@ -186,14 +215,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
         </List>
       </Box>
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar
+        {/* <Avatar
           variant="outlined"
           size="sm"
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        />
+        /> */}
+
+        <Avatar {...stringAvatar(name)} />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Admin</Typography>
-          <Typography level="body-xs">Ad@experionglobal.com</Typography>
+          <Typography level="title-sm">{name}</Typography>
+          <Typography level="body-xs" noWrap>
+            {email}
+          </Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral" onClick={logOut}>
           <LogoutRoundedIcon />

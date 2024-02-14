@@ -41,6 +41,9 @@ const TeamManagement = () => {
   const [teamName, setTeamName] = useState<string>("");
 
   const userId = localStorage.getItem("userId");
+  const userRole = sessionStorage.getItem("userRoles");
+
+  console.log("userRole", userRole);
 
   React.useEffect(() => {
     getUserInformationById(userId as string)
@@ -180,7 +183,7 @@ const TeamManagement = () => {
       const teamMemberResponse = await axios.post(
         "http://localhost:3001/addMember",
         {
-          userId: userId, // Replace userId with the actual user ID you want to add
+          userId: userId,
           teamId: teamId,
         }
       );
@@ -232,13 +235,15 @@ const TeamManagement = () => {
                 mr: 2,
               }}
             >
-              <Button2
-                variant="outlined"
-                color="inherit"
-                onClick={() => setOpen(true)}
-              >
-                <AddIcon sx={{ pr: 1 }}></AddIcon> Create New Team
-              </Button2>
+              {userRole?.includes("project manager") && (
+                <Button2
+                  variant="outlined"
+                  color="inherit"
+                  onClick={() => setOpen(true)}
+                >
+                  <AddIcon sx={{ pr: 1 }}></AddIcon> Create New Team
+                </Button2>
+              )}
             </Box>
             <Modal open={open} onClose={() => setOpen(false)}>
               <ModalDialog variant="outlined" role="alertdialog">

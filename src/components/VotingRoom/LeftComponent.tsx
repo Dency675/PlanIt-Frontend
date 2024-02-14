@@ -35,6 +35,8 @@ const LeftComponent = ({
 
   const [isStartButtonStarted, setIsStartButtonStarted] = useState(false);
   const [teamIdL, setTeamId] = useState(0);
+  const [commentValue, setCommentValue] = useState<string>("");
+  const [score, setScore] = useState<string>("");
 
   const startTimer = () => {
     setIsTimerRunning(!isTimerRunning);
@@ -182,6 +184,8 @@ const LeftComponent = ({
           setIsStartButtonStarted={setIsStartButtonStarted}
           sessionId={sessionId}
           selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
+          commentValue={commentValue}
+          score={score}
         />
       ) : (
         <></>
@@ -189,7 +193,13 @@ const LeftComponent = ({
 
       {userId === scrumMasterId ? (
         <>
-          <CommentBox selectedUserStoryId={selectedUserStoryId} />
+          <CommentBox
+            selectedUserStoryId={selectedUserStoryId}
+            setCommentValue={setCommentValue}
+            setScore={setScore}
+            commentValue={commentValue}
+            score={score}
+          />
         </>
       ) : (
         <VotingCards

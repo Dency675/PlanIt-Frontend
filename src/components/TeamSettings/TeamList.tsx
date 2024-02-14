@@ -92,7 +92,7 @@ const TeamList = ({ teamId, selectedUserArray }: TeamListProps) => {
     console.log(selectedUserArrayWithId);
   }, [selectedUserArrayWithId]);
 
-  const role = "project manager";
+  const role = localStorage.getItem("teamUserRole");
 
   return (
     <Box>
@@ -120,7 +120,7 @@ const TeamList = ({ teamId, selectedUserArray }: TeamListProps) => {
               p: { xs: 2, sm: 0 },
             }}
           >
-            {role.includes("project manager") && (
+            {role?.includes("project manager") && (
               <AddMember
                 setSelectedUserArrayWithId={setSelectedUserArrayWithId}
                 teamId={teamId}
@@ -162,7 +162,7 @@ const TeamList = ({ teamId, selectedUserArray }: TeamListProps) => {
               p: { xs: 2, sm: 0 },
             }}
           >
-            {role.includes("project manager") && (
+            {role?.includes("project manager") && (
               <AddMember
                 setSelectedUserArrayWithId={setSelectedUserArrayWithId}
                 teamId={teamId}

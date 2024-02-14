@@ -79,9 +79,8 @@ export default function Header() {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
     localStorage.removeItem("userId");
-    instance.logoutPopup({
+    instance.logoutRedirect({
       postLogoutRedirectUri: "/",
-      mainWindowRedirectUri: "/",
     });
   };
   React.useEffect(() => {

@@ -37,7 +37,7 @@ const TeamMember = ({
 
   const { givenName, roleName } = teamMember;
 
-  const role = "project manager";
+  const role = localStorage.getItem("teamUserRole");
 
   return (
     <ListItem
@@ -65,7 +65,7 @@ const TeamMember = ({
         spacing="0.5rem"
         aria-label="spacing button group"
       >
-        {role.includes("project manager") && (
+        {role?.includes("project manager") && (
           <>
             <Button
               disabled={teamMember.isScrumMaster}

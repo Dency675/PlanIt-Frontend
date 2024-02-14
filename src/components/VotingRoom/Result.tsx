@@ -19,6 +19,7 @@ import PieChartResult from "./PieChartResult";
 import ParticipantList from "./participantList";
 import { useSocket } from "../Socket/SocketContext";
 import { DeveloperListAPI } from "../../pages/VotingRoom/apis/DeveloperListAPI";
+import { resetStoryPoint } from "../../pages/VotingRoom/apis/resetStoryPoint";
 
 interface tablePropType {
   sessionId: string;
@@ -66,7 +67,16 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   // }, [currentUserStoryId]);
 
   React.useEffect(() => {
-    socket.on("showParticipants", async (sessionId) => {
+    socket.on("showParticipants", async (sessionId, count) => {
+      if (count > 0) {
+        resetStoryPoint(currentUserStoryId)
+          .then((response: any) => {
+            console.log("session status is ", response);
+          })
+          .catch((error) => {
+            console.error("Error occurred while changing status :", error);
+          });
+      }
       setShowParticipantList(true);
 
       const formattedData = participantsData.map((participant: any) => ({

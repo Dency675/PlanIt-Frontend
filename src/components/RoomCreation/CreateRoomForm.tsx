@@ -114,8 +114,7 @@ const CreateRoomForm: React.FC = () => {
 
     const formData = new FormData();
     formData.append("sessionTitle", roomName);
-    // formData.append("createDateTime", new Date().toLocaleDateString());
-    formData.append("createDateTime", "2023-04-10 09:00:00");
+    formData.append("createDateTime", new Date().toLocaleDateString());
     formData.append("timer", voteTime);
     formData.append("teamId", selectedTeamId);
     formData.append("scrumMasterId", storedUserId as string);
@@ -137,8 +136,6 @@ const CreateRoomForm: React.FC = () => {
         }
       );
       setSessionId(response.data.data.id as number);
-
-      // Show file upload confirmation
       setFileUploadConfirmation("File has been successfully uploaded!");
     } catch (error) {
       console.error("Error:", error);

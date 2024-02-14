@@ -4,17 +4,27 @@ import useDynamicHeightField from "./useDynamicHeightField";
 import "./styles.module.css";
 import { Input } from "@mui/joy";
 import axios from "axios";
+import { width } from "@mui/system";
+import Textarea from "@mui/joy/Textarea";
 
 const INITIAL_HEIGHT = 46;
 
 interface CommentBoxProps {
   selectedUserStoryId: number;
+  setScore: React.Dispatch<React.SetStateAction<string>>;
+  setCommentValue: React.Dispatch<React.SetStateAction<string>>;
+  commentValue: string;
+  score: string;
 }
 
-const CommentBox: React.FC<CommentBoxProps> = ({ selectedUserStoryId }) => {
+const CommentBox: React.FC<CommentBoxProps> = ({
+  selectedUserStoryId,
+  setCommentValue,
+  setScore,
+  commentValue,
+  score,
+}) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [commentValue, setCommentValue] = useState<string>("");
-  const [score, setScore] = useState<string>("");
 
   const outerHeight = useRef<number>(INITIAL_HEIGHT);
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -89,20 +99,16 @@ const CommentBox: React.FC<CommentBoxProps> = ({ selectedUserStoryId }) => {
       >
         <div className="header">
           <div className="user">
-            {/* <img
-              src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"
-              alt="User avatar"
-            /> */}
             <Input
               placeholder="Enter Final Score"
               value={score}
               name="score"
               id="score"
+              sx={{ top: "20px" }}
               onChange={onChangeScore}
             ></Input>
           </div>
         </div>
-        <label htmlFor="comment">What are your thoughts?</label>
         <textarea
           ref={textRef}
           onClick={onExpand}
@@ -113,15 +119,17 @@ const CommentBox: React.FC<CommentBoxProps> = ({ selectedUserStoryId }) => {
           value={commentValue}
           name="comment"
           id="comment"
+          style={{
+            marginTop: "30px",
+            width: "100%",
+            borderRadius: "5px",
+            resize: "none",
+            borderColor: "#cdd7e1",
+            padding: "5px",
+            fontSize: "16px",
+          }}
         />
-        <div className="actions">
-          <button type="button" className="cancel" onClick={onClose}>
-            Cancel
-          </button>
-          <button type="submit" disabled={commentValue.length < 1}>
-            Save
-          </button>
-        </div>
+        <div className="actions"></div>
       </form>
     </div>
   );
