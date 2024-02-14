@@ -14,6 +14,7 @@ interface CustomButtonGroupProps {
   sessionId: string;
   setIsUserStrorySelected: React.Dispatch<React.SetStateAction<boolean>>;
   setIsStartButtonStarted: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedUserStoryId: number;
 }
 //timer function
 const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
@@ -23,6 +24,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   setIsUserStrorySelected,
   setIsStartButtonStarted,
   sessionId,
+  selectedUserStoryId,
 }) => {
   const [isTimerOn, setIsTimerOn] = useState(false);
   const [isRevealButtonDisabled, setIsRevealButtonDisabled] = useState(true);
@@ -55,7 +57,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   };
 
   const handleRevelButtonClick = () => {
-    socket.emit("revealClicked", sessionId);
+    socket.emit("revealClicked", sessionId, selectedUserStoryId);
   };
 
   const handleSaveButtonClick = () => {
