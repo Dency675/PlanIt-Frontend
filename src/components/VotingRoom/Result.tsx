@@ -17,35 +17,118 @@ import TableBox from "./TableBox";
 import { PieChart } from "@mui/x-charts";
 import PieChartResult from "./PieChartResult";
 import ParticipantList from "./participantList";
+import { useSocket } from "../Socket/SocketContext";
+import { DeveloperListAPI } from "../../pages/VotingRoom/apis/DeveloperListAPI";
 
 interface tablePropType {
   sessionId: string;
 }
 
+interface Participant {
+  name: string;
+  status: boolean;
+  teamMemberId: string;
+}
+
+interface UserData {
+  userName: string;
+  roleId: number;
+  teamMemberId: number;
+  status: boolean;
+}
+
 const Result: React.FC<tablePropType> = ({ sessionId }) => {
   const [showParticipantList, setShowParticipantList] = useState(true);
-  const [participantStatus, setParticipantStatus] = useState<{
-    [key: string]: boolean;
-  }>({});
 
-  const handleButtonClick = () => {
-    setShowParticipantList(false);
+  // const participantData: Participant[] = [
+  //   { name: "Participant 1", status: false, teamMemberId: "1" },
+  //   { name: "Participant 2", status: false, teamMemberId: "2" },
+  //   { name: "Participant 3", status: false, teamMemberId: "3" },
+  //   { name: "Participant 4", status: false, teamMemberId: "4" },
+  // ];
+
+  const [userData, setUserData] = useState<UserData[]>([]);
+
+  const [participantsData, setParticipantData] = useState<UserData[]>([
+    { userName: "", status: false, teamMemberId: 0, roleId: 0 },
+  ]);
+
+  const socket = useSocket();
+
+  React.useEffect(() => {
+    socket.on("showResult", async (sessionId) => {
+      console.log("showResult", sessionId);
+      setShowParticipantList(false);
+    });
+
+    return () => {
+      socket.off("showResult");
+    };
+  }, []);
+
+  React.useEffect(() => {
+    socket.on("showParticipants", async (sessionId) => {
+      setShowParticipantList(true);
+
+      const formattedData = participantsData.map((participant: any) => ({
+        ...participant,
+        status: false,
+      }));
+      setParticipantData(formattedData);
+    });
+
+    return () => {
+      socket.off("showParticipants");
+    };
+  }, [socket, participantsData]);
+
+  React.useEffect(() => {
+    socket.on("userVotedAdded", async (sessionId, teamMemberId) => {
+      console.log("userVotedAdded", sessionId, teamMemberId);
+      toggleStatus(teamMemberId);
+    });
+
+    return () => {
+      socket.off("userVotedAdded");
+    };
+  }, [socket]);
+
+  React.useEffect(() => {
+    console.log(
+      "Developer List from result:participantsData",
+      participantsData
+    );
+  }, [participantsData]);
+
+  React.useEffect(() => {
+    DeveloperListAPI(parseInt(sessionId))
+      .then((response: any) => {
+        const formattedData = response.data.map((developer: any) => ({
+          ...developer,
+          status: false,
+        }));
+        setParticipantData(formattedData);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+  }, [sessionId]);
+
+  const toggleStatus = (teamMemberId: number) => {
+    setParticipantData((prevData) => {
+      return prevData.map((participant) => {
+        if (participant.teamMemberId === teamMemberId) {
+          console.log(
+            "Developer List from result participant.status:",
+            participant.status
+          );
+          return { ...participant, status: !participant.status };
+        }
+        console.log("participantsData", participantsData);
+        return participant;
+      });
+    });
   };
-
-  const toggleStatus = (participantName: string) => {
-    setParticipantStatus((prevStatus) => ({
-      ...prevStatus,
-      [participantName]: !prevStatus[participantName],
-    }));
-  };
-
-  const participantData = [
-    { name: "Participant 1" },
-    { name: "Participant 2" },
-    { name: "Participant 3" },
-    { name: "Participant 4" },
-    // Add more participant data as needed
-  ];
 
   return (
     <Card
@@ -66,37 +149,26 @@ const Result: React.FC<tablePropType> = ({ sessionId }) => {
           <TableContainer component={Paper}>
             <Table>
               <TableBody>
-                {participantData.map((participant, index) => (
+                {participantsData.map((participant, index) => (
                   <TableRow key={index}>
-                    <TableCell align="center" sx={{ paddingLeft: "8px" }}>
+                    <TableCell align="left" sx={{ paddingLeft: "10px" }}>
                       <Box
                         sx={{
                           width: "10px",
                           height: "10px",
-                          backgroundColor: participantStatus[participant.name]
-                            ? "red"
-                            : "green",
+                          backgroundColor: participant.status ? "green" : "red",
                           borderRadius: "50%",
                           display: "inline-block",
-                          marginRight: "8px",
+                          marginRight: "10px",
                         }}
                       ></Box>
-                      <IconButton
-                        onClick={() => toggleStatus(participant.name)}
-                      >
-                        Hi
-                      </IconButton>
-                      {participant.name}
+                      {participant.userName}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-          {/* Button to show the other components */}
-          <button onClick={handleButtonClick}>
-            Show Result and Estimation
-          </button>
         </>
       ) : (
         <>

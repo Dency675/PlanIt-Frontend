@@ -109,7 +109,7 @@ const CreateRoomForm: React.FC = () => {
     formData.append("teamId", selectedTeamId);
     formData.append("scrumMasterId", storedUserId as string);
     formData.append("estimationId", selectedEstimationScaleId.toString());
-    formData.append("calculationId", selectedCalculationMethodId.toString());
+    formData.append("calculationId", "1");
 
     if (userFile) {
       formData.append("excelLink", userFile);

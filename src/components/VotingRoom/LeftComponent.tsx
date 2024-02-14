@@ -131,16 +131,6 @@ const LeftComponent = ({
     };
   }, [selectedUserStoryId]);
 
-  // React.useEffect(() => {
-  //   socket.on("votingStarted", async (sessionId, isStartButtonStarted) => {
-  //     console.log("votingStarted", sessionId, isStartButtonStarted);
-  //   });
-
-  //   return () => {
-  //     socket.off("votingStarted");
-  //   };
-  // }, [isStartButtonStarted]);
-
   React.useEffect(() => {
     console.log("selectedUserStoryMappingId");
     console.log(selectedUserStoryMappingId);
@@ -187,6 +177,7 @@ const LeftComponent = ({
           isUserStrorySelected={isUserStrorySelected}
           setIsUserStrorySelected={setIsUserStrorySelected}
           setIsStartButtonStarted={setIsStartButtonStarted}
+          sessionId={sessionId}
         />
       ) : (
         <></>
@@ -199,6 +190,7 @@ const LeftComponent = ({
           estimationId={estimationId}
           selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
           teamId={teamIdL}
+          sessionId={sessionId}
         />
       )}
     </Box>
