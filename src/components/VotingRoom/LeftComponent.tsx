@@ -185,7 +185,9 @@ const LeftComponent = ({
 
       {userId === scrumMasterId ? (
         <>
-          <CommentBox />
+          <CommentBox
+            selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
+          />
         </>
       ) : (
         <VotingCards
