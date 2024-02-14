@@ -12,6 +12,7 @@ function VotingRoom() {
   const [estimationId, setEstimationId] = useState(0);
   const [teamId, setTeamId] = useState(0);
   const [timer, setTimer] = useState("");
+  const [currentUserStoryId, setCurrentUserStoryId] = useState<number>(0);
 
   const userIdd = localStorage.getItem("userId");
 
@@ -55,10 +56,14 @@ function VotingRoom() {
             timer={timer}
             estimationId={estimationId}
             teamId={teamId}
+            setCurrentUserStoryId={setCurrentUserStoryId}
           />
         </Grid>
         <Grid xs={12} sm={4} md={4} lg={4}>
-          <RightComponent sessionId={sessionId as string} />
+          <RightComponent
+            sessionId={sessionId as string}
+            currentUserStoryId={currentUserStoryId}
+          />
         </Grid>
       </Grid>
     </Container>
