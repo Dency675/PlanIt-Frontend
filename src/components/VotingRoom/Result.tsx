@@ -22,6 +22,7 @@ import { DeveloperListAPI } from "../../pages/VotingRoom/apis/DeveloperListAPI";
 
 interface tablePropType {
   sessionId: string;
+  currentUserStoryId: number;
 }
 
 interface Participant {
@@ -37,18 +38,10 @@ interface UserData {
   status: boolean;
 }
 
-const Result: React.FC<tablePropType> = ({ sessionId }) => {
+const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   const [showParticipantList, setShowParticipantList] = useState(true);
-
-  // const participantData: Participant[] = [
-  //   { name: "Participant 1", status: false, teamMemberId: "1" },
-  //   { name: "Participant 2", status: false, teamMemberId: "2" },
-  //   { name: "Participant 3", status: false, teamMemberId: "3" },
-  //   { name: "Participant 4", status: false, teamMemberId: "4" },
-  // ];
-
-  const [userData, setUserData] = useState<UserData[]>([]);
-
+  const [scoreCounts, setScoreCounts] = useState<{ [key: string]: number }>({});
+  const [userStoryNumber, setUserStoryNumber] = useState<number>(0);
   const [participantsData, setParticipantData] = useState<UserData[]>([
     { userName: "", status: false, teamMemberId: 0, roleId: 0 },
   ]);
@@ -56,8 +49,10 @@ const Result: React.FC<tablePropType> = ({ sessionId }) => {
   const socket = useSocket();
 
   React.useEffect(() => {
-    socket.on("showResult", async (sessionId) => {
-      console.log("showResult", sessionId);
+    socket.on("showResult", async (sessionId, selectedUserStoryId) => {
+      console.log("showResult", sessionId, selectedUserStoryId);
+
+      setUserStoryNumber(selectedUserStoryId);
       setShowParticipantList(false);
     });
 
@@ -65,6 +60,10 @@ const Result: React.FC<tablePropType> = ({ sessionId }) => {
       socket.off("showResult");
     };
   }, []);
+
+  // React.useEffect(() => {
+  //   setUserStoryNumber(currentUserStoryId);
+  // }, [currentUserStoryId]);
 
   React.useEffect(() => {
     socket.on("showParticipants", async (sessionId) => {
@@ -174,10 +173,14 @@ const Result: React.FC<tablePropType> = ({ sessionId }) => {
         <>
           <Typography variant="h6">Result</Typography>
           <Divider orientation="horizontal" />
-          <TableBox sessionId={sessionId} />
+          <TableBox
+            sessionId={sessionId}
+            currentUserStoryId={userStoryNumber}
+            setScoreCounts={setScoreCounts}
+          />
           <Typography variant="h6">Estimation</Typography>
           <Divider orientation="horizontal" />
-          <PieChartResult />
+          <PieChartResult scoreCounts={scoreCounts} />
         </>
       )}
     </Card>
