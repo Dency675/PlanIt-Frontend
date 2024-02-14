@@ -6,12 +6,10 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import ListItemButton from "@mui/joy/ListItemButton";
 import Typography from "@mui/joy/Typography";
 import Home from "@mui/icons-material/Home";
-import TeamName from "../TeamSettings/TeamName";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, ListDivider, Divider } from "@mui/joy";
-import { AnyARecord } from "dns";
+import { ListDivider } from "@mui/joy";
 
 interface TeamLists {
   teamInfoList: {
@@ -23,18 +21,24 @@ interface TeamLists {
 interface SideNavProps {
   onSelectTeam: (teamId: number) => void;
   resetSelectedUserArray: () => void;
-  updateTeamList: (newTeamList: TeamLists["teamInfoList"][]) => void; // Add this prop
+  updateTeamList: (newTeamList: TeamLists["teamInfoList"][]) => void;
 }
 
-const SideNav: React.FC<SideNavProps> = ({
+const SideNav = ({
   onSelectTeam,
   resetSelectedUserArray,
   updateTeamList,
-}) => {
+}: SideNavProps) => {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
-  const userId = localStorage.getItem("userId");
+  const handleSelectTeam = (teamId: number) => {
+    onSelectTeam(teamId);
+    resetSelectedUserArray();
+    navigate(`/teamSettings/${teamId}`);
+  };
 
   useEffect(() => {
     const fetchTeamLists = async () => {
@@ -60,20 +64,11 @@ const SideNav: React.FC<SideNavProps> = ({
     fetchTeamLists();
   }, []);
 
-  const handleSelectTeam = (teamId: number) => {
-    // Call the onSelectTeam callback function to handle team selection
-    onSelectTeam(teamId);
-    // Reset the selectedUserArray by calling the resetSelectedUserArray callback function
-    resetSelectedUserArray();
-    navigate(`/teamSettings/${teamId}`);
-  };
-
   return (
     <Box
       pr={4}
       sx={{
         flexGrow: 1,
-        // display: { xs: "none", md: "flex" },
         borderRight: "1px solid",
         borderColor: "divider",
         justifyContent: "center",
@@ -114,22 +109,6 @@ const SideNav: React.FC<SideNavProps> = ({
               </React.Fragment>
             ))
           )}
-          {/* {teamLists.map((teamList, index) => (
-            <React.Fragment key={index}>
-              <ListItem>
-                <ListItemButton
-                  onClick={() => {
-                    handleSelectTeam(teamList.id);
-                    // onSelectTeam(teamList.id);
-                    console.log(teamList.id);
-                  }}
-                >
-                  {teamList.teamName}
-                </ListItemButton>
-              </ListItem>
-              <ListDivider />
-            </React.Fragment>
-          ))} */}
         </List>
       </div>
     </Box>

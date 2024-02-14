@@ -1,16 +1,8 @@
-import * as React from "react";
 import Autocomplete from "@mui/joy/Autocomplete";
 import axios from "axios";
-import { SearchIcon } from "lucide-react";
 import { Button, Modal, Typography } from "@mui/joy";
-import { useState } from "react";
-import {
-  ModalDialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-} from "@mui/joy";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ModalDialog, DialogContent, DialogTitle } from "@mui/joy";
 
 interface UserData {
   id: string;
@@ -20,31 +12,23 @@ interface UserData {
 }
 
 interface AddMemberProps {
-  setSelectedUserArrayWithId: React.Dispatch<
-    React.SetStateAction<{ userId: string; roleId: number }[]>
+  setSelectedUserArrayWithId: Dispatch<
+    SetStateAction<{ userId: string; roleId: number }[]>
   >;
 }
 
-const AddMember: React.FC<AddMemberProps & { teamId: number }> = ({
+const AddMember = ({
   setSelectedUserArrayWithId,
   teamId,
-}) => {
-  const [usersArray, setUsersArray] = React.useState<UserData[]>([]);
-  const [selectedUserArray, setSelectedUserArray] = React.useState<UserData[]>(
-    []
-  );
-  // const [search, setSearch] = React.useState<string>("");
-  const [inputValue, setInputValue] = React.useState("");
-  const [userList, setUserList] = React.useState<
+}: AddMemberProps & { teamId: number }) => {
+  const [usersArray, setUsersArray] = useState<UserData[]>([]);
+  const [selectedUserArray, setSelectedUserArray] = useState<UserData[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [userList, setUserList] = useState<
     { email: string; givenName: string }[]
   >([]);
-  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
-  const [modalMessage, setModalMessage] = React.useState<string>("");
-
-  // Reset inputValue when the team changes
-  // React.useEffect(() => {
-  //   setInputValue("");
-  // }, [teamId]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
 
   const handleAddUsers = async () => {
     try {
@@ -78,7 +62,7 @@ const AddMember: React.FC<AddMemberProps & { teamId: number }> = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.post(
@@ -95,7 +79,6 @@ const AddMember: React.FC<AddMemberProps & { teamId: number }> = ({
           }
         );
         const data = response.data;
-        // Transform the received data into the format you need
         const transformedUsers = data.userResults.map((user: any) => ({
           id: user.id,
           employeeId: user.employeeId,
@@ -111,12 +94,12 @@ const AddMember: React.FC<AddMemberProps & { teamId: number }> = ({
     fetchUsers();
   }, [inputValue, userList]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("userList");
     console.log(userList);
   }, [userList]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("selectedUserArray");
     console.log(selectedUserArray);
     const updatedUserList = selectedUserArray.map((user) => ({

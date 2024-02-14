@@ -184,7 +184,9 @@ const LeftComponent = ({
       )}
 
       {userId === scrumMasterId ? (
-        <></>
+        <>
+          <CommentBox />
+        </>
       ) : (
         <VotingCards
           estimationId={estimationId}

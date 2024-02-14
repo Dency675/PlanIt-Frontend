@@ -1,5 +1,3 @@
-// TeamMember.jsx
-
 import {
   Avatar,
   Button,
@@ -17,7 +15,7 @@ import {
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import Modal from "@mui/joy/Modal";
 import DeleteForever from "@mui/icons-material/DeleteForever";
-import React from "react";
+import React, { useState } from "react";
 
 export interface TeamMemberProps {
   teamMember: {
@@ -26,19 +24,6 @@ export interface TeamMemberProps {
     roleName: string;
     isScrumMaster: boolean;
   };
-
-  // teamMember: {
-  //   id: number;
-
-  //   userInformation: {
-  //     givenName: string;
-  //   };
-
-  //   role: {
-  //     roleName: string;
-  //   };
-  // };
-
   onRemove: (id: number) => void;
   onMakeScrumMaster: (id: number) => void;
 }
@@ -48,19 +33,12 @@ const TeamMember = ({
   onRemove,
   onMakeScrumMaster,
 }: TeamMemberProps) => {
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const { givenName } = teamMember;
-
-  const { roleName } = teamMember;
-  // const handleMakeScrumMasterClick = () => {
-  //   onMakeScrumMaster(teamMember.id);
-
-  // console.log("check2");
-
-  // console.log(teamMember.id);
+  const { givenName, roleName } = teamMember;
 
   const role = "project manager";
+
   return (
     <ListItem
       sx={{
@@ -87,17 +65,10 @@ const TeamMember = ({
         spacing="0.5rem"
         aria-label="spacing button group"
       >
-        {/* {teamMember.isScrumMaster ? (
-          <Button disabled>Scrum Master</Button>
-        ) : (
-          <Button onClick={() => onMakeScrumMaster(teamMember.id)}>
-            Make Scrum Master
-          </Button>
-        )} */}
         {role.includes("project manager") && (
           <>
             <Button
-              disabled={teamMember.isScrumMaster} // Disable only if member is already a Scrum Master
+              disabled={teamMember.isScrumMaster}
               onClick={() => onMakeScrumMaster(teamMember.id)}
             >
               Make Scrum Master
@@ -105,10 +76,8 @@ const TeamMember = ({
 
             <Button
               variant="outlined"
-              // color="danger"
               endDecorator={<DeleteForever />}
               onClick={() => setOpen(true)}
-              //  onClick={() => onRemove(teamMember.id)}
             >
               Remove
             </Button>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SideNav from "../../components/Navbar/SideNav";
-import { Box, Button, Card, Divider, Grid, useTheme } from "@mui/joy";
+import { Box, Button, Card, Grid, useTheme } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import TeamList from "../../components/TeamSettings/TeamList";
@@ -10,8 +10,6 @@ import fetchRecentMeetingsOfTeam from "../TeamSettings/apis/fetchRecentMeetingsO
 import fetchOngoingMeetingsByTeam from "../TeamSettings/apis/fetchOngoingMeetingsByTeam";
 import { useNavigate, useParams } from "react-router";
 import { formatDateTime } from "./apis/formatDateTime";
-import { identifier } from "stylis";
-import AddIcon from "@mui/icons-material/Add";
 
 interface TeamLists {
   teamInfoList: {
@@ -19,25 +17,29 @@ interface TeamLists {
     teamName: string;
   };
 }
+interface OngoingMeetingProps {
+  id: number;
+  sessionTitle: string;
+  createDateTime: string;
+  scrumMasterId: string;
+  status: string;
+}
 
 const TeamSettings = () => {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
-  // const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
-
   const navigate = useNavigate();
 
-  const [selectedUserArray, setSelectedUserArray] = React.useState([]);
+  const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
 
-  const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]); // New state for team list
+  const [selectedUserArray, setSelectedUserArray] = useState([]);
 
-  // Function to update the team list state
+  const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
+
+  const { teamId } = useParams();
+
   const updateTeamList = (newTeamList: TeamLists["teamInfoList"][]) => {
     setTeamLists(newTeamList);
   };
 
-  const { teamId } = useParams();
   const handleSelectTeam = (teamId: number) => {
     setSelectedTeamId(teamId);
   };
@@ -46,22 +48,14 @@ const TeamSettings = () => {
     setSelectedUserArray([]);
   };
 
-  interface OngoingMeetingProps {
-    id: number;
-    sessionTitle: string;
-    createDateTime: string;
-    scrumMasterId: string;
-    status: string;
-  }
   const [ongoingMeetings, setOngoingMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
   const [recentMeetings, setRecentMeetings] = useState<OngoingMeetingProps[]>(
     []
   );
-  // const userId = localStorage.getItem("userId");
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchOngoingMeetingsByTeam(selectedTeamId as number)
       .then((response: any) => {
         if (response.status === 200) {
@@ -82,7 +76,6 @@ const TeamSettings = () => {
       });
   }, [selectedTeamId]);
 
-  // Fetch recent meetings of the user
   useEffect(() => {
     if (selectedTeamId) {
       const requestBody = {
@@ -120,8 +113,6 @@ const TeamSettings = () => {
     console.log(ongoingMeetings);
   }, [ongoingMeetings]);
 
-  console.log("ongoing not API", ongoingMeetings);
-
   const role = "scrum master";
 
   return (
@@ -142,14 +133,6 @@ const TeamSettings = () => {
               updateTeamList={updateTeamList}
             />
           </Box>
-          {isSmallScreen ? (
-            <Drawer variant="temporary">
-              {/* Drawer content goes here */}
-            </Drawer>
-          ) : (
-            <Box></Box>
-            // <TeamListDrawer />
-          )}
         </Grid>
         <Grid xs={16} md={12} px={3} pb={2} sx={{ flexGrow: 1 }} mx="auto">
           <Box>
