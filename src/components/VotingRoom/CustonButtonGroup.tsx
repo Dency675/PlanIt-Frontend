@@ -5,11 +5,13 @@ import Button from "@mui/joy/Button";
 import MuiButtonGroup from "@mui/joy/ButtonGroup";
 import Typography from "@mui/joy/Typography";
 import { useState } from "react";
+import { useSocket } from "../Socket/SocketContext";
 
 interface CustomButtonGroupProps {
   onStartTimer: () => void;
   stopTimer: () => void;
   isUserStrorySelected: boolean;
+  sessionId: string;
   setIsUserStrorySelected: React.Dispatch<React.SetStateAction<boolean>>;
   setIsStartButtonStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -20,11 +22,14 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   isUserStrorySelected,
   setIsUserStrorySelected,
   setIsStartButtonStarted,
+  sessionId,
 }) => {
   const [isTimerOn, setIsTimerOn] = useState(false);
   const [isRevealButtonDisabled, setIsRevealButtonDisabled] = useState(true);
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(true);
   const [isStartName, setIsStartName] = useState("Start Voting");
+
+  const socket = useSocket();
 
   React.useEffect(() => {
     console.log("isUserStrorySelected", isUserStrorySelected);
@@ -44,11 +49,14 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
       setIsRevealButtonDisabled(true);
       setIsStartName("End Voting");
       setIsStartButtonStarted(true);
+      socket.emit("startButtonClicked", sessionId);
     }
     setIsTimerOn(!isTimerOn);
   };
 
-  const handleRevelButtonClick = () => {};
+  const handleRevelButtonClick = () => {
+    socket.emit("revealClicked", sessionId);
+  };
 
   const handleSaveButtonClick = () => {
     setIsRevealButtonDisabled(!isRevealButtonDisabled);

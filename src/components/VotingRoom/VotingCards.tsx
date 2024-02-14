@@ -9,6 +9,7 @@ interface votingCardsPropType {
   estimationId: number;
   selectedUserStoryId: number;
   teamId: number;
+  sessionId: string;
 }
 
 interface scaleDataProps {
@@ -20,6 +21,7 @@ const VotingCards: React.FC<votingCardsPropType> = ({
   estimationId,
   selectedUserStoryId,
   teamId,
+  sessionId,
 }) => {
   const [scaleData, setScaleData] = useState<scaleDataProps[]>([
     { scaleName: "", scaleValue: 0 },
@@ -27,6 +29,7 @@ const VotingCards: React.FC<votingCardsPropType> = ({
 
   const [userId, setUserId] = useState("");
   const [teamMemberId, setTeamMemberId] = useState("");
+  const [clickedCardIndex, setClickedCardIndex] = useState(-1);
   const userIdd = localStorage.getItem("userId");
 
   React.useEffect(() => {
@@ -98,6 +101,10 @@ const VotingCards: React.FC<votingCardsPropType> = ({
         .catch((error: any) => {
           console.error("Error making API call:", error);
         });
+      if (clickedCardIndex === index || clickedCardIndex < 0)
+        socket.emit("userVoted", sessionId, teamMemberId);
+
+      setClickedCardIndex(index);
     }
   };
 

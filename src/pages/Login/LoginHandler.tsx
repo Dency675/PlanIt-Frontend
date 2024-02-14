@@ -80,7 +80,8 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
 
           let role = roles[0].trim().replace(/ /g, "_");
           // let role = "scrum_master";
-          navigate(`/${role}/`);
+          // navigate(`/${role}/`);
+          navigate(`/home`);
         }
         onLoginSuccess();
       } catch (e) {
