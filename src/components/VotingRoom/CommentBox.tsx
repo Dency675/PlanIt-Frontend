@@ -2,6 +2,8 @@ import React, { useState, useRef, FormEvent } from "react";
 import cn from "classnames";
 import useDynamicHeightField from "./useDynamicHeightField";
 import "./styles.css";
+import { Input } from "@mui/joy";
+import axios from "axios";
 
 const INITIAL_HEIGHT = 46;
 
@@ -10,6 +12,7 @@ interface CommentBoxProps {}
 const CommentBox: React.FC<CommentBoxProps> = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [commentValue, setCommentValue] = useState<string>("");
+  const [score, setScore] = useState<string>("");
 
   const outerHeight = useRef<number>(INITIAL_HEIGHT);
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -18,7 +21,8 @@ const CommentBox: React.FC<CommentBoxProps> = () => {
 
   const onExpand = () => {
     if (!isExpanded) {
-      outerHeight.current = containerRef.current?.scrollHeight || INITIAL_HEIGHT;
+      outerHeight.current =
+        containerRef.current?.scrollHeight || INITIAL_HEIGHT;
       setIsExpanded(true);
     }
   };
@@ -27,14 +31,37 @@ const CommentBox: React.FC<CommentBoxProps> = () => {
     setCommentValue(e.target.value);
   };
 
+  const onChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setScore(e.target.value);
+  };
+
   const onClose = () => {
     setCommentValue("");
     setIsExpanded(false);
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("send the form data somewhere");
+  const onSubmit = async (event: any) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    const formData = new FormData(event.target); // Capture the form data
+    const data = Object.fromEntries(formData); // Convert the FormData object to a plain object
+    console.log(data);
+
+    try {
+      // Make a POST request to your endpoint with the form data
+      const response = await axios.post(
+        "http://localhost:3001/addUserStoriesAndSessionMapping",
+        data
+      );
+
+      // Handle the response
+      console.log(response.data); // Log the response data
+      // You can also perform any other actions based on the response, such as showing a success message or redirecting the user
+    } catch (error) {
+      // Handle errors
+      console.error("Error submitting form:", error);
+      // You can display an error message to the user or perform any other error handling logic
+    }
   };
 
   return (
@@ -45,19 +72,25 @@ const CommentBox: React.FC<CommentBoxProps> = () => {
         className={cn("comment-box", {
           expanded: isExpanded,
           collapsed: !isExpanded,
-          modified: commentValue.length > 0
+          modified: commentValue.length > 0,
         })}
         style={{
-          minHeight: isExpanded ? outerHeight.current : INITIAL_HEIGHT
+          minHeight: isExpanded ? outerHeight.current : INITIAL_HEIGHT,
         }}
       >
         <div className="header">
           <div className="user">
-            <img
+            {/* <img
               src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"
               alt="User avatar"
-            />
-            <span>User Name</span>
+            /> */}
+            <Input
+              placeholder="Enter Final Score"
+              value={score}
+              name="score"
+              id="score"
+              onChange={onChangeScore}
+            ></Input>
           </div>
         </div>
         <label htmlFor="comment">What are your thoughts?</label>
@@ -77,7 +110,7 @@ const CommentBox: React.FC<CommentBoxProps> = () => {
             Cancel
           </button>
           <button type="submit" disabled={commentValue.length < 1}>
-            Respond
+            Save
           </button>
         </div>
       </form>
