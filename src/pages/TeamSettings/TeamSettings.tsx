@@ -122,6 +122,8 @@ const TeamSettings = () => {
 
   console.log("ongoing not API", ongoingMeetings);
 
+  const role = "scrum master";
+
   return (
     <>
       <Header />
@@ -165,15 +167,16 @@ const TeamSettings = () => {
                 mr: 3,
               }}
             >
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  navigate(`/roomCreation/${teamId}`);
-                }}
-              >
-                {" "}
-                Create Room
-              </Button>
+              {role.includes("scrum master") && (
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    navigate(`/roomCreation/${teamId}`);
+                  }}
+                >
+                  Create Room
+                </Button>
+              )}
             </Box>
             <OngoingMeetings ongoingMeetings={ongoingMeetings} />
             <RecentActivities recentMeetings={recentMeetings} />

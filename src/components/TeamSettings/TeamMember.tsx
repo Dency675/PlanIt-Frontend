@@ -60,6 +60,7 @@ const TeamMember = ({
 
   // console.log(teamMember.id);
 
+  const role = "project manager";
   return (
     <ListItem
       sx={{
@@ -93,54 +94,57 @@ const TeamMember = ({
             Make Scrum Master
           </Button>
         )} */}
+        {role.includes("project manager") && (
+          <>
+            <Button
+              disabled={teamMember.isScrumMaster} // Disable only if member is already a Scrum Master
+              onClick={() => onMakeScrumMaster(teamMember.id)}
+            >
+              Make Scrum Master
+            </Button>
 
-        <Button
-          disabled={teamMember.isScrumMaster} // Disable only if member is already a Scrum Master
-          onClick={() => onMakeScrumMaster(teamMember.id)}
-        >
-          Make Scrum Master
-        </Button>
-
-        <Button
-          variant="outlined"
-          // color="danger"
-          endDecorator={<DeleteForever />}
-          onClick={() => setOpen(true)}
-          //  onClick={() => onRemove(teamMember.id)}
-        >
-          Remove
-        </Button>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog variant="outlined" role="alertdialog">
-            <DialogTitle>
-              <WarningRoundedIcon />
-              Confirmation
-            </DialogTitle>
-            <Divider />
-            <DialogContent>
-              Are you sure you want to remove member?
-            </DialogContent>
-            <DialogActions>
-              <Button
-                variant="solid"
-                color="danger"
-                onClick={() => {
-                  onRemove(teamMember.id);
-                  setOpen(false);
-                }}
-              >
-                Remove
-              </Button>
-              <Button
-                variant="plain"
-                color="neutral"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-            </DialogActions>
-          </ModalDialog>
-        </Modal>
+            <Button
+              variant="outlined"
+              // color="danger"
+              endDecorator={<DeleteForever />}
+              onClick={() => setOpen(true)}
+              //  onClick={() => onRemove(teamMember.id)}
+            >
+              Remove
+            </Button>
+            <Modal open={open} onClose={() => setOpen(false)}>
+              <ModalDialog variant="outlined" role="alertdialog">
+                <DialogTitle>
+                  <WarningRoundedIcon />
+                  Confirmation
+                </DialogTitle>
+                <Divider />
+                <DialogContent>
+                  Are you sure you want to remove member?
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    variant="solid"
+                    color="danger"
+                    onClick={() => {
+                      onRemove(teamMember.id);
+                      setOpen(false);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                  <Button
+                    variant="plain"
+                    color="neutral"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </ModalDialog>
+            </Modal>
+          </>
+        )}
       </ButtonGroup>
     </ListItem>
   );

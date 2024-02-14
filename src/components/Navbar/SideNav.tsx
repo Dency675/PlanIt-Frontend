@@ -96,9 +96,7 @@ const SideNav: React.FC<SideNavProps> = ({
             Team List
           </ListItem>
           {teamLists.length === 0 ? (
-            <Typography level="body-xs" ml={2}>
-              No teams
-            </Typography>
+            <Typography level="body-xs">No teams</Typography>
           ) : (
             teamLists.map((teamList, index) => (
               <React.Fragment key={index}>

@@ -31,6 +31,7 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
     console.log(selectedUserArrayWithId);
   }, [selectedUserArrayWithId]);
 
+  const userId = localStorage.getItem("userId");
   const [scrumMaster, setScrumMaster] = useState(true);
   // useEffect(() => {
   //   const fetchTeamMembers = async () => {
@@ -54,7 +55,7 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
   const fetchTeamMembers = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/getMembers?teamId=${teamId}`
+        `http://localhost:3001/getMembers?teamId=${teamId}&userId=${userId}`
       );
 
       const teamMembersData = response.data.activeTeamMembers;
@@ -131,6 +132,7 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
     console.log(scrumMaster);
   }, [scrumMaster]);
 
+  const role = "project manager";
   return (
     <Box>
       <Typography
@@ -145,7 +147,7 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
       {teamMembers.length === 0 ? (
         <>
           <Typography sx={{ letterSpacing: "0.15rem", m: 4, fontSize: 14 }}>
-            No members in the team.
+            No other members in the team.
           </Typography>
           <Divider sx={{ height: 2 }} />
           <Box
@@ -157,10 +159,12 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
               p: { xs: 2, sm: 0 },
             }}
           >
-            <AddMember
-              setSelectedUserArrayWithId={setSelectedUserArrayWithId}
-              teamId={teamId}
-            />
+            {role.includes("project manager") && (
+              <AddMember
+                setSelectedUserArrayWithId={setSelectedUserArrayWithId}
+                teamId={teamId}
+              />
+            )}
             {/* <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} /> */}
           </Box>
         </>
@@ -198,10 +202,12 @@ const TeamList: React.FC<TeamListProps> = ({ teamId, selectedUserArray }) => {
               p: { xs: 2, sm: 0 },
             }}
           >
-            <AddMember
-              setSelectedUserArrayWithId={setSelectedUserArrayWithId}
-              teamId={teamId}
-            />
+            {role.includes("project manager") && (
+              <AddMember
+                setSelectedUserArrayWithId={setSelectedUserArrayWithId}
+                teamId={teamId}
+              />
+            )}
             {/* <Input placeholder="+ Add Member" endDecorator={<PersonSearchIcon />} /> */}
           </Box>
         </>
