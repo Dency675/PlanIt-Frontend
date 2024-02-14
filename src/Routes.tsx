@@ -37,11 +37,17 @@ const AppRoutes = () => {
           <Route
             path="/home"
             element={
-              <ProtectedRoute
-                allowedRoles={["scrum master", "developer", "project manager"]}
-              >
-                <TeamManagement />
-              </ProtectedRoute>
+              <>
+                <ProtectedRoute
+                  allowedRoles={[
+                    "scrum master",
+                    "developer",
+                    "project manager",
+                  ]}
+                >
+                  <TeamManagement />
+                </ProtectedRoute>
+              </>
             }
           />
           <Route
