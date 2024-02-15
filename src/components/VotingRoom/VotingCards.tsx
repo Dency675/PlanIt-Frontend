@@ -101,8 +101,9 @@ const VotingCards: React.FC<votingCardsPropType> = ({
         .catch((error: any) => {
           console.error("Error making API call:", error);
         });
-      if (clickedCardIndex === index || clickedCardIndex < 0)
-        socket.emit("userVoted", sessionId, teamMemberId);
+      // if (clickedCardIndex === index || clickedCardIndex < 0)
+      socket.emit("userVoted", sessionId, teamMemberId);
+      console.log("uservoted socket");
 
       setClickedCardIndex(index);
     }

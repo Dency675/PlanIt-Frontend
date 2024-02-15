@@ -8,11 +8,17 @@ const fetchMembers = async (teamId: string, userId: string): Promise<any> => {
 
     console.log(" response.data from team membr");
     console.log(response.data.activeTeamMembers);
+    console.log(
+      "response.data.activeTeamMembers[0].roleName",
+      response.data.activeTeamMembers[0].roleName
+    );
+
+    const roleName = response.data.activeTeamMembers[0].roleName;
 
     const participants = response.data.activeTeamMembers.map(
-      (item: { userId: string; roleId: number }) => ({
+      (item: { userId: string; roleId: number; roleName: string }) => ({
         userId: item.userId,
-        roleId: 5,
+        roleId: item.roleName === "project manager" ? 2 : 5,
       })
     );
 

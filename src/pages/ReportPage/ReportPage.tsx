@@ -309,14 +309,15 @@ const ReportPage = () => {
             <Grid />
             {Array.from({ length: userStoryData.length }, (_, index) => (
               <Grid item xs={12} sm={12} md={12} key={index}>
-                {index < visibleUserStoryCount && (
-                  <UserStoryComponent
-                    userStoryData={userStoryData}
-                    index={index}
-                    participantScoreData={participantScoreData}
-                    viewMode={viewMode}
-                  />
-                )}
+                {index < visibleUserStoryCount &&
+                  userStoryData[index].storyPointResult != 0 && (
+                    <UserStoryComponent
+                      userStoryData={userStoryData}
+                      index={index}
+                      participantScoreData={participantScoreData}
+                      viewMode={viewMode}
+                    />
+                  )}
               </Grid>
               // </>
             ))}

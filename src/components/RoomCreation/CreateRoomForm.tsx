@@ -224,10 +224,6 @@ const CreateRoomForm: React.FC = () => {
     }
   };
 
-  // React.useEffect(() => {
-  //   if (response === 200) addUserStoriesAndSessionMapping(fileName, sessionId);
-  // }, [fileName, sessionId]);
-
   React.useEffect(() => {
     const combinedArray = [
       ...teamMember,
@@ -269,10 +265,6 @@ const CreateRoomForm: React.FC = () => {
   const [selectedEstimationScale, setSelectedEstimationScale] =
     useState<string>("");
   const [selectedEstimationScaleId, setSelectedEstimationScaleId] =
-    useState<number>(0);
-  const [selectedCalculationMethod, setSelectedCalculationMethod] =
-    useState<string>("");
-  const [selectedCalculationMethodId, setSelectedCalculationMethodId] =
     useState<number>(0);
 
   React.useEffect(() => {

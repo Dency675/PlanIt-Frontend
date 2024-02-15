@@ -43,6 +43,7 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   const [showParticipantList, setShowParticipantList] = useState(true);
   const [scoreCounts, setScoreCounts] = useState<{ [key: string]: number }>({});
   const [userStoryNumber, setUserStoryNumber] = useState<number>(0);
+  const [teamMemberID, setTeamMemberID] = useState<number>(0);
   const [participantsData, setParticipantData] = useState<UserData[]>([
     { userName: "", status: false, teamMemberId: 0, roleId: 0 },
   ]);
@@ -94,13 +95,14 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   React.useEffect(() => {
     socket.on("userVotedAdded", async (sessionId, teamMemberId) => {
       console.log("userVotedAdded", sessionId, teamMemberId);
+      setTeamMemberID(teamMemberId);
       toggleStatus(teamMemberId);
     });
 
     return () => {
       socket.off("userVotedAdded");
     };
-  }, [socket]);
+  }, [socket, teamMemberID]);
 
   React.useEffect(() => {
     console.log(
@@ -124,16 +126,28 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   }, [sessionId]);
 
   const toggleStatus = (teamMemberId: number) => {
+    console.log("toggle status");
+    participantsData.map((participants) => {
+      console.log("participant.status:", participants.status);
+    });
     setParticipantData((prevData) => {
       return prevData.map((participant) => {
+        console.log(
+          "hidency",
+          participant.teamMemberId,
+          teamMemberId,
+          participant.status
+        );
         if (participant.teamMemberId === teamMemberId) {
           console.log(
             "Developer List from result participant.status:",
-            participant.status
+            participant.status,
+            participant.teamMemberId,
+            teamMemberId
           );
           return { ...participant, status: !participant.status };
         }
-        console.log("participantsData", participantsData);
+        // console.log("participantsData", participantsData);
         return participant;
       });
     });

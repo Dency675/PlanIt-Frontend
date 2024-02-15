@@ -98,9 +98,10 @@ export default function Header() {
 
   function stringAvatar(givenName: string) {
     console.log(givenName);
+
     return {
       sx: {
-        bgcolor: mode === "light" ? "lightgrey" : "darkgrey", // Adjusting background color based on theme mode
+        bgcolor: mode === "light" ? "lightgrey" : "darkgrey",
       },
       children: `${givenName.split(" ")[0][0]}`,
     };
@@ -165,6 +166,9 @@ export default function Header() {
                 }
                 alt=""
                 style={{ width: "100px", height: "45px" }}
+                onClick={() => {
+                  navigate(`/home`);
+                }}
               />
             </Box>
             <SideNav

@@ -2,6 +2,7 @@ import * as React from "react";
 import Autocomplete from "@mui/joy/Autocomplete";
 import axios from "axios";
 import { SearchIcon } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 interface UserData {
   id: string;
@@ -29,6 +30,8 @@ const GuestInput: React.FC<GuestInputProps> = ({
     { email: string; givenName: string }[]
   >([]);
 
+  const { teamId } = useParams();
+
   React.useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -36,7 +39,7 @@ const GuestInput: React.FC<GuestInputProps> = ({
           `http://localhost:3001/searchUserFilter`,
           {
             userList: userList,
-            teamId: 1,
+            teamId: parseInt(teamId as string),
           },
           {
             params: {

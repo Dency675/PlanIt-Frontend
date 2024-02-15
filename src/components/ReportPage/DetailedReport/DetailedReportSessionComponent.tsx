@@ -91,23 +91,7 @@ const DetailedReportSessionComponent = ({
                   <Typography>{sessionData.data.projectManagerName}</Typography>
                 </TableCell>
               </TableRow>
-              <TableRow>
-                <TableCell
-                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
-                >
-                  <SupervisedUserCircleRoundedIcon fontSize={iconSize} />
-                </TableCell>
-                <TableCell
-                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
-                >
-                  <Typography>Product Owner</Typography>
-                </TableCell>
-                <TableCell
-                  sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}
-                >
-                  <Typography>{sessionData.data.productOwnerName}</Typography>
-                </TableCell>
-              </TableRow>
+
               <TableRow>
                 <TableCell
                   sx={{ paddingRight: 0, paddingTop: 1, paddingBottom: 1 }}

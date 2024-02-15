@@ -131,7 +131,7 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                       color="primary"
                       sx={{
                         px: 0.2,
-                        writingMode: "vertical-rl",
+                        // writingMode: "vertical-rl",
                         justifyContent: "center",
                         fontSize: "xs",
                         fontWeight: "xl",
