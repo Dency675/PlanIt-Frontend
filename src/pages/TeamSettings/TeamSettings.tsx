@@ -28,17 +28,19 @@ interface OngoingMeetingProps {
 
 const TeamSettings = () => {
   const navigate = useNavigate();
+  const { teamId } = useParams();
 
-  const [selectedTeamId, setSelectedTeamId] = useState<number>(1);
+  const [selectedTeamId, setSelectedTeamId] = useState<number>(
+    parseInt(teamId as string)
+  );
+  const [teamIds, setTeamIds] = useState(parseInt(teamId as string));
 
   const [selectedUserArray, setSelectedUserArray] = useState([]);
-  const [teamIds, setTeamIds] = useState(1);
   const [userIds, setUserIds] = useState("");
 
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
   const userRole = localStorage.getItem("teamUserRole");
-  const { teamId } = useParams();
   const userId = localStorage.getItem("userId");
 
   React.useEffect(() => {

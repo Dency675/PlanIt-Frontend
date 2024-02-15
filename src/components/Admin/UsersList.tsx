@@ -103,11 +103,15 @@ export default function UsersList() {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const adminUserId = localStorage.getItem("userId");
         const fetchedData = await fetchUsersData(page);
-        if (fetchedData.length === 0) {
-          setHasMoreData(false); // No more data available
+        const filteredData = fetchedData.filter(
+          (data: any) => data.id !== adminUserId
+        );
+        if (filteredData.length === 0) {
+          setHasMoreData(false);
         } else {
-          setData(fetchedData);
+          setData(filteredData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);

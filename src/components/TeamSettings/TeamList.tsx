@@ -4,14 +4,17 @@ import { TeamMember } from "./TeamMember";
 import axios from "axios";
 import { TeamMemberProps } from "./TeamMember";
 import AddMember from "./AddMember";
+import { useParams } from "react-router-dom";
 
 interface TeamListProps {
   teamId: number;
   selectedUserArray: any;
 }
 
-const TeamList = ({ teamId, selectedUserArray }: TeamListProps) => {
+const TeamList = ({ selectedUserArray }: TeamListProps) => {
   const userId = localStorage.getItem("userId");
+
+  const { teamId } = useParams();
 
   const [teamMembers, setTeamMembers] = useState<
     TeamMemberProps["teamMember"][]
@@ -123,7 +126,7 @@ const TeamList = ({ teamId, selectedUserArray }: TeamListProps) => {
             {role?.includes("project manager") && (
               <AddMember
                 setSelectedUserArrayWithId={setSelectedUserArrayWithId}
-                teamId={teamId}
+                teamId={parseInt(teamId as string)}
               />
             )}
           </Box>
@@ -165,7 +168,7 @@ const TeamList = ({ teamId, selectedUserArray }: TeamListProps) => {
             {role?.includes("project manager") && (
               <AddMember
                 setSelectedUserArrayWithId={setSelectedUserArrayWithId}
-                teamId={teamId}
+                teamId={parseInt(teamId as string)}
               />
             )}
           </Box>

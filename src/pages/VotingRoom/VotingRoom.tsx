@@ -4,6 +4,7 @@ import LeftComponent from "../../components/VotingRoom/LeftComponent";
 import RightComponent from "../../components/VotingRoom/RightComponent";
 import { useParams } from "react-router-dom";
 import { sessionDetailsData } from "../ReportPage/apis/SessionDetailsAPI";
+import { sessionDetailsDataVoting } from "../ReportPage/apis/SessionDetailsAPIVoting";
 
 function VotingRoom() {
   const { sessionId } = useParams();
@@ -18,7 +19,7 @@ function VotingRoom() {
 
   useEffect(() => {
     if (sessionId)
-      sessionDetailsData(parseInt(sessionId))
+      sessionDetailsDataVoting(parseInt(sessionId))
         .then((response: any) => {
           setEstimationId(response.data.estimationId);
           setScrumMasterId(response.data.scrumMasterId);

@@ -18,12 +18,14 @@ import { Box } from "@mui/joy";
 import fetchMembers from "./api/fetchTeamMembers";
 import addSessionParticipants from "./api/addSessionParticipants";
 import { useNavigate, useParams } from "react-router";
+import addUserStoriesAndSessionMapping from "./api/addUserStoriesAndSessionMapping";
 
 const CreateRoomForm: React.FC = () => {
   const { teamId } = useParams();
   const [userFile, setUserFile] = useState<File | null>(null);
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [sessionId, setSessionId] = useState<number>(0);
+  const [responseResponse, setResponse] = useState<number>();
   const navigate = useNavigate();
 
   const handleFileSelect = (file: File) => {
@@ -59,6 +61,7 @@ const CreateRoomForm: React.FC = () => {
   const [fileUploadConfirmation, setFileUploadConfirmation] =
     useState<string>("");
 
+  const [fileName, setFileName] = useState<string>("");
   const [roomName, setRoomName] = useState<string>("");
   const [timer, setTimer] = useState<Date | null>(null);
   const [voteTime, setVoteTime] = useState<string>("");
@@ -135,12 +138,95 @@ const CreateRoomForm: React.FC = () => {
           },
         }
       );
-      setSessionId(response.data.data.id as number);
+      console.log(response);
+      // setSessionId(response.data.data.id as number);
+      // setSessionId(response.data.data.newSession.id as number);
+      setResponse(response.status as number);
+
+      console.log(
+        "SessionIdsuccessfully ",
+        response.data.responseData.data.newSession.id as number
+      );
+      setSessionId(response.data.responseData.data.newSession.id as number);
+      console.log("SessionId", response.data.responseData.data.fileName);
+      setFileName(response.data.responseData.data.fileName as string);
+
       setFileUploadConfirmation("File has been successfully uploaded!");
+
+      const ResponseStatus = response.status as number;
+      const currentSessionId = response.data.responseData.data.newSession.id;
+      const selectedTeamIds = response.data.responseData.data.newSession.id;
+
+      console.log(ResponseStatus, "responseResponse");
+
+      if ((response.status as number) === 201) {
+        addUserStoriesAndSessionMapping(
+          response.data.responseData.data.fileName,
+          response.data.responseData.data.newSession.id
+        )
+          .then((response: any) => {
+            console.log("Response from addSessionParticipants:", response);
+            const combinedArray = [
+              ...teamMember,
+              ...selectedUserArrayWithId,
+              { userId: storedUserId as string, roleId: 6 },
+            ];
+
+            console.log(combinedArray, "combinedArray");
+
+            addSessionParticipants({
+              sessionId: currentSessionId,
+              participants: combinedArray,
+            })
+              .then((response: any) => {
+                console.log("Response from addSessionParticipants:", response);
+              })
+              .catch((error) => {
+                console.error(
+                  "Error occurred while adding session participants:",
+                  error
+                );
+              });
+          })
+          .catch((error) => {
+            console.error(
+              "Error occurred while adding session participants:",
+              error
+            );
+          });
+
+        if (response.status === 200) {
+          const combinedArray = [
+            ...teamMember,
+            ...selectedUserArrayWithId,
+            { userId: storedUserId as string, roleId: 6 },
+          ];
+
+          console.log(combinedArray, "combinedArray");
+
+          addSessionParticipants({
+            sessionId: sessionId,
+            participants: combinedArray,
+          })
+            .then((response: any) => {
+              console.log("Response from addSessionParticipants:", response);
+            })
+            .catch((error) => {
+              console.error(
+                "Error occurred while adding session participants:",
+                error
+              );
+            });
+        }
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  // React.useEffect(() => {
+  //   if (response === 200) addUserStoriesAndSessionMapping(fileName, sessionId);
+  // }, [fileName, sessionId]);
 
   React.useEffect(() => {
     const combinedArray = [
@@ -148,7 +234,6 @@ const CreateRoomForm: React.FC = () => {
       ...selectedUserArrayWithId,
       { userId: storedUserId as string, roleId: 6 },
     ];
-
     addSessionParticipants({
       sessionId: sessionId,
       participants: combinedArray,
@@ -162,10 +247,10 @@ const CreateRoomForm: React.FC = () => {
           error
         );
       });
-  }, [sessionId]);
+  }, [sessionId, fileName]);
 
   React.useEffect(() => {
-    fetchMembers(selectedTeamId)
+    fetchMembers(selectedTeamId, storedUserId as string)
       .then((response) => {
         console.log("Response from fetchMembers:", response);
         setTeamMember(response);
@@ -176,7 +261,7 @@ const CreateRoomForm: React.FC = () => {
           error
         );
       });
-  }, []);
+  }, [selectedTeamId]);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
