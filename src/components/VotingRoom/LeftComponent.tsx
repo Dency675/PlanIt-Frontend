@@ -38,6 +38,8 @@ const LeftComponent = ({
   const [commentValue, setCommentValue] = useState<string>("");
   const [score, setScore] = useState<string>("");
 
+  const role = localStorage.getItem("teamUserRole");
+
   const startTimer = () => {
     setIsTimerRunning(!isTimerRunning);
   };
