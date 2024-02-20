@@ -103,7 +103,6 @@ const SearchBar: React.FC<GuestInputProps> = ({ setSelectedUserId }) => {
       >
         <Fade in={isProfileModalOpen}>
           <div style={{ outline: 0, color: "white" }}>
-            {/* Render ProfilePage component inside the modal */}
             <ProfilePage user={selectedUserArray} />
           </div>
         </Fade>
