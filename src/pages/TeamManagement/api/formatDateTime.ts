@@ -30,9 +30,13 @@ const formatDateTime = (time: string | Date) => {
     dayString = dayNames[dateTime.getDay()];
   } else if (dateTime.getTime() > today) {
     dayString = "Today";
-  } else if (dateTime.getTime() > today - 7 * 24 * 60 * 60 * 1000) {
-    dayString = "Tomorrow";
-  } else {
+  }
+  // else if (dateTime.getTime() > today - 7 * 24 * 60 * 60 * 1000) {
+  //   dayString = "Yesterday";
+  // } else if (dateTime.getTime() < today - 7 * 24 * 60 * 60 * 1000) {
+  //   dayString = "Tomorrow";
+  // }
+  else {
     dayString = dayNames[dateTime.getDay()];
   }
 

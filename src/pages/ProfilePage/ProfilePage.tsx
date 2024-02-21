@@ -10,32 +10,13 @@ interface UserData {
 }
 
 interface ProfilePageProps {
-  user?: UserData; // Change the prop to accept the entire user object
+  user?: UserData;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
-  // You can add additional state to hold user information
   const [userData, setUserData] = React.useState<any>(null);
 
   console.log("user", user);
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:3001/getUserById`, {
-  //         params: {
-  //           userId: userId,
-  //         },
-  //       });
-
-  //       setUserData(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, [userId]);
 
   const avatarUrl = user?.name[0] || "default_avatar_url.jpg";
   const userName = user?.name || "Unknown User";
@@ -64,8 +45,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
           alt={userName}
           src={avatarUrl}
           style={{
-            width: 120,
-            height: 120,
+            width: 100,
+            height: 100,
             margin: "auto",
             marginBottom: "20px",
           }}

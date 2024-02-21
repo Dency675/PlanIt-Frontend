@@ -11,7 +11,6 @@ import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
-import ModalClose from "@mui/joy/ModalClose";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
 import Checkbox from "@mui/joy/Checkbox";
@@ -21,8 +20,6 @@ import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
@@ -36,7 +33,6 @@ import Snackbar from "@mui/joy/Snackbar";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
 import { AspectRatio, Card, Skeleton } from "@mui/joy";
 import { fetchUsersData } from "../../pages/Admin/apis/usersList";
-// import { deleteUser } from '../../pages/Admin/apis/RemoveUser';
 import { searchUsers } from "../../pages/Admin/apis/SearchUser";
 import { deleteUser } from "../../pages/Admin/apis/RemoveUser";
 import { assignTeamManager } from "../../pages/Admin/apis/AssignManager";
@@ -50,8 +46,6 @@ import {
   ListItemDecorator,
 } from "@mui/joy";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import { Console } from "console";
-import { string } from "yargs";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -98,7 +92,7 @@ export default function UsersList() {
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openAssignSnackbar, setOpenAssignSnackbar] = useState(false);
+  const [openManagerSnack, setOpenManagerSnack] = useState(false);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -109,11 +103,15 @@ export default function UsersList() {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const adminUserId = localStorage.getItem("userId");
         const fetchedData = await fetchUsersData(page);
-        if (fetchedData.length === 0) {
-          setHasMoreData(false); // No more data available
+        const filteredData = fetchedData.filter(
+          (data: any) => data.id !== adminUserId
+        );
+        if (filteredData.length === 0) {
+          setHasMoreData(false);
         } else {
-          setData(fetchedData);
+          setData(filteredData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -164,16 +162,10 @@ export default function UsersList() {
     };
 
     const assignManager = async () => {
+      setOpenManagerSnack(true);
       try {
         await assignTeamManager(userId);
         console.log(`User with ID ${userId} assigned as manager.`);
-        // setOpen(true)
-
-        setOpenAssignSnackbar(true);
-
-        // setData(data.filter(user => user.id !== userId));
-        // setData(data.map(user => user.id === userId ? {...user, status: 'inactive'} : user));
-        // console.log("Member:", data);
       } catch (error) {
         console.error("Error assigning user :", error);
       }
@@ -190,7 +182,7 @@ export default function UsersList() {
         </MenuButton>
         <Menu size="sm" sx={{ minWidth: 140 }}>
           <MenuItem disabled={status === "inactive"} onClick={assignManager}>
-            Assign Team Manager{" "}
+            Assign Project Manager{" "}
           </MenuItem>
           <Divider />
           <MenuItem
@@ -245,18 +237,19 @@ export default function UsersList() {
             </Button>
           }
         >
-          Successful!
+          Account has been deactivated
         </Snackbar>
+
         <Snackbar
           variant="soft"
           color="success"
-          open={openAssignSnackbar}
-          onClose={() => setOpenAssignSnackbar(false)}
+          open={openManagerSnack}
+          onClose={() => setOpenManagerSnack(false)}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
           endDecorator={
             <Button
-              onClick={() => setOpenAssignSnackbar(false)}
+              onClick={() => setOpenManagerSnack(false)}
               size="sm"
               variant="soft"
               color="success"
@@ -265,16 +258,11 @@ export default function UsersList() {
             </Button>
           }
         >
-          Successful!
+          Project Manager Added
         </Snackbar>
       </Dropdown>
     );
   }
-
-  // const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-  //   setSearchQuery(e.target.value);
-  // };
-
   const handleSearch = async (e: any) => {
     setSearchQuery(e.target.value);
     try {
@@ -332,20 +320,12 @@ export default function UsersList() {
             startDecorator={<SearchIcon />}
           />
         </FormControl>
-        {/* <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button> */}
-        {/* {renderFilters()} */}
       </Box>
       <Sheet
         className="OrderTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: "none", sm: "initial" },
+          display: { xs: "block", sm: "initial" },
           width: "100%",
           borderRadius: "sm",
           flexShrink: 1,
@@ -391,7 +371,7 @@ export default function UsersList() {
                   sx={{ verticalAlign: "text-bottom" }}
                 />
               </th>
-              <th style={{ width: 140, padding: "12px 10px" }}>
+              <th style={{ width: 130, padding: "12px 10px" }}>
                 <Link
                   underline="none"
                   color="primary"
@@ -410,10 +390,10 @@ export default function UsersList() {
                   User Id
                 </Link>
               </th>
-              <th style={{ width: 230, padding: "12px 10px" }}>Name</th>
-              <th style={{ width: 160, padding: "12px 10px" }}>Status</th>
-              <th style={{ width: 160, padding: "12px 10px" }}>Department</th>
-              <th style={{ width: 140, padding: "12px 10px" }}>Set Role </th>
+              <th style={{ width: 290, padding: "12px 10px" }}>Name</th>
+              <th style={{ width: 90, padding: "12px 10px" }}>Status</th>
+              <th style={{ width: 100, padding: "12px 10px" }}>Department</th>
+              <th style={{ width: 80, padding: "12px 10px" }}>Set Role </th>
             </tr>
           </thead>
           <tbody>
@@ -477,9 +457,6 @@ export default function UsersList() {
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    {/* <Link level="body-xs" component="button">
-                      Download
-                    </Link> */}
                     <RowMenu userId={row.id} status={row.status} />
                   </Box>
                 </td>

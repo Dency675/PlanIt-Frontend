@@ -5,8 +5,6 @@ interface UserData {
   givenName: string;
   email: string;
   surName: string;
-
-  // Add other properties if needed
 }
 
 const getUserInformationById = async (

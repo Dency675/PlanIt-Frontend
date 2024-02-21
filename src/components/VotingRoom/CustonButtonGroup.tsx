@@ -6,6 +6,10 @@ import MuiButtonGroup from "@mui/joy/ButtonGroup";
 import Typography from "@mui/joy/Typography";
 import { useState } from "react";
 import { useSocket } from "../Socket/SocketContext";
+import { resetStoryPoint } from "../../pages/VotingRoom/apis/resetStoryPoint";
+import updateUserStoryMapping from "./api/updateUserStoryMapping";
+import editSessions from "../TeamSettings/api/editSessions";
+import { useNavigate } from "react-router";
 
 interface CustomButtonGroupProps {
   onStartTimer: () => void;
@@ -15,6 +19,8 @@ interface CustomButtonGroupProps {
   setIsUserStrorySelected: React.Dispatch<React.SetStateAction<boolean>>;
   setIsStartButtonStarted: React.Dispatch<React.SetStateAction<boolean>>;
   selectedUserStoryId: number;
+  commentValue: string;
+  score: string;
 }
 //timer function
 const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
@@ -25,13 +31,17 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   setIsStartButtonStarted,
   sessionId,
   selectedUserStoryId,
+  commentValue,
+  score,
 }) => {
   const [isTimerOn, setIsTimerOn] = useState(false);
   const [isRevealButtonDisabled, setIsRevealButtonDisabled] = useState(true);
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(true);
+  const [count, setCount] = useState(0);
   const [isStartName, setIsStartName] = useState("Start Voting");
 
   const socket = useSocket();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     console.log("isUserStrorySelected", isUserStrorySelected);
@@ -51,8 +61,11 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
       setIsRevealButtonDisabled(true);
       setIsStartName("End Voting");
       setIsStartButtonStarted(true);
-      socket.emit("startButtonClicked", sessionId);
+      socket.emit("startButtonClicked", sessionId, count);
+
+      setCount(count + 1);
     }
+
     setIsTimerOn(!isTimerOn);
   };
 
@@ -65,7 +78,31 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
     setIsUserStrorySelected(false);
     setIsStartButtonDisabled(!isStartButtonDisabled);
     setIsStartName("Start Voting");
+
+    updateUserStoryMapping(selectedUserStoryId, commentValue, score, count)
+      .then((response: any) => {})
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
   };
+
+  const handleExitButtonClick = () => {
+    editSessions(parseInt(sessionId), "completed")
+      .then((response: any) => {
+        console.log("session status is ", response);
+      })
+      .catch((error) => {
+        console.error("Error occurred while changing status :", error);
+      });
+
+    socket.emit("sessionEnded", sessionId);
+  };
+
+  React.useEffect(() => {
+    socket.on("exitUsers", () => {
+      navigate(`/home`);
+    });
+  }, []);
 
   React.useEffect(() => {
     console.log(
@@ -103,14 +140,14 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
           >
             Reveal
           </Button>
-          <Button disabled={isRevealButtonDisabled}>Skip</Button>
+          {/* <Button disabled={isRevealButtonDisabled}>Skip</Button> */}
           <Button
             disabled={isRevealButtonDisabled}
             onClick={handleSaveButtonClick}
           >
             Save Result
           </Button>
-          <Button>Exit</Button>
+          <Button onClick={handleExitButtonClick}>Exit</Button>
         </MuiButtonGroup>
       </CardContent>
     </Card>

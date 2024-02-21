@@ -48,20 +48,6 @@ const UserStories: React.FC<sessionIdType> = ({
   userStoryList,
 }) => {
   const socket = useSocket();
-  // const [userStoryList, setUserStoryList] = React.useState<userStoryType[]>([
-  //   initialUserStory,
-  // ]);
-
-  // React.useEffect(() => {
-  //   getAllUserStoriesBySessionId(sessionId)
-  //     .then((response: any) => {
-  //       setUserStoryList(response.data);
-  //       console.log("userStoryList:", userStoryList);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error occurred while changing status :", error);
-  //     });
-  // }, []);
 
   const HandleUserStoryChange = (e: SelectChangeEvent<string>) => {
     const selectedUserStoryName = e.target.value as string;
@@ -103,26 +89,6 @@ const UserStories: React.FC<sessionIdType> = ({
         }}
       >
         <FormControl sx={{ gridColumn: "1/-1" }}>
-          {/* <Select
-            placeholder="Select User Story"
-            // indicator={<KeyboardArrowDown />}
-            sx={{
-              [`& .${selectClasses.indicator}`]: {
-                transition: "0.2s",
-                [`&.${selectClasses.expanded}`]: {
-                  transform: "rotate(-180deg)",
-                },
-              },
-            }}
-          >
-            {" "}
-            {userStoryList.map((userStory) => (
-              <Option key={userStory.userStoryId} value={userStory.userStoryId}>
-                {userStory.userStory}
-              </Option>
-            ))}
-          </Select> */}
-
           <Select
             placeholder="Select user story"
             fullWidth

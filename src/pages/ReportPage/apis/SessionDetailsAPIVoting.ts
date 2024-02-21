@@ -1,11 +1,11 @@
 import { axiosInstance } from "../../../config/configAxios";
 import { SessionDetailsResponsesData } from "../types";
 
-export const sessionDetailsData = async (
+export const sessionDetailsDataVoting = async (
   sessionId: number
 ): Promise<SessionDetailsResponsesData> => {
   return await axiosInstance
-    .get(`/getSessionById?sessionId=${sessionId}&isJoined=true`)
+    .get(`/getSessionByIdVoting?sessionId=${sessionId}`)
     .then((data) => {
       return data.data;
     })

@@ -2,44 +2,22 @@ import React, { useState } from "react";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import Chip from "@mui/joy/Chip";
-import Divider from "@mui/joy/Divider";
 import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
-import LinearProgress from "@mui/joy/LinearProgress";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
-import Stack from "@mui/joy/Stack";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import logo from "../../assets/images/logo_Pi.png";
-import ColorSchemeToggle from "./ColorSchemeToggle";
 import { closeSidebar } from "../utils";
 import GroupIcon from "@mui/icons-material/Group";
 import Groups2Icon from "@mui/icons-material/Groups2";
-import UsersList from "./UsersList";
-import TeamsList from "./TeamsList";
 import { useMsal } from "@azure/msal-react";
-
-import { GrUserManager } from "react-icons/gr";
 import { MdRecordVoiceOver } from "react-icons/md";
+import getUserInformationById from "../../pages/TeamManagement/api/fetchUserData";
+import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 
 function Toggler({
   defaultExpanded = false,
@@ -54,6 +32,7 @@ function Toggler({
   }) => React.ReactNode;
 }) {
   const [open, setOpen] = React.useState(defaultExpanded);
+
   return (
     <React.Fragment>
       {renderToggle({ open, setOpen })}
@@ -79,24 +58,47 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
   const [selectedTab, setSelectedTab] = useState(null);
-  //  console.log(selectedTab)
+  const userId = localStorage.getItem("userId");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  React.useEffect(() => {
+    getUserInformationById(userId as string)
+      .then(({ givenName, email }) => {
+        setName(givenName);
+        setEmail(email);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   const handleTabClick = (tabName: any) => {
     setSelectedTab(tabName);
     SendValueToParent(tabName);
   };
 
+  const { setMode: setJoyMode } = useJoyColorScheme();
+  const { mode } = useJoyColorScheme();
   const { instance } = useMsal();
 
   const logOut = () => {
     localStorage.removeItem("roleID");
     sessionStorage.clear();
     localStorage.removeItem("userId");
-    instance.logoutPopup({
+    instance.logoutRedirect({
       postLogoutRedirectUri: "/",
-      mainWindowRedirectUri: "/",
     });
   };
+
+  function stringAvatar(givenName: string) {
+    console.log(givenName);
+    return {
+      sx: {
+        bgcolor: mode === "light" ? "lightgrey" : "darkgrey", // Adjusting background color based on theme mode
+      },
+      children: `${givenName.split(" ")[0][0]}`,
+    };
+  }
 
   return (
     <Sheet
@@ -200,58 +202,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected={selectedTab === 'projectmanager'} onClick={() => handleTabClick('projectmanager')}>
-            <MdRecordVoiceOver />
+            <ListItemButton
+              selected={selectedTab === "projectmanager"}
+              onClick={() => handleTabClick("projectmanager")}
+            >
+              <MdRecordVoiceOver />
               <ListItemContent>
                 <Typography level="title-sm">Project Manager</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
-
-          {/* <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <AssignmentRoundedIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem> */}
-          {/* {selectedTab === 'users' && <UsersList/> }
-      {selectedTab === 'teams' && <TeamsList />} */}
-          {/* {selectedTab === 'orders' && <OrdersTabContent />} */}
         </List>
       </Box>
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar
+        {/* <Avatar
           variant="outlined"
           size="sm"
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        />
+        /> */}
+
+        <Avatar {...stringAvatar(name)} />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Admin</Typography>
-          <Typography level="body-xs">Ad@experionglobal.com</Typography>
+          <Typography level="title-sm">{name}</Typography>
+          <Typography level="body-xs" noWrap>
+            {email}
+          </Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral" onClick={logOut}>
           <LogoutRoundedIcon />
