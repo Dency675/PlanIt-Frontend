@@ -36,6 +36,7 @@ import { fetchUsersData } from "../../pages/Admin/apis/usersList";
 import { searchUsers } from "../../pages/Admin/apis/SearchUser";
 import { deleteUser } from "../../pages/Admin/apis/RemoveUser";
 import { assignTeamManager } from "../../pages/Admin/apis/AssignManager";
+import { IoCodeSlashOutline } from "react-icons/io5";
 import {
   ButtonGroup,
   DialogActions,
@@ -46,6 +47,8 @@ import {
   ListItemDecorator,
 } from "@mui/joy";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import { fetchTeamManagers } from "../../pages/Admin/apis/ProjectManager";
+import { User } from "../../pages/Admin/types/ProjectManager";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -98,6 +101,7 @@ export default function UsersList() {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [open, setOpen] = React.useState<boolean>(false);
   const [userIdToDelete, setUserIdToDelete] = useState<string>("");
+  const [managerData, setManagerData] = useState<User[]>([]); // Provide initial value of empty array
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,6 +126,27 @@ export default function UsersList() {
 
     fetchData();
   }, [page]);
+
+  useEffect(() => {
+    const fetchProjectManagerData = async () => {
+      try {
+        const fetchedManagerData = await fetchTeamManagers();
+
+        if (!fetchedManagerData) {
+          setManagerData([]);
+        } else {
+          setManagerData(fetchedManagerData);
+        }
+        console.log("MANAGER DATA:", managerData);
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchProjectManagerData();
+  }, []);
 
   const handleNextPage = () => {
     setPage(page + 7);
@@ -349,7 +374,7 @@ export default function UsersList() {
         >
           <thead>
             <tr>
-              <th
+              {/* <th
                 style={{ width: 48, textAlign: "center", padding: "12px 6px" }}
               >
                 <Checkbox
@@ -370,8 +395,8 @@ export default function UsersList() {
                   }
                   sx={{ verticalAlign: "text-bottom" }}
                 />
-              </th>
-              <th style={{ width: 130, padding: "12px 10px" }}>
+              </th> */}
+              {/* <th style={{ width: 130, padding: "12px 10px" }}>
                 <Link
                   underline="none"
                   color="primary"
@@ -389,10 +414,11 @@ export default function UsersList() {
                 >
                   User Id
                 </Link>
-              </th>
-              <th style={{ width: 290, padding: "12px 10px" }}>Name</th>
+              </th> */}
+              <th style={{ width: 290, padding: "14px 10px" }}>Name</th>
               <th style={{ width: 90, padding: "12px 10px" }}>Status</th>
-              <th style={{ width: 100, padding: "12px 10px" }}>Department</th>
+              <th style={{ width: 80, padding: "12px 8px" }}>Department</th>
+              <th style={{ width: 100, padding: "12px 10px" }}>Role</th>
               <th style={{ width: 80, padding: "12px 10px" }}>Set Role </th>
             </tr>
           </thead>
@@ -400,7 +426,7 @@ export default function UsersList() {
             {stableSort(filteredRows, getComparator(order, "id")).map((row) => (
               //  {filteredRows.map((row) => (
               <tr key={row.id}>
-                <td style={{ textAlign: "center", width: 120 }}>
+                {/* <td style={{ textAlign: "center", width: 120 }}>
                   <Checkbox
                     size="sm"
                     checked={selected.includes(row.id)}
@@ -415,10 +441,10 @@ export default function UsersList() {
                     slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
                     sx={{ verticalAlign: "text-bottom" }}
                   />
-                </td>
-                <td>
+                </td> */}
+                {/* <td>
                   <Typography level="body-xs">{row.id}</Typography>
-                </td>
+                </td> */}
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                     <Avatar size="sm">
@@ -454,6 +480,13 @@ export default function UsersList() {
                 </td>
                 <td>
                   <Typography level="body-xs">{row.department}</Typography>
+                </td>
+                <td>
+                  <Chip variant="soft">
+                    {managerData.some((manager) => manager.id === row.id)
+                      ? "Project Manager"
+                      : "Team Member"}
+                  </Chip>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
