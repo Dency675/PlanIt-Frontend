@@ -71,7 +71,6 @@ export default function ProjectManager() {
         } else {
           setData(fetchedData);
         }
-
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
