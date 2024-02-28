@@ -19,7 +19,8 @@ const SearchBar: React.FC<GuestInputProps> = ({ setSelectedUserId }) => {
   const [usersArray, setUsersArray] = useState<UserData[]>([]);
   const [selectedUserArray, setSelectedUserArray] = useState<
     UserData | undefined
-  >(undefined);
+  >(undefined as UserData | undefined);
+
   const [inputValue, setInputValue] = useState("");
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
 
@@ -31,12 +32,13 @@ const SearchBar: React.FC<GuestInputProps> = ({ setSelectedUserId }) => {
     setProfileModalOpen(false);
   };
 
-  useEffect(() => {
-    // Clear user data when the component unmounts
-    return () => {
-      setSelectedUserArray(undefined);
-    };
-  }, []);
+  // useEffect(() => {
+  //   // Clear user data when the component unmounts
+  //   return () => {
+  //     setSelectedUserArray(undefined);
+
+  //   };
+  // }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -71,6 +73,14 @@ const SearchBar: React.FC<GuestInputProps> = ({ setSelectedUserId }) => {
   }, [selectedUserArray]);
 
   console.log("selected", usersArray);
+
+  useEffect(() => {
+    if (!isProfileModalOpen) {
+      setInputValue(""); // Clear input value when the modal closes
+      setUsersArray([]);
+      setSelectedUserArray(undefined); // Clear user array when the modal closes
+    }
+  }, [isProfileModalOpen]);
 
   return (
     <>
