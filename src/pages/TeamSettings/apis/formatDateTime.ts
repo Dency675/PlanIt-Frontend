@@ -38,7 +38,7 @@ const formatDateTime = (time: string | Date) => {
     dayString = dayNames[dateTime.getDay()];
   }
 
-  return `${formattedTime} ${formattedDate} ${dayString} `;
+  return `${formattedDate} ${dayString} ${formattedTime} `;
 };
 
 export { formatDateTime };

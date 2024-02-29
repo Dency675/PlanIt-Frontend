@@ -37,6 +37,8 @@ const LeftComponent = ({
   const [teamIdL, setTeamId] = useState(0);
   const [commentValue, setCommentValue] = useState<string>("");
   const [score, setScore] = useState<string>("");
+  const [isUserStorySelectEnable, setIsUserStorySelectEnable] =
+    React.useState<boolean>(false);
 
   const role = localStorage.getItem("teamUserRole");
 
@@ -58,7 +60,7 @@ const LeftComponent = ({
   }, [isStartButtonStarted]);
 
   React.useEffect(() => {
-    console.log("isTimerRunning");
+    console.log("isTimerRunning effect", isTimerRunning);
     console.log(isTimerRunning);
     // setIsTimerRunningSession(isTimerRunning);
     const currentTime = new Date().toLocaleTimeString();
@@ -153,7 +155,7 @@ const LeftComponent = ({
   React.useEffect(() => {
     socket.on("timerShow", ({ isTimerRunning, sessionId, currentTime }) => {
       console.log("timerShow");
-      console.log("isTimerRunning", isTimerRunning);
+      console.log("isTimerRunning", isTimerRunning, sessionId, currentTime);
       setIsTimerRunningSession(isTimerRunning);
       console.log("currentTime", currentTime);
     });
@@ -166,6 +168,7 @@ const LeftComponent = ({
           sessionId={sessionId}
           setSelectedUserStoryId={setSelectedUserStoryId}
           userStoryList={userStoryList}
+          isUserStorySelectEnable={isUserStorySelectEnable}
         />
       ) : (
         <DisplayUserStory
@@ -188,6 +191,9 @@ const LeftComponent = ({
           selectedUserStoryId={parseInt(selectedUserStoryMappingId)}
           commentValue={commentValue}
           score={score}
+          setCommentValue={setCommentValue}
+          setScore={setScore}
+          setIsUserStorySelectEnable={setIsUserStorySelectEnable}
         />
       ) : (
         <></>

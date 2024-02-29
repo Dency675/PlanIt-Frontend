@@ -16,9 +16,10 @@ const UserStoryScoreComponent = ({ userStoryData, index }: UserStoryProps) => {
       color="primary"
       style={{
         width: 200,
-        height: 200,
+        height: 195,
         border: "1px solid  #9DBEFF",
         padding: 0,
+        marginTop: 9,
       }}
     >
       <Box
@@ -30,8 +31,6 @@ const UserStoryScoreComponent = ({ userStoryData, index }: UserStoryProps) => {
           alignItems: "center",
         }}
       >
-        {/* <CardHeader title="Another Card" />
-    <CardContent>Score is 50</CardContent> */}
         <Clock size={85} />
         <CardHeader
           title={`Story Point : ${userStoryData[index].storyPointResult}`}

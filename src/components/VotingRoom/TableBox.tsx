@@ -10,6 +10,7 @@ interface tablePropType {
   setScoreCounts: React.Dispatch<
     React.SetStateAction<{ [key: string]: number }>
   >;
+  setScore: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 }
 interface UserData {
   userName: string;
@@ -25,6 +26,7 @@ const TableBox: React.FC<tablePropType> = ({
   sessionId,
   currentUserStoryId,
   setScoreCounts,
+  setScore,
 }) => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [userStoryMappingId, setUserStoryMappingId] = useState<number>(0);
@@ -48,13 +50,19 @@ const TableBox: React.FC<tablePropType> = ({
         setUserData(response.data);
 
         const counts: { [key: string]: number } = {};
+        const scorePoints: { [key: string]: string } = {};
         response.data.forEach((user: { score: any[] }) => {
           user.score.forEach((score) => {
             if (score.userStorySessionMappingId === userStoryMappingId) {
               counts[score.storyPoint] = (counts[score.storyPoint] || 0) + 1;
+              console.log("scorescore scorePoints inside", score.storyPoint);
+              scorePoints[score.storyPoint] = score.storyPoint;
             }
           });
         });
+        console.log("scorescore scorePoints count", counts);
+        console.log("scorescore scorePoints", scorePoints);
+        setScore(scorePoints);
         setScoreCounts(counts);
       })
       .catch((error) => {

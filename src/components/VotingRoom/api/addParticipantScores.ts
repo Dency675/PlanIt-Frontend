@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 interface AddParticipantScoresRequest {
   teamMemberId: string;
   userStorySessionMappingId: number;
-  storyPoint: number;
+  storyPoint: string;
 }
 
 const addParticipantScores = async (data: AddParticipantScoresRequest) => {

@@ -21,6 +21,9 @@ interface CustomButtonGroupProps {
   selectedUserStoryId: number;
   commentValue: string;
   score: string;
+  setScore: React.Dispatch<React.SetStateAction<string>>;
+  setCommentValue: React.Dispatch<React.SetStateAction<string>>;
+  setIsUserStorySelectEnable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 //timer function
 const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
@@ -33,9 +36,13 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   selectedUserStoryId,
   commentValue,
   score,
+  setScore,
+  setCommentValue,
+  setIsUserStorySelectEnable,
 }) => {
   const [isTimerOn, setIsTimerOn] = useState(false);
   const [isRevealButtonDisabled, setIsRevealButtonDisabled] = useState(true);
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(true);
   const [count, setCount] = useState(0);
   const [isStartName, setIsStartName] = useState("Start Voting");
@@ -59,9 +66,11 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
     } else {
       stopTimer();
       setIsRevealButtonDisabled(true);
+      setIsSaveButtonDisabled(true);
       setIsStartName("End Voting");
       setIsStartButtonStarted(true);
       socket.emit("startButtonClicked", sessionId, count);
+      setIsUserStorySelectEnable(true);
 
       setCount(count + 1);
     }
@@ -70,20 +79,29 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   };
 
   const handleRevelButtonClick = () => {
+    setIsSaveButtonDisabled(false);
     socket.emit("revealClicked", sessionId, selectedUserStoryId);
   };
 
   const handleSaveButtonClick = () => {
-    setIsRevealButtonDisabled(!isRevealButtonDisabled);
-    setIsUserStrorySelected(false);
-    setIsStartButtonDisabled(!isStartButtonDisabled);
-    setIsStartName("Start Voting");
+    if (score !== "" && commentValue !== "") {
+      setIsRevealButtonDisabled(!isRevealButtonDisabled);
+      setIsSaveButtonDisabled(true);
+      setIsUserStrorySelected(false);
+      setIsStartButtonDisabled(!isStartButtonDisabled);
+      setIsStartName("Start Voting");
 
-    updateUserStoryMapping(selectedUserStoryId, commentValue, score, count)
-      .then((response: any) => {})
-      .catch((error) => {
-        console.error("Error occurred while changing status :", error);
-      });
+      updateUserStoryMapping(selectedUserStoryId, commentValue, score, count)
+        .then((response: any) => {})
+        .catch((error) => {
+          console.error("Error occurred while changing status :", error);
+        });
+
+      setIsUserStorySelectEnable(false);
+
+      socket.emit("resultSaved", sessionId);
+    }
+    socket.emit("saveResultClicked", sessionId);
   };
 
   const handleExitButtonClick = () => {
@@ -131,7 +149,6 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
           sx={{ width: "100%", justifyContent: "center" }}
         >
           <Button disabled={!isStartButtonDisabled} onClick={handleButtonClick}>
-            {/* {isTimerOn ? "End Voting" : "Start Voting"} */}
             {isStartName}
           </Button>
           <Button
@@ -142,7 +159,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
           </Button>
           {/* <Button disabled={isRevealButtonDisabled}>Skip</Button> */}
           <Button
-            disabled={isRevealButtonDisabled}
+            disabled={isSaveButtonDisabled}
             onClick={handleSaveButtonClick}
           >
             Save Result

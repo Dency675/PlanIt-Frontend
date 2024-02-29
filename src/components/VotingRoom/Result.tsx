@@ -42,8 +42,10 @@ interface UserData {
 const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   const [showParticipantList, setShowParticipantList] = useState(true);
   const [scoreCounts, setScoreCounts] = useState<{ [key: string]: number }>({});
+  const [score, setScore] = useState<{ [key: string]: string }>({});
   const [userStoryNumber, setUserStoryNumber] = useState<number>(0);
   const [teamMemberID, setTeamMemberID] = useState<number>(0);
+  const [cardIndex, setCardIndex] = useState<number>(0);
   const [participantsData, setParticipantData] = useState<UserData[]>([
     { userName: "", status: false, teamMemberId: 0, roleId: 0 },
   ]);
@@ -93,10 +95,28 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
   }, [socket, participantsData]);
 
   React.useEffect(() => {
-    socket.on("userVotedAdded", async (sessionId, teamMemberId) => {
-      console.log("userVotedAdded", sessionId, teamMemberId);
+    socket.on("showParticipantsList", async (sessionId) => {
+      setShowParticipantList(true);
+      const formattedData = participantsData.map((participant: any) => ({
+        ...participant,
+        status: false,
+      }));
+      setParticipantData(formattedData);
+    });
+
+    return () => {
+      socket.off("showParticipantsList");
+    };
+  }, [socket, participantsData]);
+
+  React.useEffect(() => {
+    socket.on("userVotedAdded", async (sessionId, teamMemberId, index) => {
+      console.log("userVotedAdded", sessionId, teamMemberId, index);
       setTeamMemberID(teamMemberId);
+      // setCardIndex(index);
       toggleStatus(teamMemberId);
+      // await setCardIndex(index);
+      console.log("card index after set state:", cardIndex, index);
     });
 
     return () => {
@@ -125,10 +145,48 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
       });
   }, [sessionId]);
 
-  const toggleStatus = (teamMemberId: number) => {
-    console.log("toggle status");
+  React.useEffect(() => {
+    console.log("cardIndex", cardIndex);
+  }, [cardIndex]);
+
+  // const toggleStatus = async (teamMemberId: number, index: number) => {
+  //   console.log("toggle status", cardIndex);
+  //   participantsData.map((participants) => {
+  //     console.log("participant.status:", participants.status);
+  //   });
+  //   setParticipantData((prevData) => {
+  //     return prevData.map((participant) => {
+  //       console.log(
+  //         "hidency",
+  //         participant.teamMemberId,
+  //         teamMemberId,
+  //         participant.status
+  //       );
+  //       if (participant.teamMemberId === teamMemberId) {
+  //         console.log(
+  //           "Developer List from result participant.status:",
+  //           participant.status,
+  //           participant.teamMemberId,
+  //           teamMemberId,
+  //           index,
+  //           cardIndex
+  //         );
+  //         console.log("cardIndex from ", cardIndex);
+
+  //         if (index === cardIndex)
+  //           return { ...participant, status: !participant.status };
+  //       }
+  //       return participant;
+  //     });
+  //   });
+  //   setCardIndex(index);
+  // };
+
+  const toggleStatus = async (teamMemberId: number) => {
+    console.log("toggle status", cardIndex);
     participantsData.map((participants) => {
       console.log("participant.status:", participants.status);
+      return participants; // Add this line
     });
     setParticipantData((prevData) => {
       return prevData.map((participant) => {
@@ -145,12 +203,17 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
             participant.teamMemberId,
             teamMemberId
           );
-          return { ...participant, status: !participant.status };
+          console.log("cardIndex from ", cardIndex);
+          if (participant.status === false)
+            return { ...participant, status: !participant.status };
+
+          // setCardIndex(index);
         }
-        // console.log("participantsData", participantsData);
+
         return participant;
       });
     });
+    // setCardIndex(index);
   };
 
   return (
@@ -201,10 +264,11 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
             sessionId={sessionId}
             currentUserStoryId={userStoryNumber}
             setScoreCounts={setScoreCounts}
+            setScore={setScore}
           />
           <Typography variant="h6">Estimation</Typography>
           <Divider orientation="horizontal" />
-          <PieChartResult scoreCounts={scoreCounts} />
+          <PieChartResult scoreCounts={scoreCounts} score={score} />
         </>
       )}
     </Card>
