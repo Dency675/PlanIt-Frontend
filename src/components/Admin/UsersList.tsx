@@ -7,13 +7,11 @@ import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import Menu from "@mui/joy/Menu";
@@ -21,7 +19,6 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import SearchIcon from "@mui/icons-material/Search";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -31,12 +28,10 @@ import { useState, useEffect } from "react";
 import { UserList } from "../../pages/Admin/types/UserList";
 import Snackbar from "@mui/joy/Snackbar";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
-import { AspectRatio, Card, Skeleton } from "@mui/joy";
 import { fetchUsersData } from "../../pages/Admin/apis/usersList";
 import { searchUsers } from "../../pages/Admin/apis/SearchUser";
 import { deleteUser } from "../../pages/Admin/apis/RemoveUser";
 import { assignTeamManager } from "../../pages/Admin/apis/AssignManager";
-import { IoCodeSlashOutline } from "react-icons/io5";
 import {
   ButtonGroup,
   DialogActions,
@@ -190,7 +185,13 @@ export default function UsersList() {
       setOpenManagerSnack(true);
       try {
         await assignTeamManager(userId);
-        console.log(`User with ID ${userId} assigned as manager.`);
+        console.log(`User with ID ${userId} assigned as mansager.`);
+        // setManagerData((prev) =>
+        //   prev.map((user) =>
+        //     user.id === userId ? { ...user, role_id:  } : user
+        //   )
+        // );
+        console.log();
       } catch (error) {
         console.error("Error assigning user :", error);
       }
@@ -374,47 +375,6 @@ export default function UsersList() {
         >
           <thead>
             <tr>
-              {/* <th
-                style={{ width: 48, textAlign: "center", padding: "12px 6px" }}
-              >
-                <Checkbox
-                  size="sm"
-                  indeterminate={
-                    selected.length > 0 && selected.length !== data.length
-                  }
-                  checked={selected.length === data.length}
-                  onChange={(event) => {
-                    setSelected(
-                      event.target.checked ? data.map((row) => row.id) : []
-                    );
-                  }}
-                  color={
-                    selected.length > 0 || selected.length === data.length
-                      ? "primary"
-                      : undefined
-                  }
-                  sx={{ verticalAlign: "text-bottom" }}
-                />
-              </th> */}
-              {/* <th style={{ width: 130, padding: "12px 10px" }}>
-                <Link
-                  underline="none"
-                  color="primary"
-                  component="button"
-                  onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                  fontWeight="lg"
-                  endDecorator={<ArrowDropDownIcon />}
-                  sx={{
-                    "& svg": {
-                      transition: "0.2s",
-                      transform:
-                        order === "desc" ? "rotate(0deg)" : "rotate(180deg)",
-                    },
-                  }}
-                >
-                  User Id
-                </Link>
-              </th> */}
               <th style={{ width: 290, padding: "14px 10px" }}>Name</th>
               <th style={{ width: 90, padding: "12px 10px" }}>Status</th>
               <th style={{ width: 80, padding: "12px 8px" }}>Department</th>
@@ -426,25 +386,6 @@ export default function UsersList() {
             {stableSort(filteredRows, getComparator(order, "id")).map((row) => (
               //  {filteredRows.map((row) => (
               <tr key={row.id}>
-                {/* <td style={{ textAlign: "center", width: 120 }}>
-                  <Checkbox
-                    size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? "primary" : undefined}
-                    onChange={(event) => {
-                      setSelected((ids) =>
-                        event.target.checked
-                          ? ids.concat(row.id)
-                          : ids.filter((itemId) => itemId !== row.id)
-                      );
-                    }}
-                    slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
-                    sx={{ verticalAlign: "text-bottom" }}
-                  />
-                </td> */}
-                {/* <td>
-                  <Typography level="body-xs">{row.id}</Typography>
-                </td> */}
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                     <Avatar size="sm">
