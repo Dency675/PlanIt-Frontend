@@ -1,5 +1,5 @@
 import axios from "axios";
- 
+
 export const fetchTeamManagers = async () => {
   try {
     const response = await axios.get(`http://localhost:3001/getAllTeamManager`);
@@ -8,4 +8,3 @@ export const fetchTeamManagers = async () => {
     console.error("Error fetching active count:", error);
   }
 };
-

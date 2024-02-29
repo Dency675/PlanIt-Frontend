@@ -215,12 +215,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
         </List>
       </Box>
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        {/* <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        /> */}
-
         <Avatar {...stringAvatar(name)} />
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography level="title-sm">{name}</Typography>
