@@ -85,15 +85,15 @@ const VotingCards: React.FC<votingCardsPropType> = ({
       });
   }, [userId, teamId]);
 
-  const handleCardClick = (index: number, scaleValue: number) => {
+  const handleCardClick = (index: number, scaleName: string) => {
     if (isStartButtonStarted) {
-      setSelectedCard(index === selectedCard ? null : index);
-      console.log(scaleValue);
+      setSelectedCard(index);
+      console.log("scaleValue", scaleName, index, selectedCard);
 
       addParticipantScores({
         teamMemberId: teamMemberId,
         userStorySessionMappingId: selectedUserStoryId,
-        storyPoint: scaleValue,
+        storyPoint: scaleName,
       })
         .then(() => {
           console.log("API call successful");
@@ -102,12 +102,21 @@ const VotingCards: React.FC<votingCardsPropType> = ({
           console.error("Error making API call:", error);
         });
       // if (clickedCardIndex === index || clickedCardIndex < 0)
-      socket.emit("userVoted", sessionId, teamMemberId);
+      socket.emit("userVoted", sessionId, teamMemberId, index);
       console.log("uservoted socket");
 
       setClickedCardIndex(index);
     }
   };
+
+  React.useEffect(() => {
+    socket.on("resetSeletedCard", async (sessionId) => {
+      setSelectedCard(null);
+    });
+    return () => {
+      socket.off("resetSeletedCard");
+    };
+  }, []);
 
   return (
     <Grid container justifyContent="center" spacing={0} sx={{ mt: 1 }}>
@@ -129,7 +138,7 @@ const VotingCards: React.FC<votingCardsPropType> = ({
                   selectedCard === index ? "2px solid blue" : "1px solid ",
                 overflow: "auto",
               }}
-              onClick={() => handleCardClick(index, card.scaleValue)}
+              onClick={() => handleCardClick(index, card.scaleName)}
             >
               <CardContent>
                 <Typography level="h1">{card.scaleName}</Typography>

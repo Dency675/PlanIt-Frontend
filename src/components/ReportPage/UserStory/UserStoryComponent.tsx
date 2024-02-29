@@ -48,8 +48,16 @@ const UserStoryComponent = ({
           border: "0.5px solid #9DBEFF",
         }}
       >
-        <CardHeader title={`Story ${userStoryData[index].userStoryId}`} />
-        <Grid container spacing={1}>
+        <CardHeader
+          style={{
+            marginTop: 30,
+            marginLeft: 20,
+            marginBottom: 0,
+            paddingBottom: 0,
+          }}
+          title={`Story ${userStoryData[index].userStoryId}`}
+        />
+        <Grid container style={{}} spacing={1}>
           <Grid item xs={12} textAlign={"center"}>
             <Typography>{userStoryData[index].userStory.userStory}</Typography>
           </Grid>
@@ -116,6 +124,7 @@ const UserStoryComponent = ({
                     // justifyContent: "center",
                     alignItems: "center",
                     paddingTop: 20,
+                    paddingBottom: 20,
                   }}
                 >
                   <Typography paddingLeft={3}>

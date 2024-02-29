@@ -25,6 +25,7 @@ interface sessionIdType {
   sessionId: string;
   setSelectedUserStoryId: React.Dispatch<React.SetStateAction<number>>;
   userStoryList: userStoryType[];
+  isUserStorySelectEnable: boolean;
 }
 
 interface userStoryType {
@@ -46,6 +47,7 @@ const UserStories: React.FC<sessionIdType> = ({
   sessionId,
   setSelectedUserStoryId,
   userStoryList,
+  isUserStorySelectEnable,
 }) => {
   const socket = useSocket();
 
@@ -104,6 +106,7 @@ const UserStories: React.FC<sessionIdType> = ({
               },
             }}
             displayEmpty
+            inputProps={{ readOnly: isUserStorySelectEnable }}
           >
             {userStoryList.map((item, index) => (
               <MenuItem key={index} value={item.userStory}>

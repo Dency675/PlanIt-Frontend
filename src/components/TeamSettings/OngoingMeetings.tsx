@@ -51,6 +51,8 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
         console.error("Error occurred while changing status :", error);
       });
 
+    console.log("userId", userId);
+
     editSessionParticipants(sessionId, userIds)
       .then((response: any) => {
         console.log("session status is ", response);
@@ -149,6 +151,7 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     >
                       {userId === ongoingMeeting.scrumMasterId ? (
                         <ListItemButton
+                          sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
                             handleStartButtonClick(ongoingMeeting.id);
@@ -158,6 +161,7 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                         </ListItemButton>
                       ) : (
                         <ListItemButton
+                          sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
                             handleJoinButtonClick(ongoingMeeting.id);
