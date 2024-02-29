@@ -404,7 +404,6 @@ export default function UsersList() {
                     startDecorator={
                       {
                         active: <CheckRoundedIcon />,
-                        // inactive: <AutorenewRoundedIcon />,
                         inactive: <BlockIcon />,
                       }[row.status]
                     }
