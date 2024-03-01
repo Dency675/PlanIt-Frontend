@@ -49,8 +49,8 @@ const AddMember = ({
       console.log("Users added successfully:", response.data);
       if (response.status === 201) {
         setSelectedUserArray([]);
-        setModalMessage("Successfully Added!");
-        setIsModalOpen(true);
+        // setModalMessage("Successfully Added!");
+        // setIsModalOpen(true);
       } else {
         console.error(
           "Error adding users: Unexpected response status",
