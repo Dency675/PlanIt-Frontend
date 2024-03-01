@@ -53,7 +53,6 @@ function Toggler({
 }
 interface SidebarProps {
   SendValueToParent: (tabName: any) => void;
-  // Add other props here if needed
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
@@ -61,6 +60,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
   const userId = localStorage.getItem("userId");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+
   React.useEffect(() => {
     getUserInformationById(userId as string)
       .then(({ givenName, email }) => {
@@ -77,7 +77,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ SendValueToParent }) => {
     SendValueToParent(tabName);
   };
 
-  const { setMode: setJoyMode } = useJoyColorScheme();
   const { mode } = useJoyColorScheme();
   const { instance } = useMsal();
 

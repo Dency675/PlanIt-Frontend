@@ -57,7 +57,6 @@ export default function ProjectManager() {
   const [order, setOrder] = React.useState<Order>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [data, setData] = useState<User[]>([]); // Provide initial value of empty array
-
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -65,7 +64,6 @@ export default function ProjectManager() {
     const fetchData = async () => {
       try {
         const fetchedData = await fetchTeamManagers();
-
         if (!fetchedData) {
           setData([]);
         } else {
@@ -76,7 +74,6 @@ export default function ProjectManager() {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, []);
 
