@@ -32,15 +32,7 @@ import { fetchUsersData } from "../../pages/Admin/apis/usersList";
 import { searchUsers } from "../../pages/Admin/apis/SearchUser";
 import { deleteUser } from "../../pages/Admin/apis/RemoveUser";
 import { assignTeamManager } from "../../pages/Admin/apis/AssignManager";
-import {
-  ButtonGroup,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  ListItem,
-  ListItemContent,
-  ListItemDecorator,
-} from "@mui/joy";
+import { DialogActions, DialogContent, DialogTitle } from "@mui/joy";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { fetchTeamManagers } from "../../pages/Admin/apis/ProjectManager";
 import { User } from "../../pages/Admin/types/ProjectManager";
@@ -85,8 +77,6 @@ function stableSort<T>(
 
 export default function UsersList() {
   const [order, setOrder] = React.useState<Order>("desc");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -99,6 +89,23 @@ export default function UsersList() {
   const [managerData, setManagerData] = useState<User[]>([]); // Provide initial value of empty array
 
   useEffect(() => {
+    const fetchProjectManagerData = async () => {
+      try {
+        const fetchedManagerData = await fetchTeamManagers();
+        if (!fetchedManagerData) {
+          setManagerData([]);
+        } else {
+          setManagerData(fetchedManagerData);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchProjectManagerData();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -107,10 +114,25 @@ export default function UsersList() {
         const filteredData = fetchedData.filter(
           (data: any) => data.id !== adminUserId
         );
-        if (filteredData.length === 0) {
+        const updatedData = filteredData.map((data: any) => {
+          if (data.id === adminUserId) {
+            return { ...data, role_name: "project manager" };
+          }
+          return data;
+        });
+
+        if (updatedData.length === 0) {
           setHasMoreData(false);
         } else {
-          setData(filteredData);
+          updatedData.forEach((userData: { id: string; role_name: string }) => {
+            const foundUser = managerData.find(
+              (manager) => manager.id === userData.id
+            );
+            if (foundUser) {
+              userData.role_name = "Project Manager";
+            } else userData.role_name = "Developer";
+          });
+          setData(updatedData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -118,30 +140,8 @@ export default function UsersList() {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchProjectManagerData = async () => {
-      try {
-        const fetchedManagerData = await fetchTeamManagers();
-
-        if (!fetchedManagerData) {
-          setManagerData([]);
-        } else {
-          setManagerData(fetchedManagerData);
-        }
-        console.log("MANAGER DATA:", managerData);
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchProjectManagerData();
-  }, []);
+  }, [page, managerData]);
 
   const handleNextPage = () => {
     setPage(page + 7);
@@ -162,10 +162,7 @@ export default function UsersList() {
         try {
           await deleteUser(userIdToDelete);
           console.log(`User with ID ${userIdToDelete} deleted successfully.`);
-          // setOpen(true)
           setOpenSnackbar(true);
-
-          // setData(data.filter(user => user.id !== userId));
           setData((prevData) =>
             prevData.map((user) =>
               user.id === userIdToDelete
@@ -186,11 +183,13 @@ export default function UsersList() {
       try {
         await assignTeamManager(userId);
         console.log(`User with ID ${userId} assigned as mansager.`);
-        // setManagerData((prev) =>
-        //   prev.map((user) =>
-        //     user.id === userId ? { ...user, role_id:  } : user
-        //   )
-        // );
+        setData((prev) =>
+          prev.map((user) =>
+            user.id === userId
+              ? { ...user, role_name: "Project Manager" }
+              : user
+          )
+        );
         console.log();
       } catch (error) {
         console.error("Error assigning user :", error);
@@ -384,7 +383,6 @@ export default function UsersList() {
           </thead>
           <tbody>
             {stableSort(filteredRows, getComparator(order, "id")).map((row) => (
-              //  {filteredRows.map((row) => (
               <tr key={row.id}>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
@@ -410,7 +408,6 @@ export default function UsersList() {
                     color={
                       {
                         active: "success",
-                        // inactive: 'neutral',
                         inactive: "danger",
                       }[row.status] as ColorPaletteProp
                     }
@@ -422,11 +419,7 @@ export default function UsersList() {
                   <Typography level="body-xs">{row.department}</Typography>
                 </td>
                 <td>
-                  <Chip variant="soft">
-                    {managerData.some((manager) => manager.id === row.id)
-                      ? "Project Manager"
-                      : "Team Member"}
-                  </Chip>
+                  <Chip variant="soft">{row.role_name}</Chip>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>

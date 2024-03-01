@@ -14,8 +14,6 @@ import ProjectManager from "../../components/Admin/ProjectManager";
 
 export default function JoyOrderDashboardTemplate() {
   const [selectedTab, setSelectedTab] = React.useState("users"); // State for selected tab
-
-  console.log(selectedTab);
   const handleValueFromChild = (tabName: any) => {
     setSelectedTab(tabName);
   };
@@ -82,16 +80,13 @@ export default function JoyOrderDashboardTemplate() {
                 : "Project Manager"}
             </Typography>
           </Box>
-          {/* <UsersList/> */}
-          {
-            selectedTab === "teams" ? (
-              <TeamsList />
-            ) : selectedTab === "users" ? (
-              <UsersList />
-            ) : selectedTab === "projectmanager" ? (
-              <ProjectManager />
-            ) : null // Render null or another default component if needed
-          }
+          {selectedTab === "teams" ? (
+            <TeamsList />
+          ) : selectedTab === "users" ? (
+            <UsersList />
+          ) : selectedTab === "projectmanager" ? (
+            <ProjectManager />
+          ) : null}
         </Box>
       </Box>
     </CssVarsProvider>

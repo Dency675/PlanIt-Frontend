@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Function to search users
 export const searchUsers = async (query: any) => {
   try {
     const response = await axios.get(

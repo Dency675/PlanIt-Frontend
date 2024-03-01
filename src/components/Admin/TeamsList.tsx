@@ -16,7 +16,6 @@ import Sheet from "@mui/joy/Sheet";
 import Checkbox from "@mui/joy/Checkbox";
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
-
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -38,6 +37,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   }
   return 0;
 }
+
 type Order = "asc" | "desc";
 
 function getComparator<Key extends keyof any>(
@@ -71,7 +71,6 @@ export default function TeamsList() {
   const [order, setOrder] = React.useState<Order>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
-  // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<TeamList[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -84,7 +83,6 @@ export default function TeamsList() {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -132,7 +130,6 @@ export default function TeamsList() {
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {/* {renderFilters()} */}
               <Button color="primary" onClick={() => setOpen(false)}>
                 Submit
               </Button>
@@ -240,7 +237,6 @@ export default function TeamsList() {
           </thead>
           <tbody>
             {stableSort(filteredRows, getComparator(order, "id")).map((row) => (
-              //  {filteredRows.map((row) => (
               <tr key={row.id}>
                 <td style={{ textAlign: "center", width: 120 }}>
                   <Checkbox
@@ -271,14 +267,12 @@ export default function TeamsList() {
                     startDecorator={
                       {
                         active: <CheckRoundedIcon />,
-                        // inactive: <AutorenewRoundedIcon />,
                         inactive: <BlockIcon />,
                       }[row.status]
                     }
                     color={
                       {
                         active: "success",
-                        // inactive: 'neutral',
                         inactive: "danger",
                       }[row.status] as ColorPaletteProp
                     }
