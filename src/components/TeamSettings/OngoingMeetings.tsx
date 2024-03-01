@@ -36,6 +36,12 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
 
   const socket = useSocket();
 
+  const [userIds, setUserIds] = useState("");
+
+  React.useEffect(() => {
+    setUserIds(userId as string);
+  }, [userId, userIds]);
+
   socket.on("roomCreated", (sessionId: string) => {
     editSessions(parseInt(sessionId), "active")
       .then((response: any) => {
@@ -45,7 +51,9 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
         console.error("Error occurred while changing status :", error);
       });
 
-    editSessionParticipants(sessionId, userId as string)
+    console.log("userId", userId);
+
+    editSessionParticipants(sessionId, userIds)
       .then((response: any) => {
         console.log("session status is ", response);
       })
@@ -67,8 +75,8 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   };
 
   React.useEffect(() => {
-    socket.on("userJoined", (data: { sessionId: string }) => {
-      console.log("userJoined", data.sessionId);
+    socket.on("userJoined", (data: { sessionId: string; userId: string }) => {
+      console.log("userJoined", data.sessionId, userId);
       editSessionParticipants(data.sessionId, userId as string)
         .then((response: any) => {
           console.log("session status is ", response);
@@ -143,6 +151,7 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                     >
                       {userId === ongoingMeeting.scrumMasterId ? (
                         <ListItemButton
+                          sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
                             handleStartButtonClick(ongoingMeeting.id);
@@ -152,6 +161,7 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                         </ListItemButton>
                       ) : (
                         <ListItemButton
+                          sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
                             handleJoinButtonClick(ongoingMeeting.id);

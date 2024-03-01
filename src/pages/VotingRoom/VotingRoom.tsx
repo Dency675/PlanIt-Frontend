@@ -60,7 +60,7 @@ function VotingRoom() {
             setCurrentUserStoryId={setCurrentUserStoryId}
           />
         </Grid>
-        <Grid xs={12} sm={4} md={4} lg={4}>
+        <Grid xs={12} sm={8} md={4} lg={4}>
           <RightComponent
             sessionId={sessionId as string}
             currentUserStoryId={currentUserStoryId}
