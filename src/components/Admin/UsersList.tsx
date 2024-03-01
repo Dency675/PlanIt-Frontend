@@ -7,13 +7,11 @@ import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import Menu from "@mui/joy/Menu";
@@ -21,7 +19,6 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import SearchIcon from "@mui/icons-material/Search";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -31,21 +28,14 @@ import { useState, useEffect } from "react";
 import { UserList } from "../../pages/Admin/types/UserList";
 import Snackbar from "@mui/joy/Snackbar";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
-import { AspectRatio, Card, Skeleton } from "@mui/joy";
 import { fetchUsersData } from "../../pages/Admin/apis/usersList";
 import { searchUsers } from "../../pages/Admin/apis/SearchUser";
 import { deleteUser } from "../../pages/Admin/apis/RemoveUser";
 import { assignTeamManager } from "../../pages/Admin/apis/AssignManager";
-import {
-  ButtonGroup,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  ListItem,
-  ListItemContent,
-  ListItemDecorator,
-} from "@mui/joy";
+import { DialogActions, DialogContent, DialogTitle } from "@mui/joy";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import { fetchTeamManagers } from "../../pages/Admin/apis/ProjectManager";
+import { User } from "../../pages/Admin/types/ProjectManager";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -87,8 +77,6 @@ function stableSort<T>(
 
 export default function UsersList() {
   const [order, setOrder] = React.useState<Order>("desc");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  // const [searchQuery, setSearchQuery] = React.useState('');
   const [data, setData] = useState<UserList[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -98,6 +86,24 @@ export default function UsersList() {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [open, setOpen] = React.useState<boolean>(false);
   const [userIdToDelete, setUserIdToDelete] = useState<string>("");
+  const [managerData, setManagerData] = useState<User[]>([]); // Provide initial value of empty array
+
+  useEffect(() => {
+    const fetchProjectManagerData = async () => {
+      try {
+        const fetchedManagerData = await fetchTeamManagers();
+        if (!fetchedManagerData) {
+          setManagerData([]);
+        } else {
+          setManagerData(fetchedManagerData);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchProjectManagerData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,10 +114,25 @@ export default function UsersList() {
         const filteredData = fetchedData.filter(
           (data: any) => data.id !== adminUserId
         );
-        if (filteredData.length === 0) {
+        const updatedData = filteredData.map((data: any) => {
+          if (data.id === adminUserId) {
+            return { ...data, role_name: "project manager" };
+          }
+          return data;
+        });
+
+        if (updatedData.length === 0) {
           setHasMoreData(false);
         } else {
-          setData(filteredData);
+          updatedData.forEach((userData: { id: string; role_name: string }) => {
+            const foundUser = managerData.find(
+              (manager) => manager.id === userData.id
+            );
+            if (foundUser) {
+              userData.role_name = "Project Manager";
+            } else userData.role_name = "Developer";
+          });
+          setData(updatedData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -119,9 +140,8 @@ export default function UsersList() {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [page]);
+  }, [page, managerData]);
 
   const handleNextPage = () => {
     setPage(page + 7);
@@ -142,10 +162,7 @@ export default function UsersList() {
         try {
           await deleteUser(userIdToDelete);
           console.log(`User with ID ${userIdToDelete} deleted successfully.`);
-          // setOpen(true)
           setOpenSnackbar(true);
-
-          // setData(data.filter(user => user.id !== userId));
           setData((prevData) =>
             prevData.map((user) =>
               user.id === userIdToDelete
@@ -165,7 +182,15 @@ export default function UsersList() {
       setOpenManagerSnack(true);
       try {
         await assignTeamManager(userId);
-        console.log(`User with ID ${userId} assigned as manager.`);
+        console.log(`User with ID ${userId} assigned as mansager.`);
+        setData((prev) =>
+          prev.map((user) =>
+            user.id === userId
+              ? { ...user, role_name: "Project Manager" }
+              : user
+          )
+        );
+        console.log();
       } catch (error) {
         console.error("Error assigning user :", error);
       }
@@ -349,76 +374,16 @@ export default function UsersList() {
         >
           <thead>
             <tr>
-              <th
-                style={{ width: 48, textAlign: "center", padding: "12px 6px" }}
-              >
-                <Checkbox
-                  size="sm"
-                  indeterminate={
-                    selected.length > 0 && selected.length !== data.length
-                  }
-                  checked={selected.length === data.length}
-                  onChange={(event) => {
-                    setSelected(
-                      event.target.checked ? data.map((row) => row.id) : []
-                    );
-                  }}
-                  color={
-                    selected.length > 0 || selected.length === data.length
-                      ? "primary"
-                      : undefined
-                  }
-                  sx={{ verticalAlign: "text-bottom" }}
-                />
-              </th>
-              <th style={{ width: 130, padding: "12px 10px" }}>
-                <Link
-                  underline="none"
-                  color="primary"
-                  component="button"
-                  onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                  fontWeight="lg"
-                  endDecorator={<ArrowDropDownIcon />}
-                  sx={{
-                    "& svg": {
-                      transition: "0.2s",
-                      transform:
-                        order === "desc" ? "rotate(0deg)" : "rotate(180deg)",
-                    },
-                  }}
-                >
-                  User Id
-                </Link>
-              </th>
-              <th style={{ width: 290, padding: "12px 10px" }}>Name</th>
+              <th style={{ width: 290, padding: "14px 10px" }}>Name</th>
               <th style={{ width: 90, padding: "12px 10px" }}>Status</th>
-              <th style={{ width: 100, padding: "12px 10px" }}>Department</th>
+              <th style={{ width: 80, padding: "12px 8px" }}>Department</th>
+              <th style={{ width: 100, padding: "12px 10px" }}>Role</th>
               <th style={{ width: 80, padding: "12px 10px" }}>Set Role </th>
             </tr>
           </thead>
           <tbody>
             {stableSort(filteredRows, getComparator(order, "id")).map((row) => (
-              //  {filteredRows.map((row) => (
               <tr key={row.id}>
-                <td style={{ textAlign: "center", width: 120 }}>
-                  <Checkbox
-                    size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? "primary" : undefined}
-                    onChange={(event) => {
-                      setSelected((ids) =>
-                        event.target.checked
-                          ? ids.concat(row.id)
-                          : ids.filter((itemId) => itemId !== row.id)
-                      );
-                    }}
-                    slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
-                    sx={{ verticalAlign: "text-bottom" }}
-                  />
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.id}</Typography>
-                </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                     <Avatar size="sm">
@@ -437,14 +402,12 @@ export default function UsersList() {
                     startDecorator={
                       {
                         active: <CheckRoundedIcon />,
-                        // inactive: <AutorenewRoundedIcon />,
                         inactive: <BlockIcon />,
                       }[row.status]
                     }
                     color={
                       {
                         active: "success",
-                        // inactive: 'neutral',
                         inactive: "danger",
                       }[row.status] as ColorPaletteProp
                     }
@@ -454,6 +417,9 @@ export default function UsersList() {
                 </td>
                 <td>
                   <Typography level="body-xs">{row.department}</Typography>
+                </td>
+                <td>
+                  <Chip variant="soft">{row.role_name}</Chip>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>

@@ -1,9 +1,7 @@
-// types.ts
 export interface TeamList {
-    id: string;
-    teamName: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  teamName: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
-  
