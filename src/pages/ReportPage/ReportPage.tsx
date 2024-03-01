@@ -215,7 +215,14 @@ const ReportPage = () => {
 
   const handleDownloadPDF = () => {
     const element = document.getElementById("reportPage");
-    html2pdf().from(element).save();
+    const opt = {
+      // margin: 1,
+      filename: "estimationreport.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 1 },
+      // jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+    };
+    html2pdf().from(element).set(opt).save();
   };
   console.log("sessiondata", sessionData);
   return (

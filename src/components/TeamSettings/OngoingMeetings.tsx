@@ -9,6 +9,7 @@ import {
   ListItemButton,
   ListSubheader,
   Typography,
+  Button,
 } from "@mui/joy";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import React, { useEffect, useState } from "react";
@@ -33,6 +34,16 @@ const userId = localStorage.getItem("userId");
 
 const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
   const navigate = useNavigate();
+
+  const [showAllMeetings, setShowAllMeetings] = useState(false);
+
+  const visibleMeetings = showAllMeetings
+    ? ongoingMeetings
+    : ongoingMeetings.slice(0, 3);
+
+  const handleShowMoreClick = () => {
+    setShowAllMeetings(true);
+  };
 
   const socket = useSocket();
 
@@ -94,91 +105,91 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
           id="ellipsis-list-demo"
           level="body-xs"
           textTransform="uppercase"
-          sx={{ letterSpacing: "0.15rem", ml: 4, fontSize: 16 }}
+          sx={{ letterSpacing: "0.15rem", ml: 4, fontSize: 16, pb: 2 }}
         >
           Ongoing Meeting
         </Typography>
       </Grid>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          overflow: "auto",
-        }}
-      >
-        {ongoingMeetings.length === 0 ? (
+      <Grid container spacing={3} sx={{ ml: 3 }}>
+        {visibleMeetings.length === 0 ? (
           <Typography sx={{ m: 4 }}>No Ongoing Meetings</Typography>
         ) : (
-          <Grid>
-            <Box sx={{ display: "flex" }}>
-              {ongoingMeetings.map((ongoingMeeting, index) => (
-                <React.Fragment key={index}>
-                  <Card
-                    orientation="horizontal"
-                    variant="outlined"
-                    sx={{ m: 3 }}
+          visibleMeetings.map((ongoingMeeting, index) => (
+            <Grid key={index} xs={4}>
+              <Card
+                orientation="horizontal"
+                variant="outlined"
+                sx={{ height: "100%" }}
+              >
+                <CardContent>
+                  <Typography
+                    fontWeight="md"
+                    textColor="success.plainColor"
+                    sx={{ width: "180px" }}
                   >
-                    <CardContent>
-                      {/* <ListItemButton> */}
-                      <Typography
-                        fontWeight="md"
-                        textColor="success.plainColor"
-                        sx={{ width: "200px" }}
-                      >
-                        {ongoingMeeting.sessionTitle}
-                      </Typography>
-                      <Typography level="body-sm" sx={{ display: "flex" }}>
-                        {ongoingMeeting.createDateTime}
-                      </Typography>
-                    </CardContent>
-
-                    <CardOverflow
-                      variant="soft"
-                      color="primary"
-                      sx={{
-                        px: 0.2,
-                        // writingMode: "vertical-rl",
-                        justifyContent: "center",
-                        fontSize: "xs",
-                        fontWeight: "xl",
-                        letterSpacing: "1px",
-                        textTransform: "uppercase",
-                        borderLeft: "1px solid",
-                        borderColor: "divider",
-                      }}
-                    >
-                      {userId === ongoingMeeting.scrumMasterId ? (
+                    {ongoingMeeting.sessionTitle}
+                  </Typography>
+                  <Typography level="body-sm" sx={{ display: "flex" }}>
+                    {ongoingMeeting.createDateTime}
+                  </Typography>
+                </CardContent>
+                <CardOverflow
+                  variant="soft"
+                  color="primary"
+                  sx={{
+                    px: 0.2,
+                    justifyContent: "center",
+                    fontSize: "xs",
+                    fontWeight: "xl",
+                    letterSpacing: "1px",
+                    textTransform: "uppercase",
+                    borderLeft: "1px solid",
+                    borderColor: "divider",
+                  }}
+                >
+                  <ListItemButton
+                    onClick={() => {
+                      navigate(`/vote/${ongoingMeeting.id}`);
+                    }}
+                  >
+                    {ongoingMeeting.scrumMasterId === userId ? (
+                      <React.Fragment>
                         <ListItemButton
                           sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
-                            handleStartButtonClick(ongoingMeeting.id);
                           }}
                         >
                           Start
                         </ListItemButton>
-                      ) : (
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
                         <ListItemButton
                           sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
-                            handleJoinButtonClick(ongoingMeeting.id);
                           }}
-                          disabled={ongoingMeeting.status !== "active"}
                         >
                           Join
                         </ListItemButton>
-                      )}
-                    </CardOverflow>
-                  </Card>
-                </React.Fragment>
-              ))}
-            </Box>
-          </Grid>
+                      </React.Fragment>
+                    )}
+                  </ListItemButton>
+                </CardOverflow>
+              </Card>
+            </Grid>
+          ))
         )}
-      </Box>
+      </Grid>
+      {!showAllMeetings && (
+        <Grid
+          xs={12}
+          sx={{ display: "flex", justifyContent: "end", mt: 2, mr: 6 }}
+        >
+          <Button onClick={handleShowMoreClick}>Show More</Button>
+        </Grid>
+      )}
     </Grid>
   );
 };
