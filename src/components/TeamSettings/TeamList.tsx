@@ -67,7 +67,7 @@ const TeamList = ({ selectedUserArray }: TeamListProps) => {
   const handleMakeScrumMaster = async (id: number) => {
     try {
       let scrumResponse = await axios.put(
-        `http://localhost:3001/assignNewScrumMaster?teamMemberId=${id}`
+        `http://localhost:3001/teamMemberInformation/${id}`
       );
       setTeamMembers((prevMembers) =>
         prevMembers.map((member) => {

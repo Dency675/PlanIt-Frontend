@@ -3,7 +3,7 @@ import axios from "axios";
 const getScales = async (estimationId: number) => {
   try {
     const response = await axios.get(
-      `http://localhost:3001/getScalesByID?estimationId=${estimationId}`
+      `http://localhost:3001/scales/${estimationId}`
     );
     return response.data;
   } catch (error) {

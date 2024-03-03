@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 export const resetStoryPoint = async (userStorySessionMappingId: number) => {
   try {
     const response: AxiosResponse = await axios.put(
-      `http://localhost:3001/resetStoryPoint`,
+      `http://localhost:3001/participantScores`,
       { userStorySessionMappingId: userStorySessionMappingId }
     );
 
