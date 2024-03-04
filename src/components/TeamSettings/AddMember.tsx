@@ -29,6 +29,7 @@ const AddMember = ({
   >([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
+  const [autocompleteValue, setAutocompleteValue] = useState<UserData[]>([]);
 
   const handleAddUsers = async () => {
     try {
@@ -49,8 +50,9 @@ const AddMember = ({
       console.log("Users added successfully:", response.data);
       if (response.status === 201) {
         setSelectedUserArray([]);
-        // setModalMessage("Successfully Added!");
-        // setIsModalOpen(true);
+        setAutocompleteValue([]);
+        setModalMessage("Successfully Added!");
+        setIsModalOpen(true);
       } else {
         console.error(
           "Error adding users: Unexpected response status",
@@ -61,6 +63,9 @@ const AddMember = ({
       console.error("Error adding users:", error);
     }
   };
+  useEffect(() => {
+    setInputValue(""); // Clear input value when selectedUserArray changes
+  }, [selectedUserArray]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -125,7 +130,8 @@ const AddMember = ({
         options={usersArray}
         autoHighlight
         getOptionLabel={(option) => `${option.name} (${option.email})`}
-        defaultValue={[]}
+        value={autocompleteValue}
+        // defaultValue={[]}
         onChange={(event, newValue, inputValue) => {
           console.log("inputValue");
 
@@ -134,7 +140,7 @@ const AddMember = ({
           });
           console.log("newValue");
           console.log(newValue);
-
+          setAutocompleteValue(newValue);
           setSelectedUserArray(newValue);
         }}
         inputValue={inputValue}
