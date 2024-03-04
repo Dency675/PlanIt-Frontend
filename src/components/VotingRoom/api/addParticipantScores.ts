@@ -9,7 +9,7 @@ interface AddParticipantScoresRequest {
 const addParticipantScores = async (data: AddParticipantScoresRequest) => {
   try {
     const response: AxiosResponse = await axios.post(
-      "http://localhost:3001/addParticipantScores",
+      "http://localhost:3001/participantScores",
       data
     );
 
