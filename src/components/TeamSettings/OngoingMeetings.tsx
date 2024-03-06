@@ -18,7 +18,6 @@ import { useNavigate } from "react-router";
 import editSessions from "./api/editSessions";
 import { useSocket } from "../Socket/SocketContext";
 import editSessionParticipants from "./api/editSessionParticipants";
-import RecentActivity from "./RecentActivity";
 
 interface OngoingMeetingProps {
   ongoingMeetings: {
@@ -187,7 +186,9 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
           xs={12}
           sx={{ display: "flex", justifyContent: "end", mt: 2, mr: 6 }}
         >
-          <Button onClick={handleShowMoreClick}>Show More</Button>
+          {visibleMeetings.length !== 0 && (
+            <Button onClick={handleShowMoreClick}>Show More</Button>
+          )}
         </Grid>
       )}
     </Grid>
