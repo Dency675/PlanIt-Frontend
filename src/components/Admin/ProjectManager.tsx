@@ -2,14 +2,12 @@ import * as React from "react";
 import Box from "@mui/joy/Box";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import Link from "@mui/joy/Link";
+import Avatar from "@mui/joy/Avatar";
 import Input from "@mui/joy/Input";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
 import Typography from "@mui/joy/Typography";
 import SearchIcon from "@mui/icons-material/Search";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useState, useEffect } from "react";
 import { fetchTeamManagers } from "../../pages/Admin/apis/ProjectManager";
 import { User } from "../../pages/Admin/types/ProjectManager";
@@ -55,7 +53,6 @@ function stableSort<T>(
 
 export default function ProjectManager() {
   const [order, setOrder] = React.useState<Order>("desc");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [data, setData] = useState<User[]>([]); // Provide initial value of empty array
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -143,47 +140,6 @@ export default function ProjectManager() {
         >
           <thead>
             <tr>
-              <th
-                style={{ width: 48, textAlign: "center", padding: "12px 6px" }}
-              >
-                <Checkbox
-                  size="sm"
-                  indeterminate={
-                    selected.length > 0 && selected.length !== data.length
-                  }
-                  checked={selected.length === data.length}
-                  onChange={(event) => {
-                    setSelected(
-                      event.target.checked ? data.map((row) => row.id) : []
-                    );
-                  }}
-                  color={
-                    selected.length > 0 || selected.length === data.length
-                      ? "primary"
-                      : undefined
-                  }
-                  sx={{ verticalAlign: "text-bottom" }}
-                />
-              </th>
-              <th style={{ width: 160, padding: "12px 6px" }}>
-                <Link
-                  underline="none"
-                  color="primary"
-                  component="button"
-                  onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                  fontWeight="lg"
-                  endDecorator={<ArrowDropDownIcon />}
-                  sx={{
-                    "& svg": {
-                      transition: "0.2s",
-                      transform:
-                        order === "desc" ? "rotate(0deg)" : "rotate(180deg)",
-                    },
-                  }}
-                >
-                  User ID
-                </Link>
-              </th>
               <th style={{ width: 100, padding: "12px 6px" }}>Name</th>
               <th style={{ width: 250, padding: "12px 6px" }}>Email</th>
               <th style={{ width: 120, padding: "12px 6px" }}>Department</th>
@@ -202,29 +158,19 @@ export default function ProjectManager() {
               stableSort(filteredRows, getComparator(order, "id")).map(
                 (row) => (
                   <tr key={row.id}>
-                    <td style={{ textAlign: "center", width: 120 }}>
-                      <Checkbox
-                        size="sm"
-                        checked={selected.includes(row.id)}
-                        color={
-                          selected.includes(row.id) ? "primary" : undefined
-                        }
-                        onChange={(event) => {
-                          setSelected((ids) =>
-                            event.target.checked
-                              ? ids.concat(row.id)
-                              : ids.filter((itemId) => itemId !== row.id)
-                          );
-                        }}
-                        slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
-                        sx={{ verticalAlign: "text-bottom" }}
-                      />
-                    </td>
                     <td>
-                      <Typography level="body-xs">{row.id}</Typography>
-                    </td>
-                    <td>
-                      <Typography level="body-xs">{row.givenName}</Typography>
+                      <Box
+                        sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                      >
+                        <Avatar size="sm">
+                          {row.givenName.charAt(0).toUpperCase()}
+                        </Avatar>
+                        <div>
+                          <Typography level="body-xs">
+                            {row.givenName}
+                          </Typography>
+                        </div>
+                      </Box>
                     </td>
                     <td>
                       <Typography level="body-xs">{row.email}</Typography>
