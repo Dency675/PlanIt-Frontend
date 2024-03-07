@@ -1,45 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Paper,
   Box,
-  IconButton,
 } from "@mui/material";
 import Card from "@mui/joy/Card";
 import Divider from "@mui/joy/Divider";
 import TableBox from "./TableBox";
-import { PieChart } from "@mui/x-charts";
 import PieChartResult from "./PieChartResult";
-import ParticipantList from "./participantList";
 import { useSocket } from "../Socket/SocketContext";
 import { DeveloperListAPI } from "../../pages/VotingRoom/apis/DeveloperListAPI";
 import { resetStoryPoint } from "../../pages/VotingRoom/apis/resetStoryPoint";
+import { UserData, ResultTablePropType } from "./types";
 
-interface tablePropType {
-  sessionId: string;
-  currentUserStoryId: number;
-}
-
-interface Participant {
-  name: string;
-  status: boolean;
-  teamMemberId: string;
-}
-
-interface UserData {
-  userName: string;
-  roleId: number;
-  teamMemberId: number;
-  status: boolean;
-}
-
-const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
+const Result: React.FC<ResultTablePropType> = ({
+  sessionId,
+  currentUserStoryId,
+}) => {
   const [showParticipantList, setShowParticipantList] = useState(true);
   const [scoreCounts, setScoreCounts] = useState<{ [key: string]: number }>({});
   const [score, setScore] = useState<{ [key: string]: string }>({});
@@ -64,10 +46,6 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
       socket.off("showResult");
     };
   }, []);
-
-  // React.useEffect(() => {
-  //   setUserStoryNumber(currentUserStoryId);
-  // }, [currentUserStoryId]);
 
   React.useEffect(() => {
     socket.on("showParticipants", async (sessionId, count) => {
@@ -111,11 +89,8 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
 
   React.useEffect(() => {
     socket.on("userVotedAdded", async (sessionId, teamMemberId, index) => {
-      console.log("userVotedAdded", sessionId, teamMemberId, index);
       setTeamMemberID(teamMemberId);
-      // setCardIndex(index);
       toggleStatus(teamMemberId);
-      // await setCardIndex(index);
       console.log("card index after set state:", cardIndex, index);
     });
 
@@ -145,69 +120,18 @@ const Result: React.FC<tablePropType> = ({ sessionId, currentUserStoryId }) => {
       });
   }, [sessionId]);
 
-  React.useEffect(() => {
-    console.log("cardIndex", cardIndex);
-  }, [cardIndex]);
-
-  // const toggleStatus = async (teamMemberId: number, index: number) => {
-  //   console.log("toggle status", cardIndex);
-  //   participantsData.map((participants) => {
-  //     console.log("participant.status:", participants.status);
-  //   });
-  //   setParticipantData((prevData) => {
-  //     return prevData.map((participant) => {
-  //       console.log(
-  //         "hidency",
-  //         participant.teamMemberId,
-  //         teamMemberId,
-  //         participant.status
-  //       );
-  //       if (participant.teamMemberId === teamMemberId) {
-  //         console.log(
-  //           "Developer List from result participant.status:",
-  //           participant.status,
-  //           participant.teamMemberId,
-  //           teamMemberId,
-  //           index,
-  //           cardIndex
-  //         );
-  //         console.log("cardIndex from ", cardIndex);
-
-  //         if (index === cardIndex)
-  //           return { ...participant, status: !participant.status };
-  //       }
-  //       return participant;
-  //     });
-  //   });
-  //   setCardIndex(index);
-  // };
-
   const toggleStatus = async (teamMemberId: number) => {
     console.log("toggle status", cardIndex);
     participantsData.map((participants) => {
       console.log("participant.status:", participants.status);
-      return participants; // Add this line
+      return participants;
     });
     setParticipantData((prevData) => {
       return prevData.map((participant) => {
-        console.log(
-          "hidency",
-          participant.teamMemberId,
-          teamMemberId,
-          participant.status
-        );
         if (participant.teamMemberId === teamMemberId) {
-          console.log(
-            "Developer List from result participant.status:",
-            participant.status,
-            participant.teamMemberId,
-            teamMemberId
-          );
           console.log("cardIndex from ", cardIndex);
           if (participant.status === false)
             return { ...participant, status: !participant.status };
-
-          // setCardIndex(index);
         }
 
         return participant;

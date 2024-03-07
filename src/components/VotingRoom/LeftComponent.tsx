@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/joy";
+import { Box } from "@mui/joy";
 import React, { useState } from "react";
 import UserStories from "./UserStories";
 import Timer from "./Timer";
@@ -9,16 +9,8 @@ import CommentBox from "./CommentBox";
 import DisplayUserStory from "./DisplayUserStory";
 import getAllUserStoriesBySessionId from "./api/getAllUserStoriesBySessionId";
 import { useSocket } from "../Socket/SocketContext";
+import { propType, userStoryType } from "./types";
 
-interface propType {
-  userId: string;
-  sessionId: string;
-  scrumMasterId: string;
-  timer: string;
-  estimationId: number;
-  teamId: number;
-  setCurrentUserStoryId: React.Dispatch<React.SetStateAction<number>>;
-}
 const LeftComponent = ({
   userId,
   sessionId,
@@ -62,18 +54,10 @@ const LeftComponent = ({
   React.useEffect(() => {
     console.log("isTimerRunning effect", isTimerRunning);
     console.log(isTimerRunning);
-    // setIsTimerRunningSession(isTimerRunning);
     const currentTime = new Date().toLocaleTimeString();
     socket.emit("timerSet", isTimerRunning, sessionId, currentTime);
   }, [isTimerRunning]);
 
-  interface userStoryType {
-    roundNumber: number;
-    storyPointResult: number;
-    userStory: string;
-    userStoryId: string;
-    userStoryMappingId: string;
-  }
   const initialUserStory: userStoryType = {
     roundNumber: 0,
     storyPointResult: 0,
@@ -140,24 +124,13 @@ const LeftComponent = ({
     };
   }, [selectedUserStoryId]);
 
-  React.useEffect(() => {
-    console.log("selectedUserStoryMappingId");
-    console.log(selectedUserStoryMappingId);
-  }, [selectedUserStoryMappingId]);
-
   let testValue: number;
-  React.useEffect(() => {
-    console.log("selectedUserStoryId from left", selectedUserStoryId);
-  }, [selectedUserStoryId]);
 
   testValue = selectedUserStoryId;
 
   React.useEffect(() => {
     socket.on("timerShow", ({ isTimerRunning, sessionId, currentTime }) => {
-      console.log("timerShow");
-      console.log("isTimerRunning", isTimerRunning, sessionId, currentTime);
       setIsTimerRunningSession(isTimerRunning);
-      console.log("currentTime", currentTime);
     });
   }, [isTimerRunning]);
 
@@ -177,7 +150,6 @@ const LeftComponent = ({
         ></DisplayUserStory>
       )}
 
-      {/* <Timer isRunning={isTimerRunning} /> */}
       <Timer isRunning={isTimerRunningSession} timer={timer} />
 
       {userId === scrumMasterId ? (

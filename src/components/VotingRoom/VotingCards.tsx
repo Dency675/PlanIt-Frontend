@@ -5,17 +5,7 @@ import getScales from "./api/getScale";
 import { useSocket } from "../Socket/SocketContext";
 import addParticipantScores from "./api/addParticipantScores";
 import getTeamMemberInformationByUserId from "./api/getTeamMemberInformationByUserId";
-interface votingCardsPropType {
-  estimationId: number;
-  selectedUserStoryId: number;
-  teamId: number;
-  sessionId: string;
-}
-
-interface scaleDataProps {
-  scaleName: string;
-  scaleValue: number;
-}
+import { scaleDataProps, votingCardsPropType } from "./types";
 
 const VotingCards: React.FC<votingCardsPropType> = ({
   estimationId,
@@ -31,22 +21,13 @@ const VotingCards: React.FC<votingCardsPropType> = ({
   const [teamMemberId, setTeamMemberId] = useState("");
   const [clickedCardIndex, setClickedCardIndex] = useState(-1);
   const userIdd = localStorage.getItem("userId");
-
-  React.useEffect(() => {
-    console.log("selectedUserStoryId from votind card", selectedUserStoryId);
-  }, [selectedUserStoryId]);
-
-  React.useEffect(() => {
-    console.log("teamId from voting cards,", teamId);
-  }, [teamId]);
+  const [isStartButtonStarted, setIsStartButtonStarted] =
+    useState<boolean>(true);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   React.useEffect(() => {
     setUserId(userIdd as string);
-    console.log("userIdd", userIdd);
   }, [userIdd]);
-
-  const [isStartButtonStarted, setIsStartButtonStarted] =
-    useState<boolean>(true);
 
   const socket = useSocket();
 
@@ -60,8 +41,6 @@ const VotingCards: React.FC<votingCardsPropType> = ({
         console.error("Error occurred while changing status :", error);
       });
   }, [estimationId]);
-
-  const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   React.useEffect(() => {
     socket.on("votingStarted", async (sessionId, isStartButtonStarted) => {
@@ -88,7 +67,6 @@ const VotingCards: React.FC<votingCardsPropType> = ({
   const handleCardClick = (index: number, scaleName: string) => {
     if (isStartButtonStarted) {
       setSelectedCard(index);
-      console.log("scaleValue", scaleName, index, selectedCard);
 
       addParticipantScores({
         teamMemberId: teamMemberId,

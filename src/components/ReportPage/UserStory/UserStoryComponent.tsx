@@ -1,4 +1,3 @@
-import React from "react";
 import Card from "@mui/joy/Card";
 import { Box, Typography } from "@mui/joy";
 import UserStoryParicipantComponent from "./UserStoryParicipantComponent";
@@ -121,7 +120,6 @@ const UserStoryComponent = ({
                   xs={12}
                   style={{
                     display: "flex",
-                    // justifyContent: "center",
                     alignItems: "center",
                     paddingTop: 20,
                     paddingBottom: 20,

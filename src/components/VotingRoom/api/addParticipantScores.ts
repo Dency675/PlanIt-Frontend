@@ -1,10 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-
-interface AddParticipantScoresRequest {
-  teamMemberId: string;
-  userStorySessionMappingId: number;
-  storyPoint: string;
-}
+import { AddParticipantScoresRequest } from "../types";
 
 const addParticipantScores = async (data: AddParticipantScoresRequest) => {
   try {

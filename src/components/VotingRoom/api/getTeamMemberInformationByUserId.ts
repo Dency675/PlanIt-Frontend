@@ -23,7 +23,6 @@ const getTeamMemberInformationByUserId = async (
     );
 
     const data: { activeTeamMembers: TeamMemberInformation[] } = response.data;
-    console.log("Active team members:", data.activeTeamMembers);
     return data.activeTeamMembers[0];
   } catch (error: any) {
     console.error(

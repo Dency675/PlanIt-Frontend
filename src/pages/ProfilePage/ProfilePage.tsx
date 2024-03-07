@@ -1,6 +1,5 @@
 import { Grid, Avatar, Typography, Paper, Box } from "@mui/material";
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
 
 interface UserData {
   id: string;
@@ -14,8 +13,6 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
-  const [userData, setUserData] = React.useState<any>(null);
-
   console.log("user", user);
 
   const avatarUrl = user?.name[0] || "default_avatar_url.jpg";

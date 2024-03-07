@@ -66,3 +66,16 @@ export interface UserStory {
   userStoryId: number;
   participantScores: ParticipantScore[];
 }
+
+export interface ReportPageProp {
+  viewMode: string;
+  toggleViewMode: (event: any, newMode: React.SetStateAction<string>) => void;
+  overViewData: OverviewComponentDataResponse;
+  sessionData: SessionDetailsResponsesData;
+  barChartData: BarChartComponentResponsesData;
+  participantData: ParticipantDataListResponsesData;
+  userStoryData: UserStoryTitleAndPointResponse;
+  visibleUserStoryCount: number;
+  participantScoreData: UserStory[];
+  userStoryRef: React.MutableRefObject<null>;
+}
