@@ -3,29 +3,13 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Button from "@mui/joy/Button";
 import MuiButtonGroup from "@mui/joy/ButtonGroup";
-import Typography from "@mui/joy/Typography";
 import { useState } from "react";
 import { useSocket } from "../Socket/SocketContext";
-import { resetStoryPoint } from "../../pages/VotingRoom/apis/resetStoryPoint";
 import updateUserStoryMapping from "./api/updateUserStoryMapping";
 import editSessions from "../TeamSettings/api/editSessions";
 import { useNavigate } from "react-router";
+import { CustomButtonGroupProps } from "./types";
 
-interface CustomButtonGroupProps {
-  onStartTimer: () => void;
-  stopTimer: () => void;
-  isUserStrorySelected: boolean;
-  sessionId: string;
-  setIsUserStrorySelected: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsStartButtonStarted: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedUserStoryId: number;
-  commentValue: string;
-  score: string;
-  setScore: React.Dispatch<React.SetStateAction<string>>;
-  setCommentValue: React.Dispatch<React.SetStateAction<string>>;
-  setIsUserStorySelectEnable: React.Dispatch<React.SetStateAction<boolean>>;
-}
-//timer function
 const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   onStartTimer,
   stopTimer,
@@ -51,8 +35,6 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    console.log("isUserStrorySelected", isUserStrorySelected);
-    console.log(isUserStrorySelected);
     setIsStartButtonDisabled(isUserStrorySelected);
   }, [isUserStrorySelected]);
 
@@ -123,12 +105,6 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   }, []);
 
   React.useEffect(() => {
-    console.log(
-      "isRevealButtonDisabled",
-      isRevealButtonDisabled,
-      isRevealButtonDisabled === false
-    );
-
     if (isRevealButtonDisabled === false) setIsStartName("Re-voting");
   }, [isRevealButtonDisabled]);
   return (
@@ -157,7 +133,6 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
           >
             Reveal
           </Button>
-          {/* <Button disabled={isRevealButtonDisabled}>Skip</Button> */}
           <Button
             disabled={isSaveButtonDisabled}
             onClick={handleSaveButtonClick}

@@ -1,11 +1,8 @@
 import React from "react";
 import Result from "./Result";
-interface tablePropType {
-  sessionId: string;
-  currentUserStoryId: number;
-}
+import { ResultTablePropType } from "./types";
 
-const RightComponent: React.FC<tablePropType> = ({
+const RightComponent: React.FC<ResultTablePropType> = ({
   sessionId,
   currentUserStoryId,
 }) => {

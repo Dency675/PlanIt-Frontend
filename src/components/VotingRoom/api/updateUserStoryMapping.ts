@@ -17,7 +17,6 @@ const updateUserStoryMapping = async (
       }
     );
 
-    console.log("Response data:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("Error editing session participants:", error);

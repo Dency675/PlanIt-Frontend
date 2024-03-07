@@ -16,10 +16,6 @@ const formatDateTime = (time: string | Date) => {
     hour12: true,
   });
 
-  const amPm: string = dateTime
-    .toLocaleString("en-US", { hour: "numeric", hour12: true })
-    .split(" ")[1];
-
   const today: number = new Date().setHours(0, 0, 0, 0);
 
   const tomorrow: number = new Date().setDate(new Date().getDate() + 1);
@@ -30,11 +26,7 @@ const formatDateTime = (time: string | Date) => {
     dayString = dayNames[dateTime.getDay()];
   } else if (dateTime.getTime() > today) {
     dayString = "Today";
-  }
-  // else if (dateTime.getTime() > today - 7 * 24 * 60 * 60 * 1000) {
-  //   dayString = "Tomorrow";
-  // }
-  else {
+  } else {
     dayString = dayNames[dateTime.getDay()];
   }
 
