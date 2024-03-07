@@ -1,26 +1,15 @@
-import React, { useState, useRef, FormEvent } from "react";
+import React, { useState, useRef } from "react";
 import cn from "classnames";
-import useDynamicHeightField from "./useDynamicHeightField";
-import "./styles.module.css";
 import { Input } from "@mui/joy";
-import axios from "axios";
-import { width } from "@mui/system";
 import Textarea from "@mui/joy/Textarea";
 import { useSocket } from "../Socket/SocketContext";
-import { Box, Container, Grid } from "@mui/joy";
+import { Container } from "@mui/joy";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import FormHelperText from "@mui/joy/FormHelperText";
-import FormControl from "@mui/joy/FormControl";
+import { CommentBoxProps } from "./types";
+import updateUserStoryMapping from "./api/updateUserStoryMapping";
 
 const INITIAL_HEIGHT = 46;
-
-interface CommentBoxProps {
-  selectedUserStoryId: number;
-  setScore: React.Dispatch<React.SetStateAction<string>>;
-  setCommentValue: React.Dispatch<React.SetStateAction<string>>;
-  commentValue: string;
-  score: string;
-}
 
 const CommentBox: React.FC<CommentBoxProps> = ({
   selectedUserStoryId,
@@ -37,22 +26,10 @@ const CommentBox: React.FC<CommentBoxProps> = ({
   const [isFinalScoreValidated, setIsFinalScoreValidated] =
     useState<boolean>(false);
 
-  React.useEffect(() => {
-    console.log("isCommentBoxValidated", isCommentBoxValidated);
-  }, [isCommentBoxValidated]);
-  React.useEffect(() => {
-    console.log("isFinalScoreValidated", isFinalScoreValidated);
-  }, [isCommentBoxValidated]);
-  React.useEffect(() => {
-    console.log("score", score);
-  }, [score]);
-
   const socket = useSocket();
 
   const outerHeight = useRef<number>(INITIAL_HEIGHT);
-  // const textRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLFormElement>(null);
-  // useDynamicHeightField(textRef, commentValue);
 
   const onExpand = () => {
     if (!isExpanded) {
@@ -69,7 +46,6 @@ const CommentBox: React.FC<CommentBoxProps> = ({
 
   const onChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
     setScore(e.target.value);
-    console.log(e.target.value);
     if (e.target.value !== "") setIsFinalScoreValidated(false);
   };
 
@@ -79,34 +55,24 @@ const CommentBox: React.FC<CommentBoxProps> = ({
   };
 
   const onSubmit = async (event: any) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault();
 
-    const formData = new FormData(event.target); // Capture the form data
-    const data = Object.fromEntries(formData); // Convert the FormData object to a plain object
-    console.log(data);
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
     const { score, comment } = data;
 
-    console.log(selectedUserStoryId);
-
-    try {
-      // Make a POST request to your endpoint with the form data
-      const response = await axios.put(
-        "http://localhost:3001/updateUserStorySessionMapping",
-        {
-          userStorySessionMappingId: selectedUserStoryId,
-          comment: comment,
-          storyPointResult: score,
-        }
-      );
-
-      // Handle the response
-      console.log(response.data); // Log the response data
-      // You can also perform any other actions based on the response, such as showing a success message or redirecting the user
-    } catch (error) {
-      // Handle errors
-      console.error("Error submitting form:", error);
-      // You can display an error message to the user or perform any other error handling logic
-    }
+    updateUserStoryMapping(
+      selectedUserStoryId,
+      comment as string,
+      score as string,
+      0
+    )
+      .then((response: any) => {
+        console.log(response.data);
+      })
+      .catch((error: any) => {
+        console.error("Error submitting form:", error);
+      });
   };
 
   React.useEffect(() => {
@@ -132,9 +98,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({
   }, [socket]);
 
   React.useEffect(() => {
-    console.log("score", score);
     socket.on("commentBoxValidation", async (sessionId) => {
-      console.log(score);
       if (score === "") setIsFinalScoreValidated(true);
       else setIsFinalScoreValidated(false);
       if (commentValue === "") setIsCommentBoxValidated(true);
@@ -186,7 +150,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({
             }}
           >
             <InfoOutlined />
-            Opps! something is wrong.
+            Final Score is missing.
           </FormHelperText>
         )}
 
@@ -216,7 +180,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({
             }}
           >
             <InfoOutlined />
-            Opps! something is wrong.
+            Comment is missing.
           </FormHelperText>
         )}
       </form>

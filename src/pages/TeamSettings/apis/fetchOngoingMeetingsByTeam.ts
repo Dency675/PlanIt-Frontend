@@ -1,5 +1,4 @@
 import axios from "axios";
-import { formatDateTime } from "./formatDateTime";
 
 const fetchOngoingMeetingsByTeam = async (teamId: number) => {
   try {

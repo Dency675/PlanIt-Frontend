@@ -1,5 +1,4 @@
 import axios from "axios";
-import { formatDateTime } from "./formatDateTime";
 
 interface RequestBody {
   sortBy?: string;

@@ -1,24 +1,16 @@
 import * as React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { Box } from "@mui/joy";
+import { PieChartResultPropType } from "./types";
 
-interface tablePropType {
-  scoreCounts: { [key: string]: number };
-  score: { [key: string]: string };
-}
-
-const PieChartResult: React.FC<tablePropType> = ({ scoreCounts, score }) => {
+const PieChartResult: React.FC<PieChartResultPropType> = ({
+  scoreCounts,
+  score,
+}) => {
   const data = Object.keys(scoreCounts).map((key) => ({
     id: key,
     value: scoreCounts[key],
     label: `${score[key]}`.toString(),
   }));
-
-  console.log("scorescore", score);
-
-  React.useEffect(() => {
-    console.log("scoreCounts", scoreCounts);
-  }, [scoreCounts]);
 
   return (
     <PieChart

@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { MsalProvider } from "@azure/msal-react";
 import { UserRoleProvider } from "./pages/Login/Context/UserRoleContext";
@@ -8,10 +7,11 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import { msalConfig } from "./pages/Login/Authentication/authConfig";
 import TeamManagement from "./pages/TeamManagement/TeamManagement";
 import TeamSettings from "./pages/TeamSettings/TeamSettings";
-import VotingRoom from "./pages/VotingRoom/VotingRoom";
-import ReportPage from "./pages/ReportPage/ReportPage";
 import RoomCreation from "./pages/RoomCreation/RoomCreation";
 import Admin from "./pages/Admin/Admin";
+import ReportPageHandler from "./pages/ReportPage/ReportHandler";
+import VotingRoomHandler from "./pages/VotingRoom/VotingRoomHandler";
+import { TestLoginButton, RedirectPage } from "./components/VotingRoom/aa";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 const AppRoutes = () => {
@@ -58,7 +58,27 @@ const AppRoutes = () => {
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}
               >
-                <VotingRoom />
+                <VotingRoomHandler />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/testJira"
+            element={
+              <ProtectedRoute
+                allowedRoles={["scrum master", "developer", "project manager"]}
+              >
+                <TestLoginButton />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jiraAuth"
+            element={
+              <ProtectedRoute
+                allowedRoles={["scrum master", "developer", "project manager"]}
+              >
+                <RedirectPage />
               </ProtectedRoute>
             }
           />
@@ -68,7 +88,7 @@ const AppRoutes = () => {
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}
               >
-                <ReportPage />
+                <ReportPageHandler />
               </ProtectedRoute>
             }
           />

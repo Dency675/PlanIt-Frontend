@@ -6,42 +6,10 @@ import FormControl from "@mui/joy/FormControl";
 import Typography from "@mui/joy/Typography";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import { Book } from "lucide-react";
-// import Select, { selectClasses } from "@mui/joy/Select";
-import { InputLabel, Select, SelectChangeEvent } from "@mui/material";
-import Option from "@mui/joy/Option";
-import getAllUserStoriesBySessionId from "./api/getAllUserStoriesBySessionId";
+import { Select, SelectChangeEvent } from "@mui/material";
 import { selectClasses } from "@mui/joy/Select";
 import { MenuItem } from "@mui/material";
-import { useSocket } from "../Socket/SocketContext";
-
-interface userStoryType {
-  roundNumber: number;
-  storyPointResult: number;
-  userStory: string;
-  userStoryId: string;
-  userStoryMappingId: string;
-}
-interface sessionIdType {
-  sessionId: string;
-  setSelectedUserStoryId: React.Dispatch<React.SetStateAction<number>>;
-  userStoryList: userStoryType[];
-  isUserStorySelectEnable: boolean;
-}
-
-interface userStoryType {
-  roundNumber: number;
-  storyPointResult: number;
-  userStory: string;
-  userStoryId: string;
-  userStoryMappingId: string;
-}
-const initialUserStory: userStoryType = {
-  roundNumber: 0,
-  storyPointResult: 0,
-  userStory: "",
-  userStoryId: "",
-  userStoryMappingId: "",
-};
+import { sessionIdType } from "./types";
 
 const UserStories: React.FC<sessionIdType> = ({
   sessionId,
@@ -49,8 +17,6 @@ const UserStories: React.FC<sessionIdType> = ({
   userStoryList,
   isUserStorySelectEnable,
 }) => {
-  const socket = useSocket();
-
   const HandleUserStoryChange = (e: SelectChangeEvent<string>) => {
     const selectedUserStoryName = e.target.value as string;
     console.log(selectedUserStoryName);
@@ -60,11 +26,6 @@ const UserStories: React.FC<sessionIdType> = ({
     if (selectedUserStory) {
       console.log(selectedUserStory.userStoryMappingId);
       setSelectedUserStoryId(parseInt(selectedUserStory.userStoryMappingId));
-      // socket.emit(
-      //   "userStoryMappingId",
-      //   selectedUserStory.userStoryMappingId,
-      //   sessionId
-      // );
     }
   };
 

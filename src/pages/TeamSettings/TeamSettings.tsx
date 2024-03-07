@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SideNav from "../../components/Navbar/SideNav";
-import { Box, Button, Card, Grid, useTheme } from "@mui/joy";
+import { Box, Button, Card, Grid } from "@mui/joy";
 import OngoingMeetings from "../../components/TeamSettings/OngoingMeetings";
 import RecentActivities from "../../components/TeamSettings/RecentActivities";
 import TeamList from "../../components/TeamSettings/TeamList";
 import Header from "../../components/Navbar/Header";
-import { Drawer, useMediaQuery } from "@mui/material";
 import fetchRecentMeetingsOfTeam from "../TeamSettings/apis/fetchRecentMeetingsOfTeam";
 import fetchOngoingMeetingsByTeam from "../TeamSettings/apis/fetchOngoingMeetingsByTeam";
 import { useNavigate, useParams } from "react-router";
@@ -40,7 +39,7 @@ const TeamSettings = () => {
 
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
-  const userRole = localStorage.getItem("teamUserRole");
+  // const userRole = localStorage.getItem("teamUserRole");
   const userId = localStorage.getItem("userId");
 
   React.useEffect(() => {

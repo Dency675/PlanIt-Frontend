@@ -3,43 +3,20 @@ import React, { useState } from "react";
 import Card from "@mui/joy/Card";
 import { DeveloperListAPI } from "../../pages/VotingRoom/apis/DeveloperListAPI";
 import { useSocket } from "../Socket/SocketContext";
+import { ResultTableBoxPropType, UserDataWithScore } from "./types";
 
-interface tablePropType {
-  sessionId: string;
-  currentUserStoryId: number;
-  setScoreCounts: React.Dispatch<
-    React.SetStateAction<{ [key: string]: number }>
-  >;
-  setScore: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
-}
-interface UserData {
-  userName: string;
-  roleId: number;
-  teamMemberId: number;
-  score: {
-    userStorySessionMappingId: number;
-    storyPoint: string;
-  }[];
-}
-
-const TableBox: React.FC<tablePropType> = ({
+const TableBox: React.FC<ResultTableBoxPropType> = ({
   sessionId,
   currentUserStoryId,
   setScoreCounts,
   setScore,
 }) => {
-  const [userData, setUserData] = useState<UserData[]>([]);
+  const [userData, setUserData] = useState<UserDataWithScore[]>([]);
   const [userStoryMappingId, setUserStoryMappingId] = useState<number>(0);
 
   const socket = useSocket();
 
-  // React.useEffect(() => {
-  //   socket.emit("sessionParticipantsScore", sessionId, userData);
-  // }, [userData, sessionId, currentUserStoryId]);
-
   React.useEffect(() => {
-    console.log("currentUserStoryId", currentUserStoryId);
-    console.log("currentUserStoryIduserStoryMappingId", userStoryMappingId);
     setUserStoryMappingId(currentUserStoryId);
   }, [currentUserStoryId, userStoryMappingId]);
 
@@ -55,13 +32,10 @@ const TableBox: React.FC<tablePropType> = ({
           user.score.forEach((score) => {
             if (score.userStorySessionMappingId === userStoryMappingId) {
               counts[score.storyPoint] = (counts[score.storyPoint] || 0) + 1;
-              console.log("scorescore scorePoints inside", score.storyPoint);
               scorePoints[score.storyPoint] = score.storyPoint;
             }
           });
         });
-        console.log("scorescore scorePoints count", counts);
-        console.log("scorescore scorePoints", scorePoints);
         setScore(scorePoints);
         setScoreCounts(counts);
       })
