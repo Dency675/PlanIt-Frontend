@@ -1,7 +1,12 @@
-// CreateRoomForm.tsx
-
 import React, { useState } from "react";
-import { Button, useTheme } from "@mui/joy/";
+import {
+  Button,
+  Divider,
+  Modal,
+  ModalClose,
+  ModalDialog,
+  useTheme,
+} from "@mui/joy/";
 import RoomNameInput from "./RoomNameInput";
 import EstimationScaleDropdown from "./EstimationScaleDropdown";
 import FileSelector from "./FileSelector";
@@ -11,22 +16,40 @@ import { Drawer, useMediaQuery } from "@mui/material";
 import Grid from "@mui/joy/Grid";
 import Typography from "@mui/joy/Typography";
 import Card from "@mui/joy/Card";
-import SideNav from "../Navbar/SideNav";
 import axios from "axios";
-import { File } from "lucide-react";
 import { Box } from "@mui/joy";
 import fetchMembers from "./api/fetchTeamMembers";
 import addSessionParticipants from "./api/addSessionParticipants";
 import { useNavigate, useParams } from "react-router";
 import addUserStoriesAndSessionMapping from "./api/addUserStoriesAndSessionMapping";
+import JiraProjectDropdown from "./JiraProjectDropdown";
+import JiraSprintDropdown from "./JiraSprintDropdown";
 
 const CreateRoomForm: React.FC = () => {
   const { teamId } = useParams();
   const [userFile, setUserFile] = useState<File | null>(null);
+  const [jiraImport, setJiraImport] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [sessionId, setSessionId] = useState<number>(0);
   const [responseResponse, setResponse] = useState<number>();
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleUploadFileClick = () => {
+    setUploadModalOpen(true);
+  };
+
+  const handleImportFromJiraClick = () => {
+    // Handle import from Jira logic
+  };
+
+  const handleDownloadTemplateClick = () => {
+    // Handle download template logic
+  };
+
+  const handleClearFileUpload = () => {
+    setUserFile(null);
+  };
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
@@ -37,10 +60,10 @@ const CreateRoomForm: React.FC = () => {
 
     // Set confirmation message only if it's a CSV file
     if (file.name.toLowerCase().endsWith(".csv")) {
-      setFileUploadConfirmation("File has been selected, ready for upload!");
+      setFileUploadConfirmation(file.name);
     } else {
       setFileError("File must be a CSV file");
-      setFileUploadConfirmation(""); // Clear upload confirmation for non-CSV files
+      setFileUploadConfirmation("");
     }
   };
 
@@ -139,8 +162,6 @@ const CreateRoomForm: React.FC = () => {
         }
       );
       console.log(response);
-      // setSessionId(response.data.data.id as number);
-      // setSessionId(response.data.data.newSession.id as number);
       setResponse(response.status as number);
 
       console.log(
@@ -291,8 +312,6 @@ const CreateRoomForm: React.FC = () => {
     console.log(roomName);
   }, [roomName]);
 
-  const [sessions, setSessions] = useState([]);
-
   return (
     <Box>
       <form onSubmit={handleSubmit}>
@@ -371,55 +390,94 @@ const CreateRoomForm: React.FC = () => {
                             setSelectedUserArrayWithId
                           }
                         />
-                        {/* Removed validation for Add Guest field */}
                       </Grid>
                     </Grid>
                     <Grid
                       container
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="stretch"
+                      spacing={1}
+                      direction="column"
+                      alignItems="flex-start"
                     >
-                      <Grid xs={12} md={6}>
-                        <Grid
-                          container
-                          spacing={1}
-                          direction="column"
-                          alignItems="flex-start"
-                        >
-                          <Grid>
-                            <Typography level="title-lg">Set Timer</Typography>
-                          </Grid>
-                          <Grid>
-                            <TimerInput setTimer={setTimer} />
-                            <Typography color="danger">{timerError}</Typography>
-                          </Grid>
+                      <Grid>
+                        <Typography level="title-lg">Set Timer</Typography>
+                      </Grid>
+                      <Grid>
+                        <TimerInput setTimer={setTimer} />
+                        <Typography color="danger">{timerError}</Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container xs={12} spacing={1} justifyContent="start">
+                      <Grid
+                        container
+                        spacing={1}
+                        direction="column"
+                        alignItems="flex-start"
+                      >
+                        <Grid>
+                          <Typography level="title-lg">User Story :</Typography>
                         </Grid>
                       </Grid>
-
-                      <Grid xs={12} md={6}>
-                        <Grid
-                          container
-                          spacing={1}
-                          direction="column"
-                          alignItems="flex-start"
+                      <Grid>
+                        <Button
+                          disabled={jiraImport !== ""}
+                          onClick={handleUploadFileClick}
                         >
-                          <Grid>
-                            <Typography level="title-lg">User Story</Typography>
-                          </Grid>
-                          <Grid>
-                            <FileSelector onFileSelect={handleFileSelect} />
-                            <Typography color="danger">{fileError}</Typography>
-                            <Typography color="success">
-                              {fileUploadConfirmation}
-                            </Typography>
-                          </Grid>
+                          Upload File
+                        </Button>
+                        {userFile && (
+                          <Typography color="success">
+                            {fileUploadConfirmation}
+                            <Button
+                              variant="outlined"
+                              color="neutral"
+                              onClick={handleClearFileUpload}
+                            >
+                              X
+                            </Button>
+                          </Typography>
+                        )}
+                        {/* <FileSelector onFileSelect={handleFileSelect} />
+                        <Typography color="danger">{fileError}</Typography>
+                        <Typography color="success">
+                          {fileUploadConfirmation}
+                        </Typography> */}
+                      </Grid>
+                      <Grid container spacing={1} direction="column">
+                        <Grid>
+                          <Button
+                            disabled={userFile !== null}
+                            onClick={handleImportFromJiraClick}
+                          >
+                            Import from Jira
+                          </Button>
                         </Grid>
                       </Grid>
                     </Grid>
 
                     <Grid xs={12} mt={2}>
+                      <Divider>Jira</Divider>
+
                       <Grid
+                        sx={{
+                          paddingTop: "10px",
+                        }}
+                      >
+                        <Typography level="title-lg">Select Project</Typography>
+                        <JiraProjectDropdown />
+                      </Grid>
+                      <Grid
+                        sx={{
+                          paddingTop: "15px",
+                        }}
+                      >
+                        <Typography level="title-lg">Select Sprint</Typography>
+                        <JiraSprintDropdown />
+                      </Grid>
+                      <Grid
+                        sx={{
+                          paddingTop: "20px",
+                        }}
                         container
                         direction="row"
                         justifyContent="flex-end"
@@ -437,6 +495,27 @@ const CreateRoomForm: React.FC = () => {
           </Grid>
         </Grid>
       </form>
+      <Modal
+        open={uploadModalOpen}
+        onClose={() => setUploadModalOpen(false)}
+        title="Upload File"
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Button
+            variant="outlined"
+            color="neutral"
+            onClick={handleDownloadTemplateClick}
+          >
+            Download Template
+          </Button>
+          <FileSelector onFileSelect={handleFileSelect} />
+          <Typography color="danger">{fileError}</Typography>
+          {userFile && (
+            <Typography color="success">{fileUploadConfirmation}</Typography>
+          )}
+        </ModalDialog>
+      </Modal>
     </Box>
   );
 };
