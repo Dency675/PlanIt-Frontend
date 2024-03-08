@@ -29,6 +29,27 @@ interface OngoingMeetingProps {
   }[];
 }
 
+export const setCurrentStateInStorage = async (
+  sessionId: number,
+  isVotingStarted: boolean,
+  selectedUserStoryId: number
+) => {
+  try {
+    localStorage.setItem(
+      `sessionData${sessionId}`,
+      JSON.stringify({
+        sessionId: sessionId,
+        isVotingStarted: isVotingStarted,
+        selectedUserStoryId: selectedUserStoryId,
+      })
+    );
+
+    console.log(`Current state for session ${sessionId} stored successfully.`);
+  } catch (error) {
+    console.error("Error setting current state in storage:", error);
+  }
+};
+
 const userId = localStorage.getItem("userId");
 
 const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
@@ -72,10 +93,26 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
       });
   });
 
-  const handleStartButtonClick = (sessionId: number) => {
+  const handleStartButtonClick = async (sessionId: number) => {
     console.log("createRoom");
 
-    socket.emit("createRoom", sessionId);
+    try {
+      // await sessionStorage.setItem(
+      //   `sessionData${sessionId}`,
+      //   JSON.stringify([sessionId, true, -1])
+      // );
+
+      // localStorage.setItem("sessionData", JSON.stringify(sessionId));
+
+      await setCurrentStateInStorage(sessionId, false, -1);
+      console.log(
+        `Current state for session ${sessionId} stored successfully.`
+      );
+      socket.emit("createRoom", sessionId);
+    } catch (error) {
+      console.error("Error setting current state in storage:", error);
+      // Handle storage errors appropriately
+    }
   };
 
   const handleJoinButtonClick = (sessionId: number) => {
@@ -157,6 +194,7 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                           sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
+                            handleStartButtonClick(ongoingMeeting.id);
                           }}
                         >
                           Start
@@ -168,7 +206,9 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
                           sx={{ paddingRight: "5px", paddingLeft: "5px" }}
                           onClick={() => {
                             navigate(`/vote/${ongoingMeeting.id}`);
+                            handleJoinButtonClick(ongoingMeeting.id);
                           }}
+                          disabled={ongoingMeeting.status !== "active"}
                         >
                           Join
                         </ListItemButton>

@@ -11,13 +11,44 @@ import { selectClasses } from "@mui/joy/Select";
 import { MenuItem } from "@mui/material";
 import { sessionIdType } from "./types";
 
+export const modifyUserStoryIdInCurrentStateInStorage = async (
+  sessionId: string,
+  selectedUserStoryId: number
+) => {
+  try {
+    const meetingDataString = localStorage.getItem(`sessionData${sessionId}`);
+    let meetingData;
+
+    if (meetingDataString) {
+      try {
+        meetingData = JSON.parse(meetingDataString);
+      } catch (error) {
+        console.error("Error parsing meeting data:", error);
+      }
+    }
+
+    if (meetingData) {
+      meetingData.selectedUserStoryId = selectedUserStoryId;
+    }
+
+    localStorage.setItem(
+      `sessionData${sessionId}`,
+      JSON.stringify(meetingData)
+    );
+
+    console.log(`Current state for session ${sessionId} stored successfully.`);
+  } catch (error) {
+    console.error("Error setting current state in storage:", error);
+  }
+};
+
 const UserStories: React.FC<sessionIdType> = ({
   sessionId,
   setSelectedUserStoryId,
   userStoryList,
   isUserStorySelectEnable,
 }) => {
-  const HandleUserStoryChange = (e: SelectChangeEvent<string>) => {
+  const HandleUserStoryChange = async (e: SelectChangeEvent<string>) => {
     const selectedUserStoryName = e.target.value as string;
     console.log(selectedUserStoryName);
     const selectedUserStory = userStoryList.find(
@@ -26,6 +57,10 @@ const UserStories: React.FC<sessionIdType> = ({
     if (selectedUserStory) {
       console.log(selectedUserStory.userStoryMappingId);
       setSelectedUserStoryId(parseInt(selectedUserStory.userStoryMappingId));
+      await modifyUserStoryIdInCurrentStateInStorage(
+        sessionId,
+        parseInt(selectedUserStory.userStoryMappingId)
+      );
     }
   };
 

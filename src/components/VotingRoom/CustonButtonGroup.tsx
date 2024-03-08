@@ -10,6 +10,41 @@ import editSessions from "../TeamSettings/api/editSessions";
 import { useNavigate } from "react-router";
 import { CustomButtonGroupProps } from "./types";
 
+export const modifyStartVotingInCurrentStateInStorage = async (
+  sessionId: string,
+  isVotingStarted: boolean
+) => {
+  try {
+    const meetingDataString = localStorage.getItem(`sessionData${sessionId}`);
+    let meetingData;
+
+    if (meetingDataString) {
+      try {
+        meetingData = JSON.parse(meetingDataString);
+      } catch (error) {
+        console.error("Error parsing meeting data:", error);
+      }
+    }
+
+    if (meetingData) {
+      meetingData.isVotingStarted = isVotingStarted;
+      meetingData.currentTime = new Date()
+        .toISOString()
+        .split("T")[1]
+        .substring(0, 8);
+    }
+
+    localStorage.setItem(
+      `sessionData${sessionId}`,
+      JSON.stringify(meetingData)
+    );
+
+    console.log(`Current state for session ${sessionId} stored successfully.`);
+  } catch (error) {
+    console.error("Error setting current state in storage:", error);
+  }
+};
+
 const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   onStartTimer,
   stopTimer,
@@ -38,13 +73,14 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
     setIsStartButtonDisabled(isUserStrorySelected);
   }, [isUserStrorySelected]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (isTimerOn) {
       setIsTimerOn(!isTimerOn);
       onStartTimer();
       setIsRevealButtonDisabled(false);
       setIsStartName("Start Voting");
       setIsStartButtonStarted(false);
+      await modifyStartVotingInCurrentStateInStorage(sessionId, false);
     } else {
       stopTimer();
       setIsRevealButtonDisabled(true);
@@ -52,6 +88,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
       setIsStartName("End Voting");
       setIsStartButtonStarted(true);
       socket.emit("startButtonClicked", sessionId, count);
+      await modifyStartVotingInCurrentStateInStorage(sessionId, true);
       setIsUserStorySelectEnable(true);
 
       setCount(count + 1);
