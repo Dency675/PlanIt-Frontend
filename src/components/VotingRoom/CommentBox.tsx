@@ -84,19 +84,12 @@ const CommentBox: React.FC<CommentBoxProps> = ({
     const formData = new FormData(event.target); // Capture the form data
     const data = Object.fromEntries(formData); // Convert the FormData object to a plain object
     console.log(data);
-    const { score, comment } = data;
-
-    console.log(selectedUserStoryId);
 
     try {
       // Make a POST request to your endpoint with the form data
-      const response = await axios.put(
-        "http://localhost:3001/updateUserStorySessionMapping",
-        {
-          userStorySessionMappingId: selectedUserStoryId,
-          comment: comment,
-          storyPointResult: score,
-        }
+      const response = await axios.post(
+        "http://localhost:3001/addUserStoriesAndSessionMapping",
+        data
       );
 
       // Handle the response

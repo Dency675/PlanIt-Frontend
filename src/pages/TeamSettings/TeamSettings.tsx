@@ -28,7 +28,7 @@ interface OngoingMeetingProps {
 
 const TeamSettings = () => {
   const navigate = useNavigate();
-  const { teamId } = useParams();
+  const { teamId, teamName } = useParams();
 
   const [selectedTeamId, setSelectedTeamId] = useState<number>(
     parseInt(teamId as string)
@@ -165,6 +165,7 @@ const TeamSettings = () => {
             <Card sx={{ m: 3, display: "flex" }}>
               <TeamList
                 teamId={selectedTeamId}
+                teamName={teamName || ""}
                 selectedUserArray={selectedUserArray}
               />
             </Card>

@@ -12,12 +12,14 @@ import {
   ListItemDecorator,
   ListSubheader,
   Sheet,
-  Typography,
 } from "@mui/joy";
 import React, { useEffect, useState } from "react";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import RecentActivity, { RecentActivityProps } from "./RecentActivity";
 import axios from "axios";
+import { parse } from "date-fns";
+import { Typography } from "@mui/material";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface RecentMeetingProps {
   recentMeetings: {
@@ -39,14 +41,18 @@ const RecentActivities = ({ recentMeetings }: RecentMeetingProps) => {
 
   const [sortBy, setSortBy] = useState<string>("createDateTime");
   const [sortOrder, setSortOrder] = useState<string>("DESC");
+  const [visibleRecentActivityCount, setVisibleRecentActivityCount] =
+    useState<number>(3);
+  const [offset, setOffset] = useState<number>(0);
 
-  const sortedMeetings = [...recentMeetings].sort((a, b) => {
+  const sortedRecentMeetings = [...recentMeetings].sort((a, b) => {
     if (sortBy === "createDateTime") {
-      const dateA = new Date(a.createDateTime).getTime();
-      const dateB = new Date(b.createDateTime).getTime();
-      console.log("dateA");
+      const dateA = parse(a.createDateTime, "h:mm a dd-MM-yyyy E", new Date());
+      const dateB = parse(b.createDateTime, "h:mm a dd-MM-yyyy E", new Date());
       console.log(dateA);
-      return sortOrder === "ASC" ? dateA - dateB : dateB - dateA;
+      return sortOrder === "ASC"
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
     } else {
       return sortOrder === "ASC"
         ? a.sessionTitle.localeCompare(b.sessionTitle)
@@ -63,50 +69,64 @@ const RecentActivities = ({ recentMeetings }: RecentMeetingProps) => {
     }
   };
 
-  return (
-    <Box>
-      {" "}
-      {/* Add margin for spacing */}
-      <Card sx={{ m: 3 }}>
-        {" "}
-        {/* Adjust width based on screen size */}
-        <List>
-          <ListItem nested>
-            <ListSubheader sticky>Past Meetings</ListSubheader>
+  const loadMoreRecentActivities = () => {
+    console.log("Loading more recent activities...");
+    setVisibleRecentActivityCount((prevCount) => prevCount + 3);
+    setOffset((prev) => prev + 3);
+  };
 
-            <ButtonGroup aria-label="sort">
-              {/* <Button
-                onClick={() => handleSort("createDateTime")}
-                // color={sortBy === "createDateTime" ? "primary" : "default"}
-              >
-                Sort by Date
-              </Button> */}
-              <Button
-                onClick={() => handleSort("sessionTitle")}
-                // color={sortBy === "sessionTitle" ? "primary" : "default"}
-              >
-                Sort by Title
-              </Button>
-            </ButtonGroup>
-            {recentMeetings.length === 0 ? (
-              <Typography sx={{ p: 2 }}>No Past Meetings</Typography>
-            ) : (
-              <List
-                aria-labelledby="ellipsis-list-demo"
-                sx={{ "--ListItemDecorator-size": "50px", padding: 2 }}
-              >
-                {sortedMeetings.map((recentActivity, index) => (
+  return (
+    <List>
+      <ListItem nested>
+        <ListSubheader sticky>Past Meetings</ListSubheader>
+        <Box
+          sx={{ display: "flex", justifyContent: "space-between", padding: 1 }}
+        >
+          <Typography
+            variant="subtitle1"
+            sx={{ cursor: "pointer" }}
+            onClick={() => handleSort("sessionTitle")}
+          >
+            Title
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{ cursor: "pointer" }}
+            onClick={() => handleSort("createDateTime")}
+          >
+            Date
+          </Typography>
+        </Box>
+        {recentMeetings.length === 0 ? (
+          <Typography sx={{ p: 2 }}>No Past Meetings</Typography>
+        ) : (
+          <InfiniteScroll
+            dataLength={visibleRecentActivityCount}
+            next={loadMoreRecentActivities}
+            hasMore={visibleRecentActivityCount < recentMeetings.length}
+            loader={<h4>Loading...</h4>}
+            // endMessage={
+            //   <p style={{ textAlign: "center" }}>
+            //     <b>No more meetings to load</b>
+            //   </p>
+            // }
+          >
+            <List
+              aria-labelledby="ellipsis-list-demo"
+              sx={{ "--ListItemDecorator-size": "50px", padding: 2 }}
+            >
+              {sortedRecentMeetings
+                .slice(0, visibleRecentActivityCount)
+                .map((recentActivity, index) => (
                   <React.Fragment key={index}>
                     <RecentActivity recentActivity={recentActivity} />
                   </React.Fragment>
                 ))}
-              </List>
-            )}
-            {/* </Sheet> */}
-          </ListItem>
-        </List>
-      </Card>
-    </Box>
+            </List>
+          </InfiniteScroll>
+        )}
+      </ListItem>
+    </List>
   );
 };
 

@@ -28,9 +28,13 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
           sessionStorage.setItem("userRoles", JSON.stringify(roles));
 
           let role = roles[0].trim().replace(/ /g, "_");
-
-          if (role === "admin") navigate(`/dashboard`);
-          else navigate(`/home`);
+          // let role = "scrum_master";
+          // navigate(`/${role}/`);
+          if (role === "admin") {
+            navigate(`/admin`);
+          } else {
+            navigate(`/home`);
+          }
         }
         onLoginSuccess();
       } catch (e) {

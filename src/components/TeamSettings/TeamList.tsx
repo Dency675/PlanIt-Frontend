@@ -8,10 +8,11 @@ import { useParams } from "react-router-dom";
 
 interface TeamListProps {
   teamId: number;
+  teamName: string;
   selectedUserArray: any;
 }
 
-const TeamList = ({ selectedUserArray }: TeamListProps) => {
+const TeamList = ({ teamName, selectedUserArray }: TeamListProps) => {
   const userId = localStorage.getItem("userId");
 
   const { teamId } = useParams();
@@ -105,7 +106,7 @@ const TeamList = ({ selectedUserArray }: TeamListProps) => {
         textTransform="uppercase"
         sx={{ letterSpacing: "0.15rem", m: 2, fontSize: 16 }}
       >
-        Team Members
+        {teamName}
       </Typography>
 
       {teamMembers.length === 0 ? (

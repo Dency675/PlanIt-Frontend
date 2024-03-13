@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useDynamicHeightField = (element:any, value:any)=> {
+const useDynamicHeightField = (element: any, value: any) => {
   useEffect(() => {
     if (!element) return;
 
