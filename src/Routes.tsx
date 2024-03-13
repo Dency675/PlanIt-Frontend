@@ -23,7 +23,7 @@ const AppRoutes = () => {
 
           {/* Routes for admin */}
           <Route
-            path="/dashboard"
+            path="/admin"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Admin />
@@ -49,7 +49,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/teamSettings/:teamId"
+            path="/teamSettings/:teamId/:teamName"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "developer", "project manager"]}

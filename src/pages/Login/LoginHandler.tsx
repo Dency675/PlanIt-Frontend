@@ -28,7 +28,6 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
           sessionStorage.setItem("userRoles", JSON.stringify(roles));
 
           let role = roles[0].trim().replace(/ /g, "_");
-<<<<<<< HEAD
           // let role = "scrum_master";
           // navigate(`/${role}/`);
           if (role === "admin") {
@@ -36,11 +35,6 @@ const useLoginHandler = (onLoginSuccess: () => void) => {
           } else {
             navigate(`/home`);
           }
-=======
-
-          if (role === "admin") navigate(`/dashboard`);
-          else navigate(`/home`);
->>>>>>> 9137f1cc3b67214db67f8c710d4c8e539d3f74b7
         }
         onLoginSuccess();
       } catch (e) {

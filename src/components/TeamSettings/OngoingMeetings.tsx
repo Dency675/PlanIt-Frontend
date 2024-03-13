@@ -115,11 +115,11 @@ const OngoingMeetings = ({ ongoingMeetings }: OngoingMeetingProps) => {
           <Typography sx={{ m: 4 }}>No Ongoing Meetings</Typography>
         ) : (
           visibleMeetings.map((ongoingMeeting, index) => (
-            <Grid key={index} xs={4}>
+            <Grid key={index} width="180">
               <Card
                 orientation="horizontal"
                 variant="outlined"
-                sx={{ height: "100%" }}
+                sx={{ height: "100%", width: "100%" }}
               >
                 <CardContent>
                   <Typography

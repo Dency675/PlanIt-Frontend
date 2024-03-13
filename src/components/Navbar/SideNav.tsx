@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ListDivider } from "@mui/joy";
+import { useSearchParams } from "react-router-dom";
 
 interface TeamLists {
   teamInfoList: {
@@ -34,10 +35,10 @@ const SideNav = ({
 
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
-  const handleSelectTeam = (teamId: number) => {
+  const handleSelectTeam = (teamId: number, teamName: string) => {
     onSelectTeam(teamId);
     resetSelectedUserArray();
-    navigate(`/teamSettings/${teamId}`);
+    navigate(`/teamSettings/${teamId}/${teamName}`); // Include parameters in URL
   };
 
   useEffect(() => {
@@ -97,10 +98,9 @@ const SideNav = ({
               <React.Fragment key={index}>
                 <ListItem>
                   <ListItemButton
-                    onClick={() => {
-                      handleSelectTeam(teamList.id);
-                      console.log(teamList.id);
-                    }}
+                    onClick={() =>
+                      handleSelectTeam(teamList.id, teamList.teamName)
+                    }
                   >
                     {teamList.teamName}
                   </ListItemButton>
