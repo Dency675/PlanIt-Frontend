@@ -12,20 +12,15 @@ import MenuItem from "@mui/joy/MenuItem";
 import ListDivider from "@mui/joy/ListDivider";
 import Drawer from "@mui/joy/Drawer";
 import ModalClose from "@mui/joy/ModalClose";
-
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SideNav from "./SideNav";
 import { CssVarsProvider } from "@mui/joy";
-
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
-
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import { useMsal } from "@azure/msal-react";
-
 import LightLogo from "../../assets/images/logo_Pi.png";
 import DarkLogo from "../../assets/images/logo_white.png";
 import getUserInformationById from "../../pages/TeamManagement/api/fetchUserData";
@@ -97,8 +92,6 @@ export default function Header() {
   }, []);
 
   function stringAvatar(givenName: string) {
-    console.log(givenName);
-
     return {
       sx: {
         bgcolor: mode === "light" ? "lightgrey" : "darkgrey",
@@ -177,6 +170,8 @@ export default function Header() {
               updateTeamList={function (
                 newTeamList: { id: number; teamName: string }[]
               ): void {}}
+              teamLists={[]}
+              setTeamLists={() => {}}
             />
 
             <Box sx={{ px: 1 }}>{/* <TeamNav /> */}</Box>
@@ -193,20 +188,6 @@ export default function Header() {
           }}
         >
           <ColorSchemeToggle />
-
-          {/* <Tooltip title="Joy UI overview" variant="outlined">
-            <IconButton
-              size="sm"
-              variant="plain"
-              color="neutral"
-              component="a"
-              href="/blog/first-look-at-joy/"
-              sx={{ alignSelf: "center" }}
-            >
-              <NotificationsActiveIcon />
-            </IconButton>
-          </Tooltip> */}
-          {/* <ColorSchemeToggle /> */}
           <Dropdown>
             <MenuButton
               variant="plain"
@@ -217,12 +198,6 @@ export default function Header() {
                 borderRadius: "9999999px",
               }}
             >
-              {/* <Avatar
-                src="https://i.pravatar.cc/40?img=2"
-                srcSet="https://i.pravatar.cc/80?img=2"
-                sx={{ maxWidth: "32px", maxHeight: "32px" }}
-              /> */}
-
               <Avatar {...stringAvatar(name)} />
             </MenuButton>
             <Menu

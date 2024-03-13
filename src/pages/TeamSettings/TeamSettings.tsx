@@ -28,18 +28,13 @@ interface OngoingMeetingProps {
 const TeamSettings = () => {
   const navigate = useNavigate();
   const { teamId } = useParams();
-
   const [selectedTeamId, setSelectedTeamId] = useState<number>(
     parseInt(teamId as string)
   );
   const [teamIds, setTeamIds] = useState(parseInt(teamId as string));
-
   const [selectedUserArray, setSelectedUserArray] = useState([]);
   const [userIds, setUserIds] = useState("");
-
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
-
-  // const userRole = localStorage.getItem("teamUserRole");
   const userId = localStorage.getItem("userId");
 
   React.useEffect(() => {
@@ -156,6 +151,8 @@ const TeamSettings = () => {
               onSelectTeam={handleSelectTeam}
               resetSelectedUserArray={handleResetSelectedUserArray}
               updateTeamList={updateTeamList}
+              teamLists={teamLists}
+              setTeamLists={setTeamLists}
             />
           </Box>
         </Grid>

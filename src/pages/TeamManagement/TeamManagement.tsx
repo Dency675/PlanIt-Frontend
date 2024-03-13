@@ -39,7 +39,6 @@ const TeamManagement = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [name, setName] = useState<string>("");
   const [teamName, setTeamName] = useState<string>("");
-
   const userId = localStorage.getItem("userId");
   const userRole = sessionStorage.getItem("userRoles");
 
@@ -62,7 +61,10 @@ const TeamManagement = () => {
 
   const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]); // New state for team list
 
-  const updateTeamList = (newTeamList: TeamLists["teamInfoList"][]) => {
+  const updateTeamList = (
+    newTeamList: React.SetStateAction<{ id: number; teamName: string }[]>
+  ) => {
+    console.log("Team lists updated:", newTeamList); // Confirm that new team list is received
     setTeamLists(newTeamList);
   };
 
@@ -111,7 +113,6 @@ const TeamManagement = () => {
       });
   }, []);
 
-  // Fetch recent meetings of the user
   useEffect(() => {
     if (userId) {
       const requestBody = {
@@ -167,19 +168,19 @@ const TeamManagement = () => {
     console.log(selectedUserId);
   }, [selectedUserId]);
 
+  useEffect(() => {
+    console.log("Team lists updated:", teamLists);
+  }, [teamLists]);
   const handleCreateTeam = async () => {
     try {
-      // Make a POST request to your addTeamInformation API
       const response = await axios.post(
         "http://localhost:3001/addTeamInformation",
         {
           teamName: teamName,
-          status: "active", // You can set the status based on your requirements
+          status: "active",
         }
       );
-
       const teamId = response.data.teamInfo.id;
-
       const teamMemberResponse = await axios.post(
         "http://localhost:3001/addMember",
         {
@@ -187,17 +188,21 @@ const TeamManagement = () => {
           teamId: teamId,
         }
       );
-
-      // Handle the response as needed
       console.log("Team created successfully:", response.data);
       console.log("Team member added successfully:", teamMemberResponse.data);
-
-      // event.preventDefault();
-      // Close the modal after creating the team
+      if (teamMemberResponse.status === 201) {
+        const updatedTeamListResponse = await axios.get(
+          `http://localhost:3001/getTeamInformationByUserId?userId=${userId}`
+        );
+        const updatedTeamList = updatedTeamListResponse.data.teamInfoList;
+        setTeamLists(updatedTeamList);
+        console.log("UPDATED LISTTTTTTTT", updatedTeamList);
+        console.log("teamlisssssssts", teamLists);
+      }
+      console.log("teamlisssssssts after scop", teamLists);
       setOpen(false);
     } catch (error) {
       console.error("Error creating team:", error);
-      // Handle the error as needed
     }
   };
 
@@ -217,6 +222,8 @@ const TeamManagement = () => {
               onSelectTeam={handleSelectTeam}
               resetSelectedUserArray={handleResetSelectedUserArray}
               updateTeamList={updateTeamList}
+              teamLists={teamLists}
+              setTeamLists={setTeamLists}
             />
           </Box>
 

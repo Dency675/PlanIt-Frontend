@@ -22,17 +22,28 @@ interface SideNavProps {
   onSelectTeam: (teamId: number) => void;
   resetSelectedUserArray: () => void;
   updateTeamList: (newTeamList: TeamLists["teamInfoList"][]) => void;
+  teamLists: { id: number; teamName: string }[];
+  setTeamLists: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: number;
+        teamName: string;
+      }[]
+    >
+  >;
 }
 
 const SideNav = ({
   onSelectTeam,
   resetSelectedUserArray,
   updateTeamList,
+  teamLists,
+  setTeamLists,
 }: SideNavProps) => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
-  const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
+  // const [teamLists, setTeamLists] = useState<TeamLists["teamInfoList"][]>([]);
 
   const handleSelectTeam = (teamId: number) => {
     onSelectTeam(teamId);
@@ -63,6 +74,10 @@ const SideNav = ({
     };
     fetchTeamLists();
   }, []);
+
+  useEffect(() => {
+    console.log("Team lists updated in SideNav:", teamLists);
+  }, [teamLists]);
 
   return (
     <Box
