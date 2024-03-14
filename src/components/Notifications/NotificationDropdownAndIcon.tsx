@@ -29,13 +29,13 @@ const notificationData: notifType["notif"][] = [
     id: 4,
     title: "Manderlay",
     content: "Intuitive stable product",
-    isRead: true,
+    isRead: false,
   },
   {
     id: 5,
     title: "Woo",
     content: "De-engineered contextually-based utilisation",
-    isRead: true,
+    isRead: false,
   },
   {
     id: 6,
@@ -91,40 +91,47 @@ export const NotificationModal = () => {
 
   return (
     <>
-      <Dropdown>
-        <MenuButton variant="plain">
-          {length === 0 ? (
-            <Notifications />
-          ) : (
-            <Badge badgeContent={length} max={100} badgeInset="0 -12 0 0">
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Dropdown>
+          <MenuButton variant="plain">
+            {length === 0 ? (
               <Notifications />
-            </Badge>
-          )}
-        </MenuButton>
-        <Menu
-          sx={{
-            minHeight: "40vh",
-            maxHeight: "60vh",
-            minWidth: "30vh",
-            overflow: "auto",
-          }}
-        >
-          <Grid container spacing={2}>
-            <Grid xs={2} sm={4} md={4} lg={4}>
-              <Container>
-                <u>
-                  <h2>Notifications</h2>
-                </u>
-              </Container>
+            ) : (
+              <Badge badgeContent={length} max={100} badgeInset="0 -12 0 0">
+                <Notifications />
+              </Badge>
+            )}
+          </MenuButton>
+          <Menu
+            sx={{
+              minHeight: "40vh",
+              maxHeight: "60vh",
+              minWidth: "30vh",
+              overflow: "auto",
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid xs={2} sm={4} md={4} lg={4}>
+                <Container>
+                  <u>
+                    <h2>Notifications</h2>
+                  </u>
+                </Container>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={2} sm={4} md={4} lg={4}>
-              <NotificationComponent notify={notificationData} />
+            <Grid container spacing={2}>
+              <Grid item xs={2} sm={4} md={4} lg={4}>
+                <NotificationComponent notify={notificationData} />
+              </Grid>
             </Grid>
-          </Grid>
-        </Menu>
-      </Dropdown>
+          </Menu>
+        </Dropdown>
+      </Box>
     </>
   );
 };

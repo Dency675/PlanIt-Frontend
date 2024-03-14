@@ -17,7 +17,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SideNav from "./SideNav";
-import { Badge, CssVarsProvider } from "@mui/joy";
+import { CssVarsProvider } from "@mui/joy";
 
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
 import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
@@ -31,9 +31,6 @@ import DarkLogo from "../../assets/images/logo_white.png";
 import getUserInformationById from "../../pages/TeamManagement/api/fetchUserData";
 import { useNavigate } from "react-router";
 import { NotificationModal } from "../Notifications/NotificationDropdownAndIcon";
-import { Notifications } from "@mui/icons-material";
-import { Container, Grid } from "@mui/material";
-import { NotificationComponent } from "../Notifications/NotificationDataFormat";
 
 function ColorSchemeToggle() {
   const [mounted, setMounted] = React.useState(false);
@@ -76,7 +73,6 @@ export default function Header() {
   const [name, setName] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
 
-  const [length, setLength] = React.useState<number>(0);
   const navigate = useNavigate();
   const { instance } = useMsal();
   const { mode } = useJoyColorScheme();
@@ -149,11 +145,6 @@ export default function Header() {
             />
           </Box>
         </Stack>
-        <Box sx={{ display: { xs: "inline-flex", md: "none" } }}>
-          <IconButton variant="plain" color="neutral">
-            <Notifications />
-          </IconButton>
-        </Box>
         <Box sx={{ display: { xs: "inline-flex", md: "none" } }}>
           <IconButton
             variant="plain"
