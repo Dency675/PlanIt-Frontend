@@ -5,6 +5,8 @@ const getScales = async (estimationId: number) => {
     const response = await axios.get(
       `http://localhost:3001/scales/${estimationId}`
     );
+    console.log("estimation id is ", estimationId);
+    console.log("scales data ", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching user stories:", error);

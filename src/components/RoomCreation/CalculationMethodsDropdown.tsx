@@ -27,9 +27,7 @@ const CalculationMethodDropdown: React.FC<CalculationMethodDropdownProps> = ({
   React.useEffect(() => {
     const fetchEstimations = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/getAllCalculations"
-        );
+        const response = await axios.get("http://localhost:3001/calculations");
         const responseData: Record<string, CalculationData> = response.data;
 
         console.log("responseData");

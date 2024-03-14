@@ -11,6 +11,8 @@ interface EstimationData {
   estimationName: string;
 }
 
+const storedUserId = localStorage.getItem("userId");
+
 interface EstimationScaleDropdownProps {
   setSelectedEstimationScale: React.Dispatch<React.SetStateAction<string>>;
   setSelectedEstimationScaleId: React.Dispatch<React.SetStateAction<number>>;
@@ -28,15 +30,15 @@ const EstimationScaleDropdown: React.FC<EstimationScaleDropdownProps> = ({
     const fetchEstimations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/getEstimations"
+          `http://localhost:3001/getEstimations/${storedUserId}`
         );
-        const responseData: Record<string, EstimationData> = response.data;
+        const responseData: Record<string, EstimationData> = response.data.data;
 
         const estimationsArray = Object.values(responseData).map((item) => ({
           id: item.id,
           estimationName: item.estimationName,
         }));
-
+        console.log("estimationArray", estimationsArray);
         setEstimationsArray(estimationsArray);
       } catch (error) {
         console.error("Error fetching estimations:", error);
@@ -69,6 +71,13 @@ const EstimationScaleDropdown: React.FC<EstimationScaleDropdownProps> = ({
           transition: "0.2s",
           [`&.${selectClasses.expanded}`]: {
             transform: "rotate(-180deg)",
+          },
+        },
+      }}
+      MenuProps={{
+        PaperProps: {
+          style: {
+            maxHeight: 200, // Set max height for the dropdown
           },
         },
       }}
