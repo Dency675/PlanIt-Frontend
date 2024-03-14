@@ -24,6 +24,7 @@ import { useNavigate, useParams } from "react-router";
 import addUserStoriesAndSessionMapping from "./api/addUserStoriesAndSessionMapping";
 import JiraProjectDropdown from "./JiraProjectDropdown";
 import JiraSprintDropdown from "./JiraSprintDropdown";
+import CustomModal from "./CustomModal";
 
 const CreateRoomForm: React.FC = () => {
   const { teamId } = useParams();
@@ -371,6 +372,7 @@ const CreateRoomForm: React.FC = () => {
                             {estimationError}
                           </Typography>
                         </Box>
+                        <CustomModal />
                       </Grid>
                     </Grid>
 

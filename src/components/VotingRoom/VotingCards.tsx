@@ -118,6 +118,8 @@ const VotingCards: React.FC<votingCardsPropType> = ({
     };
   }, []);
 
+  console.log("scale data is ", scaleData);
+
   return (
     <Grid container justifyContent="center" spacing={0} sx={{ mt: 1 }}>
       {scaleData.map((card, index) => (
