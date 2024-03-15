@@ -593,10 +593,10 @@ const CreateRoomForm: React.FC = () => {
                           </Typography>
                         )}
                         {/* <FileSelector onFileSelect={handleFileSelect} />
+                        <Typography color="danger">{fileError}</Typography>
                         <Typography color="success">
-                        {fileUploadConfirmation}
-                      </Typography> */}
-                        {/* <Typography color="danger">{userStoryError}</Typography> */}
+                          {fileUploadConfirmation}
+                        </Typography> */}
                       </Grid>
                       <Grid container spacing={1} direction="column">
                         <Grid>
