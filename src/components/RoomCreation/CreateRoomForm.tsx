@@ -35,6 +35,8 @@ const CreateRoomForm: React.FC = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const csvData = `Id,Summary,Issue key,Issue id `;
+
   const handleUploadFileClick = () => {
     setUploadModalOpen(true);
   };
@@ -44,7 +46,17 @@ const CreateRoomForm: React.FC = () => {
   };
 
   const handleDownloadTemplateClick = () => {
-    // Handle download template logic
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.setAttribute("download", "template.csv");
+    link.click();
+
+    // setTimeout(() => {
+    //   window.URL.revokeObjectURL(url);
+    // }, 1000);
   };
 
   const handleClearFileUpload = () => {
@@ -53,7 +65,6 @@ const CreateRoomForm: React.FC = () => {
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
-
     // Reset file-related states and messages
     setUserFile(file);
     setFileError("");
@@ -136,8 +147,6 @@ const CreateRoomForm: React.FC = () => {
       return;
     }
 
-    navigate(`/teamSettings/${teamId}`);
-
     const formData = new FormData();
     formData.append("sessionTitle", roomName);
     formData.append("createDateTime", new Date().toISOString());
@@ -161,6 +170,7 @@ const CreateRoomForm: React.FC = () => {
           },
         }
       );
+      navigate(`/teamSettings/${teamId}`);
       console.log(response);
       setResponse(response.status as number);
 
