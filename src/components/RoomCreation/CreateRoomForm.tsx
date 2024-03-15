@@ -46,6 +46,8 @@ const CreateRoomForm: React.FC = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const csvData = `Id,Summary,Issue key,Issue id `;
+
   const [userDetails, setUserDetails] = useState<any>(null);
   const [userProjects, setUserProjects] = useState<any>(null);
   const [accessToken, setAccessToken] = useState<any>(null);
@@ -112,20 +114,27 @@ const CreateRoomForm: React.FC = () => {
   };
 
   function handleDownloadTemplateClick() {
-    const filePath = "../../assets/userStoryTemplate/Template.csv";
+    // const filePath = "../../assets/userStoryTemplate/Template.csv";
 
-    fetch(filePath).then((response) => {
-      response.blob().then((blob) => {
-        // Creating new object of PDF file
-        const fileURL = window.URL.createObjectURL(blob);
+    // fetch(filePath).then((response) => {
+    //   response.blob().then((blob) => {
+    //     // Creating new object of PDF file
+    //     const fileURL = window.URL.createObjectURL(blob);
 
-        // Setting various property values
-        let alink = document.createElement("a");
-        alink.href = fileURL;
-        alink.download = "SamplePDF.pdf";
-        alink.click();
-      });
-    });
+    //     // Setting various property values
+    //     let alink = document.createElement("a");
+    //     alink.href = fileURL;
+    //     alink.download = "SamplePDF.pdf";
+    //     alink.click();
+    //   });
+    // });
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.setAttribute("download", "template.csv");
+    link.click();
   }
 
   const handleClearFileUpload = () => {
@@ -233,8 +242,6 @@ const CreateRoomForm: React.FC = () => {
       return;
     }
 
-    navigate(`/teamSettings/${teamId}`);
-
     const formData = new FormData();
     formData.append("sessionTitle", roomName);
     formData.append("createDateTime", new Date().toISOString());
@@ -261,6 +268,7 @@ const CreateRoomForm: React.FC = () => {
           },
         }
       );
+      navigate(`/teamSettings/${teamId}`);
       console.log(response);
       setResponse(response.status as number);
 
