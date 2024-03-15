@@ -29,8 +29,6 @@ import JiraSprintDropdown from "./JiraSprintDropdown";
 import { useLocation } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import fileDownload from "js-file-download";
-
 const CreateRoomForm: React.FC = () => {
   // const { teamId } = useParams();
 
@@ -113,21 +111,7 @@ const CreateRoomForm: React.FC = () => {
     window.location.href = `http://localhost:3001/auth/jira/${teamId}`;
   };
 
-  function handleDownloadTemplateClick() {
-    // const filePath = "../../assets/userStoryTemplate/Template.csv";
-
-    // fetch(filePath).then((response) => {
-    //   response.blob().then((blob) => {
-    //     // Creating new object of PDF file
-    //     const fileURL = window.URL.createObjectURL(blob);
-
-    //     // Setting various property values
-    //     let alink = document.createElement("a");
-    //     alink.href = fileURL;
-    //     alink.download = "SamplePDF.pdf";
-    //     alink.click();
-    //   });
-    // });
+  const handleDownloadTemplateClick = () => {
     const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -135,7 +119,11 @@ const CreateRoomForm: React.FC = () => {
     link.href = url;
     link.setAttribute("download", "template.csv");
     link.click();
-  }
+
+    // setTimeout(() => {
+    //   window.URL.revokeObjectURL(url);
+    // }, 1000);
+  };
 
   const handleClearFileUpload = () => {
     setUserFile(null);
@@ -147,7 +135,6 @@ const CreateRoomForm: React.FC = () => {
 
   const handleFileSelect = (file: File) => {
     console.log("Selected file:", file);
-
     // Reset file-related states and messages
     setUserFile(file);
     setFileError("");
