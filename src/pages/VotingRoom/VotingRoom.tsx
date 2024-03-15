@@ -11,6 +11,7 @@ interface VotingRoomProp {
   estimationId: number;
   teamId: number;
   currentUserStoryId: number;
+  isUsingJira: boolean;
   setCurrentUserStoryId: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -23,6 +24,7 @@ const VotingRoom = ({
   teamId,
   setCurrentUserStoryId,
   currentUserStoryId,
+  isUsingJira,
 }: VotingRoomProp) => {
   return (
     <Container>
@@ -36,6 +38,7 @@ const VotingRoom = ({
             estimationId={estimationId}
             teamId={teamId}
             setCurrentUserStoryId={setCurrentUserStoryId}
+            isUsingJira={isUsingJira}
           />
         </Grid>
         <Grid xs={12} sm={8} md={4} lg={4}>

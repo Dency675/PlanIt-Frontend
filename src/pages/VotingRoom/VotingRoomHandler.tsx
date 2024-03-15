@@ -11,6 +11,7 @@ const VotingRoomHandler = () => {
   const [teamId, setTeamId] = useState(0);
   const [timer, setTimer] = useState("");
   const [currentUserStoryId, setCurrentUserStoryId] = useState<number>(0);
+  const [isUsingJira, setIsUsingJira] = useState<boolean>(false);
 
   const userIdd = localStorage.getItem("userId");
 
@@ -22,6 +23,7 @@ const VotingRoomHandler = () => {
           setScrumMasterId(response.data.scrumMasterId);
           setTeamId(response.data.teamId);
           setTimer(response.data.timer);
+          if (response.data.excelLink === "jira") setIsUsingJira(true);
         })
         .catch((error) => {
           console.error("Error occurred while changing status :", error);
@@ -42,6 +44,7 @@ const VotingRoomHandler = () => {
       teamId={teamId}
       setCurrentUserStoryId={setCurrentUserStoryId}
       currentUserStoryId={currentUserStoryId}
+      isUsingJira={isUsingJira}
     />
   );
 };

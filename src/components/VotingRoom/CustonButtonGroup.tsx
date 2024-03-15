@@ -9,6 +9,7 @@ import updateUserStoryMapping from "./api/updateUserStoryMapping";
 import editSessions from "../TeamSettings/api/editSessions";
 import { useNavigate } from "react-router";
 import { CustomButtonGroupProps } from "./types";
+import axios from "axios";
 
 export const modifyStartVotingInCurrentStateInStorage = async (
   sessionId: string,
@@ -58,6 +59,7 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
   setScore,
   setCommentValue,
   setIsUserStorySelectEnable,
+  userStoryList,
 }) => {
   const [isTimerOn, setIsTimerOn] = useState(false);
   const [isRevealButtonDisabled, setIsRevealButtonDisabled] = useState(true);
@@ -115,6 +117,55 @@ const CustomButtonGroup: React.FC<CustomButtonGroupProps> = ({
         .catch((error) => {
           console.error("Error occurred while changing status :", error);
         });
+
+      const foundUserStory = userStoryList.find(
+        (userStory) =>
+          parseInt(userStory.userStoryMappingId) === selectedUserStoryId
+      );
+
+      console.log("issueKey", foundUserStory?.userStoryKey);
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+      console.log("code", code);
+
+      if (code) {
+        axios
+          .post(
+            `http://localhost:3001/auth/saveToJira?code=${code}&sessionId=${sessionId}`,
+            {
+              issueKey: foundUserStory?.userStoryKey,
+              storyPointValue: score,
+              cloudId: "8041d251-f1c4-4732-a7ea-2680b867ceaf",
+            }
+          )
+          .then((response) => {
+            console.log("response", response);
+          })
+          .catch((error) => {
+            console.error("Error fetching user details:", error);
+          });
+
+        // axios
+        //   .put(
+        //     `http://localhost:3001/postStoryPoint?code=${code}&sessionId=${sessionId}`,
+        //     {
+        //       issueKey: "SCRUM-1",
+        //       storyPointValue: score,
+        //       cloudId: "8041d251-f1c4-4732-a7ea-2680b867ceaf",
+        //     }
+        //   )
+        //   .then((response) => {
+        //     console.log("response", response.data);
+        //   })
+        //   .catch((error) => {
+        //     console.error("Error fetching user details:", error);
+        // // Handle error or redirect to an error page
+        // });
+      } else {
+        // Handle redirection failure or invalid code
+        console.error("Invalid code");
+      }
 
       setIsUserStorySelectEnable(false);
 
