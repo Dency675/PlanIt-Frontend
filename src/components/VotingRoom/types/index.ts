@@ -24,6 +24,8 @@ export interface CustomButtonGroupProps {
   selectedUserStoryId: number;
   commentValue: string;
   score: string;
+  savetoJira: boolean;
+  userStoryList: userStoryType[];
   setScore: React.Dispatch<React.SetStateAction<string>>;
   setCommentValue: React.Dispatch<React.SetStateAction<string>>;
   setIsUserStorySelectEnable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -49,6 +51,7 @@ export interface propType {
   timer: string;
   estimationId: number;
   teamId: number;
+  isUsingJira: boolean;
   setCurrentUserStoryId: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -58,6 +61,9 @@ export interface userStoryType {
   userStory: string;
   userStoryId: string;
   userStoryMappingId: string;
+  userStoryKey: string;
+  description: string;
+  userStoryIdInJira: string;
 }
 
 export interface PieChartResultPropType {

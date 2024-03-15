@@ -10,6 +10,7 @@ import DisplayUserStory from "./DisplayUserStory";
 import getAllUserStoriesBySessionId from "./api/getAllUserStoriesBySessionId";
 import { useSocket } from "../Socket/SocketContext";
 import { propType, userStoryType } from "./types";
+import StoryPointsModal from "./StoryPointsModal";
 
 const LeftComponent = ({
   userId,
@@ -18,6 +19,7 @@ const LeftComponent = ({
   timer,
   estimationId,
   teamId,
+  isUsingJira,
   setCurrentUserStoryId,
 }: propType) => {
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
@@ -31,6 +33,12 @@ const LeftComponent = ({
   const [score, setScore] = useState<string>("");
   const [isUserStorySelectEnable, setIsUserStorySelectEnable] =
     React.useState<boolean>(false);
+  const [savetoJira, setSaveToJira] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  React.useEffect(() => {
+    console.log("savetoJira from left,", savetoJira);
+  }, [savetoJira]);
 
   const role = localStorage.getItem("teamUserRole");
 
@@ -64,6 +72,9 @@ const LeftComponent = ({
     userStory: "",
     userStoryId: "",
     userStoryMappingId: "",
+    userStoryKey: "string",
+    description: "",
+    userStoryIdInJira: "",
   };
 
   const [userStoryList, setUserStoryList] = React.useState<userStoryType[]>([
@@ -134,6 +145,13 @@ const LeftComponent = ({
     });
   }, [isTimerRunning]);
 
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
+
   return (
     <Box>
       {userId === scrumMasterId ? (
@@ -149,6 +167,19 @@ const LeftComponent = ({
           userStoryList={userStoryList}
         ></DisplayUserStory>
       )}
+
+      {userId === scrumMasterId &&
+        isModalOpen &&
+        isUsingJira &&
+        code === null && (
+          <StoryPointsModal
+            open={isModalOpen}
+            onClose={handleModalClose}
+            onSaveToJira={setSaveToJira}
+            teamId={teamIdL}
+            sessionId={sessionId}
+          />
+        )}
 
       <Timer isRunning={isTimerRunningSession} timer={timer} />
 
@@ -166,6 +197,8 @@ const LeftComponent = ({
           setCommentValue={setCommentValue}
           setScore={setScore}
           setIsUserStorySelectEnable={setIsUserStorySelectEnable}
+          savetoJira={savetoJira}
+          userStoryList={userStoryList}
         />
       ) : (
         <></>

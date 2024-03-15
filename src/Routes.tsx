@@ -93,7 +93,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/roomCreation/:teamId"
+            path="/roomCreation"
             element={
               <ProtectedRoute
                 allowedRoles={["scrum master", "project manager", "developer"]}

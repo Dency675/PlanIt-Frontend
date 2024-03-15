@@ -7,6 +7,8 @@ import {
   ModalDialog,
   useTheme,
 } from "@mui/joy/";
+
+// import Template from "../../assets/userStoryTemplate/Template.csv"
 import RoomNameInput from "./RoomNameInput";
 import EstimationScaleDropdown from "./EstimationScaleDropdown";
 import FileSelector from "./FileSelector";
@@ -16,7 +18,7 @@ import { Drawer, useMediaQuery } from "@mui/material";
 import Grid from "@mui/joy/Grid";
 import Typography from "@mui/joy/Typography";
 import Card from "@mui/joy/Card";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Box } from "@mui/joy";
 import fetchMembers from "./api/fetchTeamMembers";
 import addSessionParticipants from "./api/addSessionParticipants";
@@ -25,9 +27,18 @@ import addUserStoriesAndSessionMapping from "./api/addUserStoriesAndSessionMappi
 import JiraProjectDropdown from "./JiraProjectDropdown";
 import JiraSprintDropdown from "./JiraSprintDropdown";
 import CustomModal from "./CustomModal";
+import { useLocation } from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
+
+import fileDownload from "js-file-download";
 
 const CreateRoomForm: React.FC = () => {
-  const { teamId } = useParams();
+  // const { teamId } = useParams();
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const teamId = queryParams.get("id");
+
   const [userFile, setUserFile] = useState<File | null>(null);
   const [jiraImport, setJiraImport] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState("");
@@ -36,20 +47,94 @@ const CreateRoomForm: React.FC = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [userProjects, setUserProjects] = useState<any>(null);
+  const [accessToken, setAccessToken] = useState<any>(null);
+  const [projectData, setProjectData] = useState<any>(null);
+  const [issues, setIssues] = React.useState<any[]>([]);
+
+  const [formattedIssues, setFormattedIssues] = React.useState<
+    // { userStoryId: string; userStory: string }[]
+    {
+      userStoryId: string;
+      userStory: string;
+      description: string;
+      issueKey: string;
+    }[]
+  >([]);
+
+  interface Sprint {
+    id: number;
+    name: string;
+  }
+  const [sprints, setSprints] = React.useState<Sprint[]>([]);
+
+  React.useEffect(() => {
+    console.log("formattedIssues", formattedIssues);
+    console.log("userFile", userFile);
+  }, [formattedIssues]);
+  React.useEffect(() => {
+    // Add logic to handle redirection after Jira authentication
+    // For example, you can check if the URL contains the code or any relevant information
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    console.log("code", code);
+
+    if (code) {
+      // Make a request to the server to exchange the code for access token and fetch user details
+      axios
+        .get(`http://localhost:3001/auth/callback?code=${code}&id=${teamId}`)
+        .then((response) => {
+          // Data received from the server after successful authentication
+          setUserDetails(response.data.UserData);
+          setUserProjects(response.data.ProjectData);
+          setProjectData(response.data.projects);
+          setAccessToken(response.data.tokenResponse.access_token);
+
+          console.log("response", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user details:", error);
+          // Handle error or redirect to an error page
+        });
+    } else {
+      // Handle redirection failure or invalid code
+      console.error("Invalid code");
+    }
+  }, []);
+
   const handleUploadFileClick = () => {
     setUploadModalOpen(true);
   };
 
-  const handleImportFromJiraClick = () => {
-    // Handle import from Jira logic
+  const handleImportFromJiraClick = async () => {
+    window.location.href = `http://localhost:3001/auth/jira/${teamId}`;
   };
 
-  const handleDownloadTemplateClick = () => {
-    // Handle download template logic
-  };
+  function handleDownloadTemplateClick() {
+    const filePath = "../../assets/userStoryTemplate/Template.csv";
+
+    fetch(filePath).then((response) => {
+      response.blob().then((blob) => {
+        // Creating new object of PDF file
+        const fileURL = window.URL.createObjectURL(blob);
+
+        // Setting various property values
+        let alink = document.createElement("a");
+        alink.href = fileURL;
+        alink.download = "SamplePDF.pdf";
+        alink.click();
+      });
+    });
+  }
 
   const handleClearFileUpload = () => {
     setUserFile(null);
+  };
+
+  const handleClearJiraData = () => {
+    setProjectData(null);
   };
 
   const handleFileSelect = (file: File) => {
@@ -82,6 +167,7 @@ const CreateRoomForm: React.FC = () => {
   const [estimationError, setEstimationError] = useState<string>("");
   const [timerError, setTimerError] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");
+  const [userStoryError, setUserStoryError] = useState<string>("");
   const [fileUploadConfirmation, setFileUploadConfirmation] =
     useState<string>("");
 
@@ -123,14 +209,25 @@ const CreateRoomForm: React.FC = () => {
       setTimerError("");
     }
 
+    if (formattedIssues.length !== 0 || userFile) {
+      console.log("userFile", userFile);
+      console.log("formattedIssues", formattedIssues);
+      setUserStoryError("");
+    } else {
+      setUserStoryError("Upload user story through file or jira ");
+    }
+
     if (!userFile) {
-      setFileError("File is required");
-      isValid = false;
+      if (formattedIssues.length === 0) {
+        setFileError("File is required");
+        isValid = false;
+      }
     } else if (!userFile.name.toLowerCase().endsWith(".csv")) {
       setFileError("File must be a CSV file");
       isValid = false;
     } else {
       setFileError("");
+      setUserStoryError("");
     }
 
     if (!isValid) {
@@ -148,8 +245,11 @@ const CreateRoomForm: React.FC = () => {
     formData.append("estimationId", selectedEstimationScaleId.toString());
     formData.append("calculationId", "1");
 
-    if (userFile) {
+    console.log(userFile);
+    if (userFile !== null) {
       formData.append("excelLink", userFile);
+    } else if (formattedIssues.length !== 0) {
+      formData.append("excelLink", "jira");
     }
 
     try {
@@ -182,40 +282,100 @@ const CreateRoomForm: React.FC = () => {
       console.log(ResponseStatus, "responseResponse");
 
       if ((response.status as number) === 201) {
-        addUserStoriesAndSessionMapping(
-          response.data.responseData.data.fileName,
-          response.data.responseData.data.newSession.id
-        )
-          .then((response: any) => {
-            console.log("Response from addSessionParticipants:", response);
-            const combinedArray = [
-              ...teamMember,
-              ...selectedUserArrayWithId,
-              { userId: storedUserId as string, roleId: 6 },
-            ];
+        // if (response.data.responseData.data.fileName !== "") {
+        // addUserStoriesAndSessionMapping(
+        //   response.data.responseData.data.fileName,
+        //   response.data.responseData.data.newSession.id
+        // )
+        //   .then((response: any) => {
+        //     console.log("Response from addSessionParticipants:", response);
+        //     const combinedArray = [
+        //       ...teamMember,
+        //       ...selectedUserArrayWithId,
+        //       { userId: storedUserId as string, roleId: 6 },
+        //     ];
 
-            console.log(combinedArray, "combinedArray");
+        //     console.log(combinedArray, "combinedArray");
 
-            addSessionParticipants({
+        //     // addSessionParticipants({
+        //     //   sessionId: currentSessionId,
+        //     //   participants: combinedArray,
+        //     // })
+        //     //   .then((response: any) => {
+        //     //     console.log("Response from addSessionParticipants:", response);
+        //     //   })
+        //     //   .catch((error) => {
+        //     //     console.error(
+        //     //       "Error occurred while adding session participants:",
+        //     //       error
+        //     //     );
+        //     //   });
+        //   })
+        //   .catch((error) => {
+        //     console.error(
+        //       "Error occurred while adding session participants:",
+        //       error
+        //     );
+        //   });
+        // }
+
+        try {
+          if (response.data.responseData.data.fileName !== "") {
+            const addUserStoriesAndSessionMappingResponse =
+              await addUserStoriesAndSessionMapping(
+                response.data.responseData.data.fileName,
+                response.data.responseData.data.newSession.id
+              );
+            console.log(
+              "Response from addUserStoriesAndSessionMapping:",
+              addUserStoriesAndSessionMappingResponse
+            );
+          } else {
+            const userStories = formattedIssues.map((issue) => issue.userStory);
+
+            const addUserStoriesAndSessionMappingResponse = await axios.post(
+              "http://localhost:3001/addUserStories",
+              {
+                userStories: formattedIssues,
+                sessionId: response.data.responseData.data.newSession.id,
+              }
+            );
+
+            console.log(
+              "Response from addUserStoriesAndSessionMapping:",
+              addUserStoriesAndSessionMappingResponse
+            );
+          }
+
+          const combinedArray = [
+            ...teamMember,
+            ...selectedUserArrayWithId,
+            { userId: storedUserId as string, roleId: 6 },
+          ];
+
+          console.log(combinedArray, "combinedArray");
+
+          try {
+            const addParticipantsResponse = await addSessionParticipants({
               sessionId: currentSessionId,
               participants: combinedArray,
-            })
-              .then((response: any) => {
-                console.log("Response from addSessionParticipants:", response);
-              })
-              .catch((error) => {
-                console.error(
-                  "Error occurred while adding session participants:",
-                  error
-                );
-              });
-          })
-          .catch((error) => {
+            });
+            console.log(
+              "Response from addSessionParticipants:",
+              addParticipantsResponse
+            );
+          } catch (error) {
             console.error(
               "Error occurred while adding session participants:",
               error
             );
-          });
+          }
+        } catch (error) {
+          console.error(
+            "Error occurred while adding session participants:",
+            error
+          );
+        }
 
         if (response.status === 200) {
           const combinedArray = [
@@ -422,7 +582,7 @@ const CreateRoomForm: React.FC = () => {
                       </Grid>
                       <Grid>
                         <Button
-                          disabled={jiraImport !== ""}
+                          disabled={projectData !== null}
                           onClick={handleUploadFileClick}
                         >
                           Upload File
@@ -431,19 +591,19 @@ const CreateRoomForm: React.FC = () => {
                           <Typography color="success">
                             {fileUploadConfirmation}
                             <Button
-                              variant="outlined"
+                              variant="plain"
                               color="neutral"
                               onClick={handleClearFileUpload}
                             >
-                              X
+                              <ClearIcon fontSize="small" />
                             </Button>
                           </Typography>
                         )}
                         {/* <FileSelector onFileSelect={handleFileSelect} />
-                        <Typography color="danger">{fileError}</Typography>
                         <Typography color="success">
-                          {fileUploadConfirmation}
-                        </Typography> */}
+                        {fileUploadConfirmation}
+                      </Typography> */}
+                        {/* <Typography color="danger">{userStoryError}</Typography> */}
                       </Grid>
                       <Grid container spacing={1} direction="column">
                         <Grid>
@@ -453,29 +613,65 @@ const CreateRoomForm: React.FC = () => {
                           >
                             Import from Jira
                           </Button>
+                          {projectData && (
+                            <Typography color="success">
+                              <Button
+                                variant="plain"
+                                color="neutral"
+                                onClick={handleClearJiraData}
+                              >
+                                Clear data from Jira {"   "}
+                                <ClearIcon fontSize="small" />
+                              </Button>
+                            </Typography>
+                          )}
                         </Grid>
+                      </Grid>
+                      <Grid sx={{ marginLeft: 14 }}>
+                        {" "}
+                        <Typography color="danger">{userStoryError}</Typography>
                       </Grid>
                     </Grid>
 
                     <Grid xs={12} mt={2}>
-                      <Divider>Jira</Divider>
-
-                      <Grid
-                        sx={{
-                          paddingTop: "10px",
-                        }}
-                      >
-                        <Typography level="title-lg">Select Project</Typography>
-                        <JiraProjectDropdown />
-                      </Grid>
-                      <Grid
-                        sx={{
-                          paddingTop: "15px",
-                        }}
-                      >
-                        <Typography level="title-lg">Select Sprint</Typography>
-                        <JiraSprintDropdown />
-                      </Grid>
+                      {projectData && (
+                        <>
+                          {" "}
+                          <Divider>Jira</Divider>
+                          <Grid
+                            sx={{
+                              paddingTop: "10px",
+                            }}
+                          >
+                            <Typography level="title-lg">
+                              Select Project
+                            </Typography>
+                            <JiraProjectDropdown
+                              projects={userProjects}
+                              accessToken={accessToken}
+                              projectData={projectData}
+                              setSprints={setSprints}
+                            />
+                          </Grid>
+                          {sprints.length !== 0 && (
+                            <Grid
+                              sx={{
+                                paddingTop: "15px",
+                              }}
+                            >
+                              <Typography level="title-lg">
+                                Select Sprint
+                              </Typography>
+                              <JiraSprintDropdown
+                                accessToken={accessToken}
+                                sprints={sprints}
+                                setIssues={setIssues}
+                                setFormattedIssues={setFormattedIssues}
+                              />
+                            </Grid>
+                          )}
+                        </>
+                      )}
                       <Grid
                         sx={{
                           paddingTop: "20px",

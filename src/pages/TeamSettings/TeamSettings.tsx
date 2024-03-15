@@ -179,7 +179,7 @@ const TeamSettings = () => {
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    navigate(`/roomCreation/${teamId}`);
+                    navigate(`/roomCreation?id=${teamId}`);
                   }}
                 >
                   Create Room
